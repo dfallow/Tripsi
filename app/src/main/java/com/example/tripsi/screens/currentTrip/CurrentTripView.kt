@@ -1,6 +1,8 @@
 package com.example.tripsi.screens.currentTrip
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,6 +28,20 @@ fun CurrentTripView() {
             .fillMaxWidth()
             .fillMaxHeight(0.7F)) {
             ShowCurrentTripMap()
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                TripInfoOverlay(type = "Distance", measurement = "79km")
+                TripInfoOverlay(type = "Speed", measurement = "40km/h")
+                TripInfoOverlay(type = "Time", measurement = "2-3hours")
+            }
+
         }
 
         Row(modifier = Modifier
@@ -92,4 +108,24 @@ fun ShowCurrentTripMap() {
         mapInitialized = true
     }
     AndroidView({ currentTripMap })
+}
+
+@Composable
+fun TripInfoOverlay(type: String, measurement: String) {
+
+    Column(
+        modifier = Modifier
+            .size(width = 80.dp, height = 60.dp)
+            //.border(1.dp, MaterialTheme.colors.onBackground, CircleShape)
+            .background(MaterialTheme.colors.onBackground, RoundedCornerShape(10.dp))
+            .padding(2.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+        Text(type, color = MaterialTheme.colors.primary)
+        Text(measurement, color = MaterialTheme.colors.onSecondary)
+    }
+
+    Spacer(modifier = Modifier.height(5.dp))
+
 }
