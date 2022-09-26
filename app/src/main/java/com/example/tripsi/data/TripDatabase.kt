@@ -15,11 +15,11 @@ import androidx.room.RoomDatabase
     version = 1
 )
 abstract class TripDatabase : RoomDatabase() {
-    abstract fun TripDao(): TripDao
-    abstract fun StatisticsDao(): StatisticsDao
-    abstract fun ImageDao(): ImageDao
-    abstract fun NoteDao(): NoteDao
-    abstract fun LocationDao(): LocationDao
+    abstract fun tripDao(): TripDao
+    abstract fun statisticsDao(): StatisticsDao
+    abstract fun imageDao(): ImageDao
+    abstract fun noteDao(): NoteDao
+    abstract fun locationDao(): LocationDao
 
     //ensure that there is only ONE instance of the database
     companion object {
