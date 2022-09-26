@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
+import java.util.Date
 
 @Entity
 data class Trip(
@@ -12,7 +13,9 @@ data class Trip(
     val id: Int,
     val destination: String,
     val travelMethod: Int,
-    val status: Int
+    val status: Int,
+    // TODO: might have to change Date type
+    val plannedStartDate: Date
 )
 
 @Entity(
@@ -83,7 +86,7 @@ data class Note(
         )
     ]
 )
-data class Coordinates(
+data class Location(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val coordsLatitude: Double,
