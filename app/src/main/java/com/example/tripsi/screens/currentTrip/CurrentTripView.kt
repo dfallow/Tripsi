@@ -76,7 +76,6 @@ fun CurrentTripView() {
             ) {
             Text("End Trip", textAlign = TextAlign.Center)
         }
-        Text("test")
     }
 
 }
@@ -110,8 +109,12 @@ fun ShowCurrentTripMap() {
     AndroidView({ currentTripMap })
 }
 
+
+// Trip Measurements Overlay
 @Composable
 fun TripInfoOverlay(type: String, measurement: String) {
+
+    Spacer(modifier = Modifier.height(5.dp))
 
     Column(
         modifier = Modifier
@@ -126,6 +129,6 @@ fun TripInfoOverlay(type: String, measurement: String) {
         Text(measurement, color = MaterialTheme.colors.onSecondary)
     }
 
-    Spacer(modifier = Modifier.height(5.dp))
+
 
 }
