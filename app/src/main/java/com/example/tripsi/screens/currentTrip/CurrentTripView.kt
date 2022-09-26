@@ -13,6 +13,7 @@ fun CurrentTripView() {
     ShowCurrentTripMap()
 }
 
+// Initial creation of the map
 @Composable
 fun CurrentTripMap(): MapView {
     val context = LocalContext.current
@@ -24,6 +25,7 @@ fun CurrentTripMap(): MapView {
     return mapView
 }
 
+// Display map in composable
 @Composable
 fun ShowCurrentTripMap() {
     val currentTripMap = CurrentTripMap()
@@ -32,8 +34,10 @@ fun ShowCurrentTripMap() {
 
     if (!mapInitialized) {
         currentTripMap.setTileSource(TileSourceFactory.MAPNIK)
-        currentTripMap.controller.setZoom(9.0)
+        currentTripMap.setMultiTouchControls(true)
+        currentTripMap.controller.setZoom(15.0)
         currentTripMap.controller.setCenter(GeoPoint(60.17, 24.95))
+        mapInitialized = true
     }
     AndroidView({ currentTripMap })
 }
