@@ -1,11 +1,7 @@
 package com.example.tripsi.screens.currentTrip
 
-import android.util.Log
-import android.widget.Space
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +13,6 @@ import com.example.tripsi.R
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
-import kotlin.math.log
 
 @Composable
 fun CurrentTripView() {
@@ -60,17 +55,19 @@ fun CurrentTripView() {
         Button(
             onClick = { /*TODO*/ },
             modifier = viewModel.modifier,
-            shape = viewModel.shape
+            shape = viewModel.shape,
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
             ) {
             Text("End Trip", textAlign = TextAlign.Center)
         }
+        Text("test")
     }
 
 }
 
 // Initial creation of the map
 @Composable
-fun CurrentTripMap(): MapView {
+fun currentTripMap(): MapView {
     val context = LocalContext.current
     val mapView = remember {
         MapView(context).apply {
@@ -83,7 +80,7 @@ fun CurrentTripMap(): MapView {
 // Display map in composable
 @Composable
 fun ShowCurrentTripMap() {
-    val currentTripMap = CurrentTripMap()
+    val currentTripMap = currentTripMap()
 
     var mapInitialized by remember(currentTripMap) { mutableStateOf(false)}
 

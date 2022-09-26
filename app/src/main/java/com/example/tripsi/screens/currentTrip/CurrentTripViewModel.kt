@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModel
 
 class CurrentTripViewModel: ViewModel() {
 
+    // Currently storing generic properties for buttons
     val modifier = Modifier
         .width(130.dp)
-
     val shape = RoundedCornerShape(10.dp)
 
 
