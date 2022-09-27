@@ -1,5 +1,8 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.content.Context
+import android.graphics.Bitmap
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,15 +14,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import com.example.tripsi.R
 import com.example.tripsi.utils.Location
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 
 @Composable
-fun CurrentTripView(location: Location) {
+fun CurrentTripView(location: Location, context: Context) {
 
     val viewModel = CurrentTripViewModel()
 
@@ -29,7 +37,7 @@ fun CurrentTripView(location: Location) {
         Box(modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.7F)) {
-            ShowCurrentTripMap(location)
+            ShowCurrentTripMap(location, context)
 
             Column(
                 modifier = Modifier
@@ -96,10 +104,13 @@ fun currentTripMap(): MapView {
 
 // Display map in composable
 @Composable
-fun ShowCurrentTripMap(location: Location) {
+fun ShowCurrentTripMap(location: Location, context: Context) {
     val currentTripMap = currentTripMap()
     var mapInitialized by remember(currentTripMap) { mutableStateOf(false)}
     val marker = Marker(currentTripMap)
+
+    // TODO Custom icons for user location and moments
+    // TODO check if can create marker array
 
     if (!mapInitialized) {
         currentTripMap.setTileSource(TileSourceFactory.MAPNIK)
@@ -113,6 +124,7 @@ fun ShowCurrentTripMap(location: Location) {
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         marker.position = location.userLocation
         marker.title = location.userLocation.toString()
+        marker.icon = ContextCompat.getDrawable(context, R.drawable.ic_launcher_foreground)
         currentTripMap.overlays.add(marker)
     }
 }
@@ -136,7 +148,4 @@ fun TripInfoOverlay(type: String, measurement: String) {
         Text(type, color = MaterialTheme.colors.primary)
         Text(measurement, color = MaterialTheme.colors.onSecondary)
     }
-
-
-
 }
