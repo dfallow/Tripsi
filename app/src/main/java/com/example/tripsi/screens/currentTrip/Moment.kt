@@ -1,22 +1,18 @@
 package com.example.tripsi.screens.currentTrip
 
-import android.app.Application
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.textInputServiceFactory
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 
 
 @Composable
@@ -27,14 +23,6 @@ fun PopupMoment(imageId: Int) {
             .fillMaxHeight(0.5f)
             .background(MaterialTheme.colors.onBackground)
     ) {
-       Button(
-           onClick = {
-               viewModel.hideMoment()
-           },
-       ) {
-           Text("Dismiss")
-       }
-        
         Row(
             Modifier
                 .padding(10.dp)
@@ -73,11 +61,10 @@ fun PopupMoment(imageId: Int) {
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            Button(
-                onClick = { /*TODO*/ }
-            ) {
-                Text("Close")
-            }
+            ClickableText(text = AnnotatedString("Close"), onClick = {
+                viewModel.hideMoment()
+            })
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }
