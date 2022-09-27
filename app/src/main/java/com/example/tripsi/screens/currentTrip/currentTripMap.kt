@@ -49,11 +49,17 @@ fun ShowCurrentTripMap(location: Location, context: Context) {
     for (moment in viewModel.moments) {
         val moMarker = Marker(currentTripMap)
         moMarker.position = moment
-        moMarker.icon = ContextCompat.getDrawable(context, R.drawable.photo_svgrepo_com)
-        moMarker.setOnMarkerClickListener { marker, mapView ->
-            Log.d("marker","test")
-            true
+
+        // TODO when database is merged we can check if start/end location is true
+        if (moment == viewModel.moments.first()) {
+            moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
+        } else {
+            moMarker.icon = ContextCompat.getDrawable(context, R.drawable.photo_svgrepo_com)
         }
+        //moMarker.setOnMarkerClickListener { marker, mapView ->
+          //  Log.d("marker","test")
+          //  true
+        //}
         momentLocations += moMarker
     }
 
@@ -88,6 +94,7 @@ fun ShowCurrentTripMap(location: Location, context: Context) {
 }
 
 // Trip Measurements Overlay
+// TODO add small icons, change text size, replace dummy info with liveData
 @Composable
 fun TripInfoOverlay(type: String, measurement: String) {
 
@@ -96,7 +103,6 @@ fun TripInfoOverlay(type: String, measurement: String) {
     Column(
         modifier = Modifier
             .size(width = 80.dp, height = 60.dp)
-            //.border(1.dp, MaterialTheme.colors.onBackground, CircleShape)
             .background(MaterialTheme.colors.onBackground, RoundedCornerShape(10.dp))
             .padding(2.dp),
         horizontalAlignment = Alignment.CenterHorizontally

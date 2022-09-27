@@ -61,7 +61,9 @@ fun CurrentTripView(location: Location, context: Context) {
 
         Spacer(modifier = Modifier.height(32.dp))
         Button(
-            onClick = { /*TODO*/
+            onClick = { /*TODO
+                          This function should be when the user starts a trip
+                        */
                       location.startUpdatingLocation()
                       },
             modifier = viewModel.modifier,
