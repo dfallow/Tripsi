@@ -2,12 +2,21 @@ package com.example.tripsi.screens.currentTrip
 
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import org.osmdroid.util.GeoPoint
 
 class CurrentTripViewModel: ViewModel() {
+
+    var showMoment by mutableStateOf(false)
+
+    fun displayMoment()  { showMoment = true }
+
+    fun hideMoment() { showMoment = false }
 
     // Currently storing generic properties for buttons
     // TODO create own file for these properties
