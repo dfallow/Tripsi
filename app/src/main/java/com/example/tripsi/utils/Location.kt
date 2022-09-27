@@ -28,6 +28,9 @@ class Location(context: Context): LocationListener {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100 * 1000, 100f, this)
         Log.d("Location", startLocation.toString())
         return startLocation
+    }
 
+    fun stopUpdatingLocation(){
+        locationManager.removeUpdates(this)
     }
 }
