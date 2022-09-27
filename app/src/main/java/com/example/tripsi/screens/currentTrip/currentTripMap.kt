@@ -1,6 +1,7 @@
 package com.example.tripsi.screens.currentTrip
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -49,6 +50,10 @@ fun ShowCurrentTripMap(location: Location, context: Context) {
         val moMarker = Marker(currentTripMap)
         moMarker.position = moment
         moMarker.icon = ContextCompat.getDrawable(context, R.drawable.photo_svgrepo_com)
+        moMarker.setOnMarkerClickListener { marker, mapView ->
+            Log.d("marker","test")
+            true
+        }
         momentLocations += moMarker
     }
 
