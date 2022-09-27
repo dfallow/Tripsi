@@ -12,7 +12,7 @@ import com.example.tripsi.screens.travelHistory.TravelHistoryView
 fun BottomNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Home.route
+        startDestination = BottomBarScreen.Map.route
     ) {
         composable(route = BottomBarScreen.Trips.route) {
             TravelHistoryView()
