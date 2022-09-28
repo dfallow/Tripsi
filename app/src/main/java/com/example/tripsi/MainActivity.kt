@@ -48,8 +48,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    //Text("Hello there")
-                    CurrentTripView(location, this, application)
+                    Text("Hello there")
+                    //CurrentTripView(location, this, application)
                 }
             }
         }
