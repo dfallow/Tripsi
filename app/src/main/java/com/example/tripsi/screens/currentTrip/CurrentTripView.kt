@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -70,7 +71,6 @@ fun CurrentTripView(location: Location, context: Context, application: Applicati
             onClick = { /*TODO
                           This function should be when the user starts a trip
                         */
-                      location.startUpdatingLocation()
                       },
             modifier = viewModel.modifier,
             shape = viewModel.shape,
@@ -82,14 +82,21 @@ fun CurrentTripView(location: Location, context: Context, application: Applicati
 
     if (viewModel.showMoment) {
         Popup() {
-            Column(
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxHeight()
+            Surface(
+                color = Color.Black.copy(alpha = 0.6f),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxHeight()
+
                 ) {
-                PopupMoment(R.drawable.location_svgrepo_com)
+                    PopupMoment(R.drawable.location_svgrepo_com)
+                }
             }
+
 
         }
     }
