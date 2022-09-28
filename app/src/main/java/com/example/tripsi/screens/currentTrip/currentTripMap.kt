@@ -1,6 +1,7 @@
 package com.example.tripsi.screens.currentTrip
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Popup
 import androidx.core.content.ContextCompat
 import com.example.tripsi.R
 import com.example.tripsi.utils.Location
@@ -55,14 +57,13 @@ fun ShowCurrentTripMap(location: Location, context: Context) {
         } else {
             moMarker.icon = ContextCompat.getDrawable(context, R.drawable.photo_svgrepo_com)
         }
-        //moMarker.setOnMarkerClickListener { marker, mapView ->
-          //  Log.d("marker","test")
-          //  true
-        //}
+        moMarker.setOnMarkerClickListener { marker, mapView ->
+            Log.d("marker","${marker.position}")
+            viewModel.displayMoment()
+            true
+        }
         momentLocations += moMarker
     }
-
-
 
     if (!mapInitialized) {
         currentTripMap.setTileSource(TileSourceFactory.MAPNIK)
@@ -88,7 +89,7 @@ fun ShowCurrentTripMap(location: Location, context: Context) {
         for (moment in momentLocations) {
             currentTripMap.overlays.add(moment)
         }
-        currentTripMap.invalidate()
+        //currentTripMap.invalidate()
     }
 }
 

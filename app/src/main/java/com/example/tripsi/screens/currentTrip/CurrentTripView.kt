@@ -1,19 +1,26 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.app.Application
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import com.example.tripsi.R
 import com.example.tripsi.utils.Location
 
 val viewModel = CurrentTripViewModel()
 
 @Composable
-fun CurrentTripView(location: Location, context: Context) {
+fun CurrentTripView(location: Location, context: Context, application: Application) {
+
+    location.startUpdatingLocation()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -64,13 +71,33 @@ fun CurrentTripView(location: Location, context: Context) {
             onClick = { /*TODO
                           This function should be when the user starts a trip
                         */
-                      location.startUpdatingLocation()
                       },
             modifier = viewModel.modifier,
             shape = viewModel.shape,
             colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
             ) {
             Text("End Trip", textAlign = TextAlign.Center)
+        }
+    }
+
+    if (viewModel.showMoment) {
+        Popup() {
+            Surface(
+                color = Color.Black.copy(alpha = 0.6f),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxHeight()
+
+                ) {
+                    PopupMoment(R.drawable.location_svgrepo_com)
+                }
+            }
+
+
         }
     }
 

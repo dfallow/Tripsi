@@ -1,6 +1,7 @@
 package com.example.tripsi
 
 import android.content.pm.PackageManager
+import android.media.Image
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,6 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
@@ -47,7 +49,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     Text("Hello there")
-                    //CurrentTripView(location, this)
+                    //CurrentTripView(location, this, application)
                 }
             }
         }
