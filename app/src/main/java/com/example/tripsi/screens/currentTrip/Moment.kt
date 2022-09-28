@@ -21,7 +21,7 @@ fun PopupMoment(imageId: Int) {
         Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.5f)
-            .background(MaterialTheme.colors.onBackground)
+            .background(Color.White)
     ) {
         Row(
             Modifier
@@ -29,8 +29,8 @@ fun PopupMoment(imageId: Int) {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-
             Card(
+                // Shows the image, currently set up with one mock image
                 Modifier
                     .fillMaxWidth(0.65f)
                     .fillMaxHeight(0.55f),
@@ -38,33 +38,41 @@ fun PopupMoment(imageId: Int) {
             ) {
                 Image(painter = painterResource(imageId), contentDescription = "something")
             }
-
-
             Column(
+                // Contains the moment information such as date, location, time
                 Modifier
                     .fillMaxHeight(0.55f)
                     .fillMaxWidth()
-                    .padding(horizontal = 5.dp)
-                    .background(Color.Black),
+                    .padding(horizontal = 5.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text("Date")
+                Text("Date", color = Color.Black)
                 Text("Time")
                 Text("Location")
 
             }
         }
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
+            // This contains the moment comment and hide moment clickable text
             verticalArrangement = Arrangement.Bottom,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            ClickableText(text = AnnotatedString("Close"), onClick = {
-                viewModel.hideMoment()
-            })
-            Spacer(modifier = Modifier.height(10.dp))
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxHeight(0.45f)
+                    .fillMaxWidth()
+                    .padding(vertical = 2.dp, horizontal = 10.dp)
+            ) {
+                Text("This is a temporary string, which will be replaced with the moment comment")
+
+                ClickableText(text = AnnotatedString("Close"), onClick = {
+                    viewModel.hideMoment()
+                })
+            }
         }
     }
 }
