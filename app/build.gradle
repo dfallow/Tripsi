@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
 }
 
+
 android {
     namespace 'com.example.tripsi'
     compileSdk 32
@@ -71,6 +72,10 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
+
+    // Navigation
+    def nav_version = "2.5.2"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
 
     // Room db
     def roomVersion = "2.4.0"

@@ -11,6 +11,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
+import androidx.navigation.Navigation
+import com.example.tripsi.screens.home.HomeView
+import com.example.tripsi.ui.theme.TripsiTheme
+import com.example.tripsi.utils.Navigation
 import androidx.compose.ui.res.painterResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,7 +22,6 @@ import androidx.preference.PreferenceManager
 import com.example.tripsi.screens.currentTrip.AddMoment
 import com.example.tripsi.screens.currentTrip.CurrentTripView
 import com.example.tripsi.screens.currentTrip.MomentDetails
-import com.example.tripsi.ui.theme.TripsiTheme
 import com.example.tripsi.utils.Location
 import org.osmdroid.config.Configuration
 
@@ -50,7 +53,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Text("Hello there")
+                    com.example.tripsi.utils.Navigation()
+
+                    //Text("Hello there")
                     //CurrentTripView(location, this, application)
                     //AddMoment()
                 }

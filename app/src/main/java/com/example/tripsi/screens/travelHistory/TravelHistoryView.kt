@@ -1,5 +1,9 @@
 package com.example.tripsi.screens.travelHistory
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,6 +29,12 @@ import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 
 // TODO: cleanup the code from all the formatting, modifiers, etc
+
+@Composable
+fun TravelHistoryView(navController: NavController) {
+    Column() {
+        Text(text = "This is TravelHistoryView")
+    }
 
 @Composable
 fun TravelHistoryItem(tripName: String, imageCount: Int, noteCount: Int) {
@@ -97,6 +107,4 @@ fun TravelHistoryList(model: TripDbViewModel) {
             }
         }
     }
-
-
 }

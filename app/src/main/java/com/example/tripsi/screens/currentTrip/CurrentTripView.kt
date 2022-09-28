@@ -1,5 +1,8 @@
 package com.example.tripsi.screens.currentTrip
 
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import android.app.Application
 import android.content.Context
 import androidx.compose.foundation.background
@@ -16,6 +19,11 @@ import com.example.tripsi.R
 import com.example.tripsi.utils.Location
 
 val viewModel = CurrentTripViewModel()
+
+// @Composable
+// fun CurrentTripView(navController: NavController) {
+//    Text(text = "This is CurrentTripView")
+// }
 
 @Composable
 fun CurrentTripView(location: Location, context: Context, application: Application) {
@@ -102,4 +110,3 @@ fun CurrentTripView(location: Location, context: Context, application: Applicati
     }
 
 }
-
