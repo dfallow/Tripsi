@@ -1,5 +1,7 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.content.Intent
+import android.provider.MediaStore
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
@@ -7,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.lifecycle.ViewModel
 import org.osmdroid.util.GeoPoint
 

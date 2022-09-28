@@ -1,19 +1,28 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.graphics.Bitmap
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+
+// TODO Important to not orientation changes clear screen
 
 @Composable
 fun AddMoment() {
@@ -53,9 +62,9 @@ fun MomentDetails() {
                     .fillMaxHeight()
                     .fillMaxWidth(0.5f)
             ) {
-                Text("Date", color = MaterialTheme.colors.primary)
-                Text("Time", color = MaterialTheme.colors.primary)
-                Text("Location", color = MaterialTheme.colors.primary)
+                Text("Date", color = colors.primary)
+                Text("Time", color = colors.primary)
+                Text("Location", color = colors.primary)
             }
 
             Column(
@@ -64,9 +73,9 @@ fun MomentDetails() {
                 modifier = Modifier
                     .fillMaxHeight()
             ) {
-                Text("Some Value", color = MaterialTheme.colors.onSecondary)
-                Text("Some Value", color = MaterialTheme.colors.onSecondary)
-                Text("Some Value", color = MaterialTheme.colors.onSecondary)
+                Text("Some Value", color = colors.onSecondary)
+                Text("Some Value", color = colors.onSecondary)
+                Text("Some Value", color = colors.onSecondary)
             }
         }
     }
@@ -114,20 +123,59 @@ fun myAppTextFieldColors(
 
 @Composable
 fun MomentPictures() {
-    Column() {
 
-        Row(
-            // Where the taken pictures will show
-        ) {
+    val photoThumbnails = remember { mutableListOf<Bitmap?>(null) }
 
+    val result = remember { mutableStateOf<Bitmap?>(null) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+        result.value = it
+        Log.d("photo", "test")
+        photoThumbnails.add( it )
+        Log.d("photo", photoThumbnails.toString())
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        LazyRow (
+            modifier = Modifier.fillMaxHeight(0.35f)
+                ) {
+            itemsIndexed(photoThumbnails) { _, item ->
+                if (item != null) {
+                    Card(
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier
+                            .size(150.dp, 150.dp)
+                            .padding(10.dp)
+                    ) {
+                        Image(
+                            item.asImageBitmap(),
+                            null,
+                            contentScale = ContentScale.FillBounds,
+                            modifier = Modifier
+                                .fillMaxSize()
+
+                        )
+                    }
+
+                }
+            }
         }
 
+        // TODO If I remove this the photos do not appear in the above lazyRow
+        Row() {
+            result.value?.let { }
+        }
+
+        // TODO Replace button with some kind of camera clickable icon
         Button(
             onClick = {
-            // TODO Take Picture and show in above row
+                Log.d("photo", "test")
+                launcher.launch()
             }
         ) {
-            Text("Take Picture")
+            Text("Take Photo")
         }
 
     }
@@ -138,7 +186,7 @@ fun SaveOrDiscard() {
     // Contains the buttons for saving or discarding the moment
     Row (
         horizontalArrangement = Arrangement.SpaceAround,
-       verticalAlignment = Alignment.Bottom ,
+       verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -147,14 +195,19 @@ fun SaveOrDiscard() {
         Button(
             onClick = {
             /*TODO*/
-            }
+            },
+            modifier = viewModel.modifier,
+            shape = viewModel.shape
         ) {
             Text("Save")
         }
         Button(
             onClick = {
                 /*TODO*/
-            }
+            },
+            modifier = viewModel.modifier,
+            shape = viewModel.shape,
+            colors = ButtonDefaults.buttonColors(colors.secondary)
         ) {
             Text("Discard")
         }
