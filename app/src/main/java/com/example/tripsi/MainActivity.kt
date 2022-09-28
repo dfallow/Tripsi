@@ -10,10 +10,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.tripsi.screens.NavGraphs
+import androidx.navigation.Navigation
 import com.example.tripsi.screens.home.HomeView
 import com.example.tripsi.ui.theme.TripsiTheme
-import com.ramcosta.composedestinations.DestinationsNavHost
+import com.example.tripsi.utils.Navigation
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    DestinationsNavHost(navGraph = NavGraphs.root)
+                    com.example.tripsi.utils.Navigation()
                 }
             }
         }

@@ -3,12 +3,10 @@ package com.example.tripsi.screens.travelHistory
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import androidx.navigation.NavController
 
-@Destination
 @Composable
-fun TravelHistoryView(navigator: DestinationsNavigator) {
+fun TravelHistoryView(navController: NavController) {
     Column() {
         Text(text = "This is TravelHistoryView")
     }

@@ -2,11 +2,9 @@ package com.example.tripsi.screens.planTrip
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import androidx.navigation.NavController
 
-@Destination
 @Composable
-fun PlanTripView(navigator: DestinationsNavigator) {
+fun PlanTripView(navController: NavController) {
     Text(text = "This is PlanTripView")
 }

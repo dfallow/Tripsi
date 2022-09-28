@@ -2,11 +2,9 @@ package com.example.tripsi.screens.media
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import androidx.navigation.NavController
 
-@Destination
 @Composable
-fun MediaView(navigator: DestinationsNavigator) {
+fun MediaView(navController: NavController) {
     Text(text = "This is MediaView")
 }
