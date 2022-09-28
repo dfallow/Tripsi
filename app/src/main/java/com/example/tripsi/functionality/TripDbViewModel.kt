@@ -8,7 +8,7 @@ import com.example.tripsi.data.*
 import kotlinx.coroutines.launch
 
 class TripDbViewModel(application: Application) : AndroidViewModel(application) {
-    private val db = TripDatabase.get(application)
+    val db = TripDatabase.get(application)
 
     //Trip
     fun getAllTrips(): LiveData<List<Trip>> = db.tripDao().getAll()
@@ -105,5 +105,15 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
             db.locationDao().update(location)
         }
     }
+
+    // get one trip and all of its related data
+    fun getTripData(tripId: Int): LiveData<TripData> = db.tripDao().getTripData(tripId)
+
+    //get all trips and their related data
+    fun getAllTripsData(): LiveData<List<TripData>> = db.tripDao().getAllTripsData()
+
+    //get all trips and their data by trip status
+    fun getAllTripsDataByStatus(status: Int): LiveData<List<TripData>> =
+        db.tripDao().getAllTripDataByStatus(status)
 
 }
