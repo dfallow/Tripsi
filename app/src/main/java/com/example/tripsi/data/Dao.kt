@@ -57,7 +57,7 @@ interface ImageDao : BaseDao<Image> {
 
     //get image by id
     @Query("SELECT * FROM image WHERE image.imgId = :imageId")
-    fun getImageById(imageId: Int) : LiveData<Image>
+    fun getImageById(imageId: Int): LiveData<Image>
 
 
 }

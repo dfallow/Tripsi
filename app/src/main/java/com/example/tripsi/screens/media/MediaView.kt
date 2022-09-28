@@ -1,11 +1,6 @@
 package com.example.tripsi.screens.media
 
-import android.util.DisplayMetrics
-import android.util.Log
-import android.view.Window
-import android.view.WindowManager
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -21,7 +16,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -68,12 +62,13 @@ fun MediaView(model: TripDbViewModel, tripId: Int) {
                     ) {
                         Text("show on map")
                     }
-                    Button(onClick = { /*TODO*/ },
+                    Button(
+                        onClick = { /*TODO*/ },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0xFFCBEF43),
                             contentColor = Color(0xFF2D0320)
                         )
-                        ) {
+                    ) {
                         Text("create a video")
                     }
                 }
@@ -152,10 +147,11 @@ fun DisplayStats(distance: Double, duration: Double, speed: Double) {
 //TODO: replace with component from map view
 @Composable
 fun StatsItem(label: String, statsValue: String, unit: String) {
-    Column(modifier = Modifier
-        .size(97.dp, 80.dp)
-        .clip(RoundedCornerShape(15.dp))
-        .background(Color(0xFF3C493F))
+    Column(
+        modifier = Modifier
+            .size(97.dp, 80.dp)
+            .clip(RoundedCornerShape(15.dp))
+            .background(Color(0xFF3C493F))
     ) {
         Row(modifier = Modifier.padding(5.dp, 5.dp, 0.dp, 0.dp)) {
             when (label) {
@@ -184,9 +180,20 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
                     )
                 }
             }
-            Text(label, color = Color(0xFFCBEF43), fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 5.dp))
+            Text(
+                label,
+                color = Color(0xFFCBEF43),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 5.dp)
+            )
         }
-        Text(statsValue, color = Color(0xFFFFFFFF), fontSize = 25.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 7.dp))
+        Text(
+            statsValue,
+            color = Color(0xFFFFFFFF),
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 7.dp)
+        )
         Text(unit, color = Color(0xFFFFFFFF), modifier = Modifier.padding(horizontal = 7.dp))
     }
 }
