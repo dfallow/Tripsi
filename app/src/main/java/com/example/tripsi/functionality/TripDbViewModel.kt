@@ -51,6 +51,8 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     //Image
     fun getTripImages(tripId: Int): LiveData<List<Image>> = db.imageDao().getTripImages(tripId)
 
+    fun getImageById(imageId: Int): LiveData<Image> = db.imageDao().getImageById(imageId)
+
     fun addImage(image: Image) {
         viewModelScope.launch {
             db.imageDao().insert(image)
@@ -65,6 +67,8 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
 
     //Note
     fun getTripNotes(tripId: Int): LiveData<List<Note>> = db.noteDao().getTripNotes(tripId)
+
+    fun getNoteById(noteId: Int): LiveData<Note> = db.noteDao().getNoteById(noteId)
 
     fun addNote(note: Note) {
         viewModelScope.launch {
