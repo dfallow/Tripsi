@@ -19,6 +19,8 @@ val viewModel = CurrentTripViewModel()
 @Composable
 fun CurrentTripView(location: Location, context: Context, application: Application) {
 
+    location.startUpdatingLocation()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

@@ -89,7 +89,7 @@ fun ShowCurrentTripMap(location: Location, context: Context) {
         for (moment in momentLocations) {
             currentTripMap.overlays.add(moment)
         }
-        currentTripMap.invalidate()
+        //currentTripMap.invalidate()
     }
 }
 

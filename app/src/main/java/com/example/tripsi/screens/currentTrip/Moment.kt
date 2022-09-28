@@ -32,7 +32,7 @@ fun PopupMoment(imageId: Int) {
 
             Card(
                 Modifier
-                    .fillMaxWidth(0.6f)
+                    .fillMaxWidth(0.65f)
                     .fillMaxHeight(0.55f),
                 shape = RoundedCornerShape(10)
             ) {
