@@ -16,7 +16,6 @@ import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.material.icons.rounded.EditNote
 import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material.icons.rounded.Image
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -107,4 +106,5 @@ fun TravelHistoryList(model: TripDbViewModel) {
             }
         }
     }
+}
 }

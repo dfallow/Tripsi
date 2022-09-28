@@ -26,7 +26,7 @@ val viewModel = CurrentTripViewModel()
 // }
 
 @Composable
-fun CurrentTripView(location: Location, context: Context, application: Application) {
+fun CurrentTripView(location: Location, context: Context, navController: NavController) {
 
     location.startUpdatingLocation()
 
