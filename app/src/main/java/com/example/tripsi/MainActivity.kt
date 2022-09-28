@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    com.example.tripsi.utils.Navigation()
+                    Navigation(context = this, location)
 
                     //Text("Hello there")
                     //CurrentTripView(location, this, application)
