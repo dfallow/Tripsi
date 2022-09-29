@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.tripsi"
-        minSdk 29
+        minSdk 28
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -62,18 +62,10 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.5.1'
     implementation "androidx.compose.ui:ui:$compose_ui_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_ui_version"
-
     implementation 'androidx.compose.material:material:1.2.1'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
-
-    // older version on from master branch
-    //implementation 'androidx.compose.material:material:1.1.1'
     implementation 'org.osmdroid:osmdroid-android:6.1.14'
     implementation 'androidx.preference:preference-ktx:1.2.0'
-    
-    // Older version from master
-    //implementation 'com.google.android.gms:play-services-maps:18.0.2'
-
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -84,7 +76,6 @@ dependencies {
     // Navigation
     def nav_version = "2.5.2"
     implementation("androidx.navigation:navigation-compose:$nav_version")
-
     // Room db
     def roomVersion = "2.4.0"
     implementation "androidx.room:room-runtime:$roomVersion"
@@ -93,7 +84,6 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
     // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$roomVersion"
-
     def lifecycle_version = "2.5.1"
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -102,9 +92,6 @@ dependencies {
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.compose.runtime:runtime-livedata:$compose_ui_version"
-    //def nav_version = "2.5.1"
-    //implementation("androidx.navigation:navigation-compose:$nav_version")
-
     //material design icons
     implementation "androidx.compose.material:material-icons-extended:$compose_ui_version"
 
