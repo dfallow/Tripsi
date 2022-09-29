@@ -1,8 +1,5 @@
 package com.example.tripsi.screens.media
 
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -11,8 +8,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.tripsi.functionality.TripDbViewModel
 
 @Composable
@@ -210,8 +210,8 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel) {
             val img = item.image?.let { tripDbViewModel.getImageById(it).observeAsState() }
             val txt = item.note?.let { tripDbViewModel.getNoteById(it).observeAsState() }
 
-            //if there is at least one image or note, display the card
-            if (img != null || txt != null) {
+            //if there is at least one image, display the card
+            if (img != null) {
                 Column(
                     modifier = Modifier
                         .padding(15.dp)
@@ -221,9 +221,7 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
-                        if (img != null) {
-                            TripPhotoItem(img.value?.filename.toString())
-                        }
+                        TripPhotoItem(img.value?.filename.toString())
                         Spacer(
                             modifier = Modifier
                                 .size(10.dp)
@@ -234,8 +232,18 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel) {
                         }
                     }
                 }
-            } else {
-                Text("No photos or notes to display", fontSize = 18.sp)
+                // if there's only a note but no image, display just the note
+            } else if (txt != null) {
+                Column(
+                    Modifier
+                        .padding(15.dp)
+                        .size(270.dp, 370.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    TripNoteItem(txt.value?.noteText.toString())
+
+                }
             }
         }
     }
