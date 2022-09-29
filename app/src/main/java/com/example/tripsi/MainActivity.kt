@@ -14,12 +14,19 @@ import com.example.tripsi.utils.Navigation
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
+import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
 import org.osmdroid.config.Configuration
 
 class MainActivity : ComponentActivity() {
+    companion object {
+        private lateinit var model: TripDbViewModel
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //initialize database view model
+        model = TripDbViewModel(application)
 
         if ((Build.VERSION.SDK_INT >= 23 &&
                     ContextCompat.checkSelfPermission(this,
@@ -45,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Navigation(context = this, location)
+                    Navigation(context = this, location, model)
 
                     //Text("Hello there")
                     //CurrentTripView(location, this, application)

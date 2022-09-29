@@ -27,7 +27,7 @@ import com.example.tripsi.functionality.TripDbViewModel
 
 @Composable
 fun MediaView(model: TripDbViewModel, tripId: Int, navController: NavController) {
-    val tripData = model.db.tripDao().getTripData(tripId).observeAsState()
+    val tripData = model.getTripData(tripId).observeAsState()
 
     Column(
         modifier = Modifier

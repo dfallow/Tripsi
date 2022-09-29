@@ -10,6 +10,10 @@ import kotlinx.coroutines.launch
 class TripDbViewModel(application: Application) : AndroidViewModel(application) {
     val db = TripDatabase.get(application)
 
+    //this is currently used to pass tripId between Travel History View and Media View
+    //TODO find a better way to pass this id between the views
+    var tripId = 0
+
     //Trip
     fun getAllTrips(): LiveData<List<Trip>> = db.tripDao().getAll()
 
