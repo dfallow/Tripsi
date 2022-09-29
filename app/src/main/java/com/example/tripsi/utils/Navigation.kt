@@ -19,7 +19,7 @@ fun Navigation(context: Context, location: Location, tripDbViewModel: TripDbView
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
         composable(route = Screen.HomeScreen.route) {
-            HomeView(navController = navController)
+            HomeView(navController = navController, tripDbViewModel = tripDbViewModel)
         }
         composable(route = Screen.TravelsScreen.route) {
             TravelHistoryView(navController = navController, tripDbViewModel = tripDbViewModel)

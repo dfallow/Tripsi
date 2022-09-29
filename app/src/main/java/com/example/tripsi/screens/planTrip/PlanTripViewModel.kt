@@ -22,14 +22,18 @@ class PlanTripViewModel() : ViewModel() {
     var isMapEditable = mutableStateOf(true)
     private var timer: CountDownTimer? = null
 
+    //information to be saved to database
     var tripDate: String? = null
     var tripName: String? = null
     var tripDestination: String? = null
     var tripMethod: Int? = null
 
+    //try saving data to db
     fun saveTrip(tripDbViewModel: TripDbViewModel, context: Context): Boolean {
         var success: Boolean
-        if (tripDate == null && tripName == null && tripDestination == null && tripMethod == null) {
+
+        //if the user hasn't fill out all the fields, show Toast
+        if (tripDate == null || tripName == null || tripDestination == null || tripMethod == null) {
             Toast.makeText(context, "Please fill out all the fields", Toast.LENGTH_LONG).show()
             success = false
         } else {
