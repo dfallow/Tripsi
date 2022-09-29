@@ -21,6 +21,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 // TODO Important to not orientation changes clear screen
 
@@ -40,6 +45,12 @@ fun AddMoment() {
 
 @Composable
 fun MomentDetails() {
+    val dateFormat = SimpleDateFormat("dd.MM.yyyy")
+    val timeFormat = SimpleDateFormat("HH:mm")
+    val now = Date()
+    Log.i("msg", dateFormat.format(now) )
+    Log.i("msg", timeFormat.format(now) )
+
     Card(
         // Moment Information
         backgroundColor = MaterialTheme.colors.onBackground,
@@ -73,8 +84,8 @@ fun MomentDetails() {
                 modifier = Modifier
                     .fillMaxHeight()
             ) {
-                Text("Some Value", color = colors.onSecondary)
-                Text("Some Value", color = colors.onSecondary)
+                Text(dateFormat.format(now), color = colors.onSecondary)
+                Text(timeFormat.format(now), color = colors.onSecondary)
                 Text("Some Value", color = colors.onSecondary)
             }
         }

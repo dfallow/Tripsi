@@ -14,6 +14,7 @@ import com.example.tripsi.utils.Navigation
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
+import com.example.tripsi.screens.currentTrip.AddMoment
 import com.example.tripsi.utils.Location
 import org.osmdroid.config.Configuration
 
@@ -45,11 +46,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Navigation(context = this, location)
+                    //Navigation(context = this, location)
 
                     //Text("Hello there")
                     //CurrentTripView(location, this, application)
-                    //AddMoment()
+                    AddMoment()
                     //PlanTrip()
                 }
             }
