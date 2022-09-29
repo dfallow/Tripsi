@@ -1,2 +1,112 @@
 package com.example.tripsi.screens.currentTrip
 
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import android.app.Application
+import android.content.Context
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import com.example.tripsi.R
+import com.example.tripsi.utils.Location
+
+val viewModel = CurrentTripViewModel()
+
+// @Composable
+// fun CurrentTripView(navController: NavController) {
+//    Text(text = "This is CurrentTripView")
+// }
+
+@Composable
+fun CurrentTripView(location: Location, context: Context, navController: NavController) {
+
+    location.startUpdatingLocation()
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.7F)) {
+            ShowCurrentTripMap(location, context)
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                TripInfoOverlay(type = "Distance", measurement = "79km")
+                TripInfoOverlay(type = "Speed", measurement = "40km/h")
+                TripInfoOverlay(type = "Time", measurement = "2-3hours")
+            }
+
+        }
+
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+            horizontalArrangement = Arrangement.SpaceAround) {
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = viewModel.modifier,
+                shape = viewModel.shape
+            ) {
+                Text("Save the Moment", textAlign = TextAlign.Center)
+            }
+
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = viewModel.modifier,
+                shape = viewModel.shape
+            ) {
+                Text("Connect a Friend", textAlign = TextAlign.Center)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+        Button(
+            onClick = { /*TODO
+                          This function should be when the user starts a trip
+                        */
+                      },
+            modifier = viewModel.modifier,
+            shape = viewModel.shape,
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+            ) {
+            Text("End Trip", textAlign = TextAlign.Center)
+        }
+    }
+
+    if (viewModel.showMoment) {
+        Popup() {
+            Surface(
+                color = Color.Black.copy(alpha = 0.6f),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxHeight()
+
+                ) {
+                    PopupMoment(R.drawable.location_svgrepo_com)
+                }
+            }
+
+
+        }
+    }
+
+}

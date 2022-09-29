@@ -22,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tripsi.R
 import java.util.*
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 
 @Composable
 fun PlanTrip() {
@@ -285,3 +288,8 @@ fun TripType() {
         }
     }
 }
+
+//@Composable
+//fun PlanTripView(navController: NavController) {
+//    Text(text = "This is PlanTripView")
+//}
