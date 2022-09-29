@@ -15,16 +15,16 @@ class PlanTripViewModel : ViewModel()  {
     val location = MutableStateFlow(getInitialLocation())
     val addressText = mutableStateOf("")
     var isMapEditable = mutableStateOf(true)
-    var timer: CountDownTimer? = null
+    private var timer: CountDownTimer? = null
 
-    fun getInitialLocation() : Location{
+    private fun getInitialLocation() : Location{
         val initialLocation = Location("")
-        initialLocation.latitude = 51.506874
-        initialLocation.longitude = -0.139800
+        initialLocation.latitude = 60.1699
+        initialLocation.longitude = 24.9384
         return initialLocation
     }
 
-    fun updateLocation(latitude: Double, longitude: Double){
+/*    fun updateLocation(latitude: Double, longitude: Double){
         if(latitude != location.value.latitude) {
             val location = Location("")
             location.latitude = latitude
@@ -33,9 +33,9 @@ class PlanTripViewModel : ViewModel()  {
         }
     }
 
-    fun setLocation(loc: Location) {
+    private fun setLocation(loc: Location) {
         location.value = loc
-    }
+    }*/
 
     fun getAddressFromLocation(context: Context): String {
         val geocoder = Geocoder(context, Locale.getDefault())
@@ -74,10 +74,10 @@ class PlanTripViewModel : ViewModel()  {
         val addresses: List<Address>? = geocoder.getFromLocationName(strAddress, 1)
 
         if (addresses!!.isNotEmpty()) {
-            address = addresses?.get(0)
-            var loc = Location("")
-            loc.latitude = address.getLatitude()
-            loc.longitude = address.getLongitude()
+            address = addresses[0]
+            val loc = Location("")
+            loc.latitude = address.latitude
+            loc.longitude = address.longitude
             return loc
         }
         return location.value
