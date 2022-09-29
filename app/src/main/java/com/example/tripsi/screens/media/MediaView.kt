@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.sp
 import com.example.tripsi.functionality.TripDbViewModel
 
 @Composable
-fun MediaView(model: TripDbViewModel, tripId: Int, navController: NavController) {
-    val tripData = model.getTripData(tripId).observeAsState()
+fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavController) {
+    val tripData = tripDbViewModel.getTripData(tripId).observeAsState()
 
     Column(
         modifier = Modifier
@@ -47,7 +47,7 @@ fun MediaView(model: TripDbViewModel, tripId: Int, navController: NavController)
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxHeight()
             ) {
-                DisplayTripMediaList(it.trip!!.tripId, model)
+                DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel)
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
@@ -200,15 +200,15 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
 }
 
 @Composable
-fun DisplayTripMediaList(tripId: Int, model: TripDbViewModel) {
+fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel) {
     //this retrieves all coordinates saved for the trip
-    val tripMedia = model.getTripLocationData(tripId).observeAsState(listOf())
+    val tripMedia = tripDbViewModel.getTripLocationData(tripId).observeAsState(listOf())
 
     LazyRow(Modifier.padding(horizontal = 10.dp)) {
         itemsIndexed(tripMedia.value) { _, item ->
             //if imageId/noteId is associated with the coordinates, retrieve all Image and Note data by their ids
-            val img = item.image?.let { model.getImageById(it).observeAsState() }
-            val txt = item.note?.let { model.getNoteById(it).observeAsState() }
+            val img = item.image?.let { tripDbViewModel.getImageById(it).observeAsState() }
+            val txt = item.note?.let { tripDbViewModel.getNoteById(it).observeAsState() }
 
             //if there is at least one image or note, display the card
             if (img != null || txt != null) {

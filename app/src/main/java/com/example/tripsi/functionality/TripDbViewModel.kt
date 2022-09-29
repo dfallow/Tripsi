@@ -8,7 +8,7 @@ import com.example.tripsi.data.*
 import kotlinx.coroutines.launch
 
 class TripDbViewModel(application: Application) : AndroidViewModel(application) {
-    val db = TripDatabase.get(application)
+    private val db = TripDatabase.get(application)
 
     //this is currently used to pass tripId between Travel History View and Media View
     //TODO find a better way to pass this id between the views
@@ -19,10 +19,12 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getTripsByStatus(status: Int): LiveData<List<Trip>> = db.tripDao().getTripsByStatus(status)
 
-    fun addTrip(trip: Trip) {
+    fun addTrip(trip: Trip) : Int? {
+        var tripId: Int? = null
         viewModelScope.launch {
-            db.tripDao().insert(trip)
+            tripId = (db.tripDao().insert(trip)).toInt()
         }
+        return tripId
     }
 
     fun deleteTrip(trip: Trip) {

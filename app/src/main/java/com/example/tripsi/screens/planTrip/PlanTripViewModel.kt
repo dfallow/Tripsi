@@ -5,19 +5,61 @@ import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.os.CountDownTimer
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.tripsi.data.Trip
+import com.example.tripsi.data.TripStatus
+import com.example.tripsi.functionality.TripDbViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.*
 
-class PlanTripViewModel : ViewModel()  {
+class PlanTripViewModel() : ViewModel() {
 
     val location = MutableStateFlow(getInitialLocation())
     val addressText = mutableStateOf("")
     var isMapEditable = mutableStateOf(true)
     private var timer: CountDownTimer? = null
 
-    private fun getInitialLocation() : Location{
+    var tripDate: String? = null
+    var tripName: String? = null
+    var tripDestination: String? = null
+    var tripMethod: Int? = null
+
+    fun saveTrip(tripDbViewModel: TripDbViewModel, context: Context): Boolean {
+        var success: Boolean
+        if (tripDate == null && tripName == null && tripDestination == null && tripMethod == null) {
+            Toast.makeText(context, "Please fill out all the fields", Toast.LENGTH_LONG).show()
+            success = false
+        } else {
+            try {
+                tripDbViewModel.addTrip(
+                    Trip(
+                        0,
+                        tripName!!,
+                        tripDestination!!,
+                        tripMethod!!,
+                        TripStatus.UPCOMING.status,
+                        tripDate!!
+                    )
+                )
+                Toast.makeText(context, "Trip planned successfully!", Toast.LENGTH_LONG).show()
+                success = true
+            } catch (e: Exception) {
+                Log.e("DATABASE", e.localizedMessage)
+                Toast.makeText(
+                    context,
+                    "Something went wrong. Please try again.",
+                    Toast.LENGTH_LONG
+                ).show()
+                success = false
+            }
+        }
+        return success
+    }
+
+    private fun getInitialLocation(): Location {
         val initialLocation = Location("")
         initialLocation.latitude = 60.1699
         initialLocation.longitude = 24.9384
@@ -43,8 +85,9 @@ class PlanTripViewModel : ViewModel()  {
         val addressText: String
 
         try {
-            addresses = geocoder.getFromLocation(location.value.latitude, location.value.longitude, 1)
-        }catch(ex: Exception){
+            addresses =
+                geocoder.getFromLocation(location.value.latitude, location.value.longitude, 1)
+        } catch (ex: Exception) {
             ex.printStackTrace()
         }
 
@@ -55,12 +98,12 @@ class PlanTripViewModel : ViewModel()  {
         return addressText
     }
 
-    fun onTextChanged(context: Context, text: String){
-        if(text == "")
+    fun onTextChanged(context: Context, text: String) {
+        if (text == "")
             return
         timer?.cancel()
         timer = object : CountDownTimer(1000, 1500) {
-            override fun onTick(millisUntilFinished: Long) { }
+            override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
                 location.value = getLocationFromAddress(context, text)
             }

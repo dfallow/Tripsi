@@ -15,24 +15,24 @@ import com.example.tripsi.screens.planTrip.PlanTripView
 import com.example.tripsi.screens.travelHistory.TravelHistoryView
 
 @Composable
-fun Navigation(context: Context, location: Location, model: TripDbViewModel) {
+fun Navigation(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
         composable(route = Screen.HomeScreen.route) {
             HomeView(navController = navController)
         }
         composable(route = Screen.TravelsScreen.route) {
-            TravelHistoryView(navController = navController, model = model)
+            TravelHistoryView(navController = navController, tripDbViewModel = tripDbViewModel)
         }
         composable(route = Screen.PlanScreen.route) {
-            PlanTripView(navController = navController)
+            PlanTripView(navController = navController, tripDbViewModel = tripDbViewModel)
         }
         composable(route = Screen.CurrentScreen.route) {
             CurrentTripView(navController = navController, context = context, location = location
             )
         }
         composable(route = Screen.MediaScreen.route) {
-            MediaView(navController = navController, model = model, tripId = model.tripId)
+            MediaView(navController = navController, tripDbViewModel = tripDbViewModel, tripId = tripDbViewModel.tripId)
         }
 
     }

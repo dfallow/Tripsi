@@ -32,8 +32,8 @@ import com.example.tripsi.utils.Screen
 
 
 @Composable
-fun TravelHistoryView(model: TripDbViewModel, navController: NavController) {
-    val pastTrips = model.getAllTripsDataByStatus(TripStatus.PAST.status).observeAsState(listOf())
+fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavController) {
+    val pastTrips = tripDbViewModel.getAllTripsDataByStatus(TripStatus.PAST.status).observeAsState(listOf())
 
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
@@ -55,7 +55,7 @@ fun TravelHistoryView(model: TripDbViewModel, navController: NavController) {
                         trip = it,
                         imageCount = trip.image?.size ?: 0,
                         noteCount = trip.note?.size ?: 0,
-                        model = model,
+                        tripDbViewModel = tripDbViewModel,
                         navController = navController
                     )
                 }
@@ -69,7 +69,7 @@ fun TravelHistoryItem(
     trip: Trip,
     imageCount: Int,
     noteCount: Int,
-    model: TripDbViewModel,
+    tripDbViewModel: TripDbViewModel,
     navController: NavController
 ) {
     Row(
@@ -79,7 +79,7 @@ fun TravelHistoryItem(
             .padding(horizontal = 10.dp)
             .fillMaxWidth()
             .clickable {
-                model.tripId = trip.tripId
+                tripDbViewModel.tripId = trip.tripId
                 navController.navigate(Screen.MediaScreen.route) },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -110,7 +110,7 @@ fun TravelHistoryItem(
 
             }
             IconButton(onClick = {
-                model.tripId = trip.tripId
+                tripDbViewModel.tripId = trip.tripId
                 navController.navigate(route = Screen.MediaScreen.route)
             }) {
                 Icon(Icons.Rounded.ChevronRight, "arrow right", tint = Color(0xFFCBEF43))
