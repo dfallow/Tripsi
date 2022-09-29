@@ -9,6 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import com.example.tripsi.screens.planTrip.PlanTrip
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.navigation.Navigation
@@ -58,6 +60,7 @@ class MainActivity : ComponentActivity() {
                     //Text("Hello there")
                     //CurrentTripView(location, this, application)
                     //AddMoment()
+                    //PlanTrip()
                 }
             }
         }
