@@ -20,15 +20,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.tripsi.R
-import java.util.*
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
+import com.example.tripsi.R
+import com.example.tripsi.data.TravelMethod
+import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.utils.Screen
+import java.util.*
 
 @Composable
-fun PlanTripView(navController: NavController) {
-
+fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel) {
+    val planTripViewModel = PlanTripViewModel()
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -42,16 +44,19 @@ fun PlanTripView(navController: NavController) {
             Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center
         )
-        DatePicker()
-        TextInput()
-        MapAddressPickerView(viewModel = PlanTripViewModel())
-        TripType()
+        DatePicker(planTripViewModel)
+        TextInput(planTripViewModel)
+        MapAddressPickerView(planTripViewModel)
+        TripType(planTripViewModel)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             Button(
-                onClick = { /*TODO Save in DB Room*/ },
+                onClick = {
+                    val saved = planTripViewModel.saveTrip(tripDbViewModel, context)
+                    if (saved) navController.navigate(Screen.HomeScreen.route)
+                },
                 colors = ButtonDefaults.buttonColors(Color(0xFFCBEF43))
             ) {
                 Text(
@@ -74,11 +79,14 @@ fun PlanTripView(navController: NavController) {
 }
 
 @Composable
-fun TextInput() {
+fun TextInput(planTripViewModel: PlanTripViewModel) {
     var text by remember { mutableStateOf("") }
     OutlinedTextField(
         value = text,
-        onValueChange = { text = it },
+        onValueChange = {
+            planTripViewModel.tripName = it
+            text = it
+        },
         label = { Text("Name of your trip", color = Color(0xFF2D0320)) },
         modifier = Modifier
             .fillMaxWidth(),
@@ -91,18 +99,18 @@ fun TextInput() {
 }
 
 @Composable
-fun MapAddressPickerView(viewModel: PlanTripViewModel) {
+fun MapAddressPickerView(planTripViewModel: PlanTripViewModel) {
     Surface {
-        val currentLocation = viewModel.location.collectAsState()
-        var text by remember { viewModel.addressText }
+        val currentLocation = planTripViewModel.location.collectAsState()
+        var text by remember { planTripViewModel.addressText }
         val context = LocalContext.current
 
 
         Row {
 
             currentLocation.value.let {
-                if (viewModel.isMapEditable.value) {
-                    text = viewModel.getAddressFromLocation(context)
+                if (planTripViewModel.isMapEditable.value) {
+                    text = planTripViewModel.getAddressFromLocation(context)
                 }
             }
         }
@@ -111,9 +119,10 @@ fun MapAddressPickerView(viewModel: PlanTripViewModel) {
                 OutlinedTextField(
                     value = text,
                     onValueChange = {
+                        planTripViewModel.tripDestination = it
                         text = it
-                        if (!viewModel.isMapEditable.value)
-                            viewModel.onTextChanged(context, text)
+                        if (!planTripViewModel.isMapEditable.value)
+                            planTripViewModel.onTextChanged(context, text)
                     },
                     trailingIcon = {
                         Icon(
@@ -126,7 +135,7 @@ fun MapAddressPickerView(viewModel: PlanTripViewModel) {
 
                     modifier = Modifier
                         .fillMaxWidth(),
-                    enabled = !viewModel.isMapEditable.value,
+                    enabled = !planTripViewModel.isMapEditable.value,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         focusedBorderColor = Color(0xFFCBEF43),
                         unfocusedBorderColor = Color(0xFF3C493F)
@@ -141,12 +150,13 @@ fun MapAddressPickerView(viewModel: PlanTripViewModel) {
             ) {
                 Button(
                     onClick = {
-                        viewModel.isMapEditable.value = !viewModel.isMapEditable.value
+                        planTripViewModel.isMapEditable.value =
+                            !planTripViewModel.isMapEditable.value
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFFCBEF43))
                 ) {
                     Text(
-                        text = if (viewModel.isMapEditable.value) "Insert" else "Save",
+                        text = if (planTripViewModel.isMapEditable.value) "Insert" else "Save",
                         fontWeight = FontWeight.ExtraBold,
                         color = Color(0xFF2D0320)
                     )
@@ -160,7 +170,7 @@ fun MapAddressPickerView(viewModel: PlanTripViewModel) {
 
 
 @Composable
-fun DatePicker() {
+fun DatePicker(planTripViewModel: PlanTripViewModel) {
 
     // Fetching the Local Context
     val mContext = LocalContext.current
@@ -191,6 +201,7 @@ fun DatePicker() {
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
             mDate.value = "$mDayOfMonth/${mMonth + 1}/$mYear"
+            planTripViewModel.tripDate = mDate.value
         }, mYear, mMonth, mDay
     )
 
@@ -236,12 +247,37 @@ fun DatePicker() {
 }
 
 @Composable
-fun TripType() {
+fun TripType(planTripViewModel: PlanTripViewModel) {
     val selectedValue = remember { mutableStateOf("") }
     val isSelectedItem: (String) -> Boolean = { selectedValue.value == it }
     val onChangeState: (String) -> Unit = { selectedValue.value = it }
 
-    val items = listOf("Car", "Bus", "Bike", "Walk", "Plane")
+    val items = listOf(
+        TravelMethod.CAR,
+        TravelMethod.BUS,
+        TravelMethod.BIKE,
+        TravelMethod.WALK,
+        TravelMethod.PLANE
+    )
+
+    when (selectedValue.value) {
+        TravelMethod.CAR.name -> {
+            planTripViewModel.tripMethod = TravelMethod.CAR.method
+        }
+        TravelMethod.BUS.name -> {
+            planTripViewModel.tripMethod = TravelMethod.BUS.method
+        }
+        TravelMethod.BIKE.name -> {
+            planTripViewModel.tripMethod = TravelMethod.BIKE.method
+        }
+        TravelMethod.WALK.name -> {
+            planTripViewModel.tripMethod = TravelMethod.WALK.method
+        }
+        TravelMethod.PLANE.name -> {
+            planTripViewModel.tripMethod = TravelMethod.PLANE.method
+        }
+    }
+
     Text(text = "Selected Type of trip: ${selectedValue.value.ifEmpty { "NONE" }}")
     Row(
         modifier = Modifier
@@ -253,33 +289,33 @@ fun TripType() {
     {
         items.forEach { item ->
 
-            IconToggleButton(checked = isSelectedItem(item),
-                onCheckedChange = { onChangeState(item) }
+            IconToggleButton(checked = isSelectedItem(item.name),
+                onCheckedChange = { onChangeState(item.name) }
             )
             {
                 when (item) {
-                    "Car" -> Icon(
-                        painter = painterResource(if (isSelectedItem.invoke(item)) R.drawable.unselected_car else R.drawable.car),
+                    TravelMethod.CAR -> Icon(
+                        painter = painterResource(if (isSelectedItem.invoke(item.name)) R.drawable.unselected_car else R.drawable.car),
                         contentDescription = "car",
                         tint = Color(0xFFCBEF43)
                     )
-                    "Bus" -> Icon(
-                        painter = painterResource(if (isSelectedItem(item)) R.drawable.unselected_bus else R.drawable.bus),
+                    TravelMethod.BUS -> Icon(
+                        painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_bus else R.drawable.bus),
                         contentDescription = "bus",
                         tint = Color(0xFFCBEF43)
                     )
-                    "Bike" -> Icon(
-                        painter = painterResource(if (isSelectedItem(item)) R.drawable.unselected_bike else R.drawable.bike),
+                    TravelMethod.BIKE -> Icon(
+                        painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_bike else R.drawable.bike),
                         contentDescription = "bike",
                         tint = Color(0xFFCBEF43)
                     )
-                    "Walk" -> Icon(
-                        painter = painterResource(if (isSelectedItem(item)) R.drawable.unselected_walk else R.drawable.walk),
+                    TravelMethod.WALK -> Icon(
+                        painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_walk else R.drawable.walk),
                         contentDescription = "walk",
                         tint = Color(0xFFCBEF43)
                     )
-                    "Plane" -> Icon(
-                        painter = painterResource(if (isSelectedItem(item)) R.drawable.unselected_plane else R.drawable.plane),
+                    TravelMethod.PLANE -> Icon(
+                        painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_plane else R.drawable.plane),
                         contentDescription = "plane",
                         tint = Color(0xFFCBEF43)
                     )
