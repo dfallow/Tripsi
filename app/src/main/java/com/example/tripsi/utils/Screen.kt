@@ -6,4 +6,5 @@ sealed class Screen(val route: String) {
     object CurrentScreen : Screen("current")
     object TravelsScreen : Screen("travel")
     object MediaScreen : Screen("media")
+    object MomentScreen : Screen("moment")
 }

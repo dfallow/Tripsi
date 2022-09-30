@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.screens.currentTrip.AddMoment
 import com.example.tripsi.screens.currentTrip.CurrentTripView
 import com.example.tripsi.screens.home.HomeView
 import com.example.tripsi.screens.media.MediaView
@@ -31,8 +32,11 @@ fun Navigation(context: Context, location: Location, tripDbViewModel: TripDbView
             CurrentTripView(navController = navController, context = context, location = location
             )
         }
+        composable(route = Screen.MomentScreen.route) {
+            AddMoment(navController = navController, context = context)
+        }
         composable(route = Screen.MediaScreen.route) {
-            MediaView(navController = navController, tripDbViewModel = tripDbViewModel, tripId = tripDbViewModel.tripId)
+            MediaView(navController = navController, tripDbViewModel = tripDbViewModel, tripId = tripDbViewModel.tripId, context = context)
         }
 
     }

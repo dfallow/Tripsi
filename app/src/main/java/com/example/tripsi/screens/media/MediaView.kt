@@ -1,5 +1,7 @@
 package com.example.tripsi.screens.media
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -26,7 +28,7 @@ import androidx.navigation.NavController
 import com.example.tripsi.functionality.TripDbViewModel
 
 @Composable
-fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavController) {
+fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavController, context: Context) {
     val tripData = tripDbViewModel.getTripData(tripId).observeAsState()
 
     Column(
@@ -55,7 +57,10 @@ fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavC
                         .padding(bottom = 30.dp)
                 ) {
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                                    /*TODO*/
+                                    Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                                  },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0xFFCBEF43),
                             contentColor = Color(0xFF2D0320)
@@ -64,7 +69,10 @@ fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavC
                         Text("show on map")
                     }
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                                    /*TODO*/
+                                    Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                                  },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0xFFCBEF43),
                             contentColor = Color(0xFF2D0320)
