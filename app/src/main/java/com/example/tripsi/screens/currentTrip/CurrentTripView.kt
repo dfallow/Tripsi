@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -17,13 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import com.example.tripsi.R
 import com.example.tripsi.utils.Location
+import com.example.tripsi.utils.Screen
 
 val viewModel = CurrentTripViewModel()
-
-// @Composable
-// fun CurrentTripView(navController: NavController) {
-//    Text(text = "This is CurrentTripView")
-// }
 
 @Composable
 fun CurrentTripView(location: Location, context: Context, navController: NavController) {
@@ -58,7 +55,9 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
             .padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceAround) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                          navController.navigate(Screen.MomentScreen.route)
+                },
                 modifier = viewModel.modifier,
                 shape = viewModel.shape
             ) {
@@ -66,7 +65,10 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
             }
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                            /*TODO*/
+                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                          },
                 modifier = viewModel.modifier,
                 shape = viewModel.shape
             ) {
@@ -79,6 +81,7 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
             onClick = { /*TODO
                           This function should be when the user starts a trip
                         */
+                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
                       },
             modifier = viewModel.modifier,
             shape = viewModel.shape,
