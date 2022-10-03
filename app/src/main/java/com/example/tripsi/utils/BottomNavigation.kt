@@ -1,5 +1,6 @@
 package com.example.tripsi.utils
 
+import android.content.Context
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -18,16 +19,18 @@ fun BottomNavigation() {
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        BottomNavGraph(navController = navController)
+        //BottomNavGraph(navController = navController)
+        NavigationGraph(navController = navController)
+
     }
 }
 
 @Composable
 fun BottomBar(navController: NavHostController) {
     val screens = listOf(
-        BottomBarScreen.Trips,
-        BottomBarScreen.Home,
-        BottomBarScreen.Map
+        Screen.TravelsScreen,
+        Screen.HomeScreen,
+        Screen.CurrentScreen
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -48,7 +51,7 @@ fun BottomBar(navController: NavHostController) {
 
 @Composable
 fun RowScope.addItem(
-    screen: BottomBarScreen,
+    screen: Screen,
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {
@@ -57,7 +60,7 @@ fun RowScope.addItem(
             Text(text = screen.title)
         },
         icon = {
-            Icon(imageVector = screen.icon, contentDescription = "Nav icon")
+            screen.icon?.let { Icon(imageVector = it, contentDescription = "Nav icon") }
         },
         selected = currentDestination?.hierarchy?.any {
             it.route == screen.route

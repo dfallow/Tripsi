@@ -11,13 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.navigation.NavController
 import androidx.navigation.navArgument
-import com.example.tripsi.utils.BottomBarScreen
-import com.example.tripsi.utils.BottomNavGraph
-import com.example.tripsi.utils.BottomNavigation
-import com.example.tripsi.utils.Navigation
+import com.example.tripsi.utils.*
 
 @Composable
-fun HomeView()
+fun HomeView(navController: NavController)
 {
     Column(
         modifier = androidx.compose.ui.Modifier.fillMaxSize(),
@@ -26,11 +23,19 @@ fun HomeView()
     ) {
         Text(text = "This is HomeView")
         Button(onClick = {
+            navController.navigate(Screen.TravelsScreen.route)
         }) {
             Text(text = "trip history")
         }
-        Button(onClick = { }) {
+        Button(onClick = {
+            navController.navigate(Screen.PlanScreen.route)
+        }) {
             Text(text = "plan a trip")
+        }
+        Button(onClick = {
+            navController.navigate(Screen.MediaScreen.route)
+        }) {
+            Text(text = "Start a trip")
         }
     }
 }

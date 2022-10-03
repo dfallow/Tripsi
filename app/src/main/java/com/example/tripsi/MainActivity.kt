@@ -6,15 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
-import androidx.navigation.compose.rememberNavController
 import com.example.tripsi.ui.theme.TripsiTheme
-import com.example.tripsi.utils.Navigation
+import com.example.tripsi.utils.BottomNavigation
 
 class MainActivity : ComponentActivity() {
 
@@ -27,7 +21,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                   com.example.tripsi.utils.BottomNavigation()
+                    //Navigation(navController = NavHostController(this))
+                    BottomNavigation()
                 }
             }
         }

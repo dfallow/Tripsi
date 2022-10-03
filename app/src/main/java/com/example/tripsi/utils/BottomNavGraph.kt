@@ -1,9 +1,11 @@
 package com.example.tripsi.utils
 
+
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.tripsi.screens.currentTrip.CurrentTripView
 import com.example.tripsi.screens.home.HomeView
 import com.example.tripsi.screens.planTrip.PlanTripView
 import com.example.tripsi.screens.travelHistory.TravelHistoryView
@@ -12,16 +14,16 @@ import com.example.tripsi.screens.travelHistory.TravelHistoryView
 fun BottomNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Map.route
+        startDestination = Screen.HomeScreen.route
     ) {
-        composable(route = BottomBarScreen.Trips.route) {
-            TravelHistoryView()
+        composable(route = Screen.TravelsScreen.route) {
+            TravelHistoryView(navController)
         }
-        composable(route = BottomBarScreen.Home.route) {
-            HomeView()
+        composable(route = Screen.HomeScreen.route) {
+            HomeView(navController)
         }
-        composable(route = BottomBarScreen.Map.route) {
-            PlanTripView()
+        composable(route = Screen.CurrentScreen.route) {
+            CurrentTripView(navController)
         }
     }
 }
