@@ -49,21 +49,20 @@ fun AddMoment(location: Location, context: Context) {
 
 @Composable
 fun MomentDetails(location: Location, context: Context) {
+    // define format for date and time
     val dateFormat = SimpleDateFormat("dd.MM.yyyy")
     val timeFormat = SimpleDateFormat("HH:mm")
     val now = Date()
-    Log.i("msg", dateFormat.format(now))
-    Log.i("msg", timeFormat.format(now))
 
+    // update location to display city name
     location.startUpdatingLocation()
-    Log.d("msg", location.userLocation.longitude.toString())
-    Log.d("msg", location.userLocation.latitude.toString())
-
-
     val geoCoder = Geocoder(context, Locale.getDefault())
-    val address = geoCoder.getFromLocation(location.userLocation.latitude, location.userLocation.longitude, 1)
+    val address = geoCoder.getFromLocation(
+        location.userLocation.latitude,
+        location.userLocation.longitude,
+        1
+    )
     val cityName = address[0].locality
-
 
     Card(
         // Moment Information
