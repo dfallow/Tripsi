@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
 
                     //Text("Hello there")
                     //CurrentTripView(location, this, application)
-                    AddMoment()
+                    AddMoment(location, context = this)
                     //PlanTrip()
                 }
             }

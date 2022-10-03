@@ -1,6 +1,8 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.location.Geocoder
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,22 +23,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.example.tripsi.utils.Location
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.collections.List
 
 // TODO Important to not orientation changes clear screen
 
 @Composable
-fun AddMoment() {
+fun AddMoment(location: Location, context: Context) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
     ) {
-        MomentDetails()
+        MomentDetails(location = location, context = context)
         MomentComment()
         MomentPictures()
         SaveOrDiscard()
@@ -44,12 +48,22 @@ fun AddMoment() {
 }
 
 @Composable
-fun MomentDetails() {
+fun MomentDetails(location: Location, context: Context) {
     val dateFormat = SimpleDateFormat("dd.MM.yyyy")
     val timeFormat = SimpleDateFormat("HH:mm")
     val now = Date()
-    Log.i("msg", dateFormat.format(now) )
-    Log.i("msg", timeFormat.format(now) )
+    Log.i("msg", dateFormat.format(now))
+    Log.i("msg", timeFormat.format(now))
+
+    location.startUpdatingLocation()
+    Log.d("msg", location.userLocation.longitude.toString())
+    Log.d("msg", location.userLocation.latitude.toString())
+
+
+    val geoCoder = Geocoder(context, Locale.getDefault())
+    val address = geoCoder.getFromLocation(location.userLocation.latitude, location.userLocation.longitude, 1)
+    val cityName = address[0].locality
+
 
     Card(
         // Moment Information
@@ -86,7 +100,9 @@ fun MomentDetails() {
             ) {
                 Text(dateFormat.format(now), color = colors.onSecondary)
                 Text(timeFormat.format(now), color = colors.onSecondary)
-                Text("Some Value", color = colors.onSecondary)
+                Text(
+                    cityName, color = colors.onSecondary
+                )
             }
         }
     }
@@ -104,7 +120,7 @@ fun MomentComment(
         onValueChange = { comment = it },
         shape = RoundedCornerShape(10.dp),
         //textStyle = TextStyle(color = Color.Blue),
-        label = { Text("Describe the moment...")},
+        label = { Text("Describe the moment...") },
         colors = colors,
         modifier = Modifier
             .fillMaxWidth()
@@ -141,7 +157,7 @@ fun MomentPictures() {
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
         result.value = it
         Log.d("photo", "test")
-        photoThumbnails.add( it )
+        photoThumbnails.add(it)
         Log.d("photo", photoThumbnails.toString())
     }
 
@@ -149,9 +165,9 @@ fun MomentPictures() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        LazyRow (
+        LazyRow(
             modifier = Modifier.fillMaxHeight(0.35f)
-                ) {
+        ) {
             itemsIndexed(photoThumbnails) { _, item ->
                 if (item != null) {
                     Card(
@@ -195,17 +211,17 @@ fun MomentPictures() {
 @Composable
 fun SaveOrDiscard() {
     // Contains the buttons for saving or discarding the moment
-    Row (
+    Row(
         horizontalArrangement = Arrangement.SpaceAround,
-       verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .padding(10.dp)
-            ) {
+    ) {
         Button(
             onClick = {
-            /*TODO*/
+                /*TODO*/
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape
