@@ -27,9 +27,9 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel) {
     val homeViewModel = HomeViewModel()
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.globe))
-    val progress by animateLottieCompositionAsState(composition)
-
-                Column(
+    val progress by animateLottieCompositionAsState(composition = composition, iterations = LottieConstants.IterateForever)
+    
+    Column(
                         modifier = Modifier . fillMaxSize (),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
