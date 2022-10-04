@@ -10,15 +10,21 @@ import kotlinx.coroutines.launch
 class TripDbViewModel(application: Application) : AndroidViewModel(application) {
     private val db = TripDatabase.get(application)
 
+    //this is currently used to pass tripId between Travel History View and Media View
+    //TODO find a better way to pass this id between the views
+    var tripId = 0
+
     //Trip
     fun getAllTrips(): LiveData<List<Trip>> = db.tripDao().getAll()
 
     fun getTripsByStatus(status: Int): LiveData<List<Trip>> = db.tripDao().getTripsByStatus(status)
 
-    fun addTrip(trip: Trip) {
+    fun addTrip(trip: Trip) : Int? {
+        var tripId: Int? = null
         viewModelScope.launch {
-            db.tripDao().insert(trip)
+            tripId = (db.tripDao().insert(trip)).toInt()
         }
+        return tripId
     }
 
     fun deleteTrip(trip: Trip) {
@@ -51,6 +57,8 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     //Image
     fun getTripImages(tripId: Int): LiveData<List<Image>> = db.imageDao().getTripImages(tripId)
 
+    fun getImageById(imageId: Int): LiveData<Image> = db.imageDao().getImageById(imageId)
+
     fun addImage(image: Image) {
         viewModelScope.launch {
             db.imageDao().insert(image)
@@ -65,6 +73,8 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
 
     //Note
     fun getTripNotes(tripId: Int): LiveData<List<Note>> = db.noteDao().getTripNotes(tripId)
+
+    fun getNoteById(noteId: Int): LiveData<Note> = db.noteDao().getNoteById(noteId)
 
     fun addNote(note: Note) {
         viewModelScope.launch {
@@ -105,5 +115,15 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
             db.locationDao().update(location)
         }
     }
+
+    // get one trip and all of its related data
+    fun getTripData(tripId: Int): LiveData<TripData> = db.tripDao().getTripData(tripId)
+
+    //get all trips and their related data
+    fun getAllTripsData(): LiveData<List<TripData>> = db.tripDao().getAllTripsData()
+
+    //get all trips and their data by trip status
+    fun getAllTripsDataByStatus(status: Int): LiveData<List<TripData>> =
+        db.tripDao().getAllTripDataByStatus(status)
 
 }

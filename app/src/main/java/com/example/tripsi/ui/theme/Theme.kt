@@ -13,9 +13,22 @@ private val DarkColorPalette = darkColors(
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
+    // Generic Buttons
+    primary = genericBtnLight,
+    onPrimary = genericBtnTextLight,
+
+    // Cancel Buttons
+    secondary = cancelBtnLight,
+    onSecondary = cancelBtnTextLight,
+
     primaryVariant = Purple700,
+<<<<<<< HEAD
     secondary = darkGreen
+=======
+    onBackground = navBar,
+
+
+>>>>>>> master
 
     /* Other default colors to override
     background = Color.White,

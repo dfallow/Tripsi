@@ -1,5 +1,6 @@
 package com.example.tripsi.utils
 
+<<<<<<< HEAD
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
@@ -47,4 +48,13 @@ sealed class Screen(
         title = "Moment",
         icon = null
     )
+=======
+sealed class Screen(val route: String) {
+    object HomeScreen : Screen("home")
+    object PlanScreen : Screen("plan")
+    object CurrentScreen : Screen("current")
+    object TravelsScreen : Screen("travel")
+    object MediaScreen : Screen("media")
+    object MomentScreen : Screen("moment")
+>>>>>>> master
 }
