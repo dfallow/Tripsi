@@ -8,15 +8,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-<<<<<<< HEAD
+
 import androidx.compose.ui.Modifier
 import com.example.tripsi.ui.theme.TripsiTheme
 import com.example.tripsi.utils.BottomNavigation
-
-class MainActivity : ComponentActivity() {
-=======
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
@@ -31,7 +27,6 @@ class MainActivity : ComponentActivity() {
     companion object {
         private lateinit var tripDbViewModel: TripDbViewModel
     }
->>>>>>> master
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,30 +76,27 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-<<<<<<< HEAD
                     //Navigation(navController = NavHostController(this))
-                    BottomNavigation()
-=======
+
 
                     //for testing purposes
                     val trips = tripDbViewModel.getAllTrips().observeAsState()
                     //Text(trips.value.toString())
 
-                    Navigation(context = this, location, tripDbViewModel)
+                    BottomNavigation()
+                    //Navigation(context = this, location, tripDbViewModel)
 
 
                     //Text("Hello there")
                     //CurrentTripView(location, this, application)
                     //AddMoment(location, context = this)
                     //PlanTrip()
->>>>>>> master
                 }
             }
         }
     }
 }
-<<<<<<< HEAD
-=======
+
 
 //for testing only. This will be removed later
 fun addMockData(tripDbViewModel: TripDbViewModel) {
@@ -190,4 +182,3 @@ fun addMockData(tripDbViewModel: TripDbViewModel) {
     tripDbViewModel.addLocation(Location(0, 70.12, 70.19, "10/2/2022", null, null, 4))
     tripDbViewModel.addLocation(Location(0, 75.12, 75.19, "10/5/2022", 5, null, 5))
 }
->>>>>>> master
