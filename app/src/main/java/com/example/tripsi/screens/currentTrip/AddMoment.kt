@@ -2,6 +2,7 @@ package com.example.tripsi.screens.currentTrip
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.location.Geocoder
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -23,6 +24,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.example.tripsi.utils.Location
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.List
 import androidx.navigation.NavController
 import com.example.tripsi.utils.Screen
 
@@ -35,7 +43,7 @@ fun AddMoment(navController: NavController, context: Context) {
         modifier = Modifier
             .fillMaxSize()
     ) {
-        MomentDetails()
+        MomentDetails(location = location, context = context)
         MomentComment()
         MomentPictures()
         SaveOrDiscard(navController, context)
@@ -43,7 +51,22 @@ fun AddMoment(navController: NavController, context: Context) {
 }
 
 @Composable
-fun MomentDetails() {
+fun MomentDetails(location: Location, context: Context) {
+    // define format for date and time
+    val dateFormat = SimpleDateFormat("dd.MM.yyyy")
+    val timeFormat = SimpleDateFormat("HH:mm")
+    val now = Date()
+
+    // update location to display city name
+    location.startUpdatingLocation()
+    val geoCoder = Geocoder(context, Locale.getDefault())
+    val address = geoCoder.getFromLocation(
+        location.userLocation.latitude,
+        location.userLocation.longitude,
+        1
+    )
+    val cityName = address[0].locality
+
     Card(
         // Moment Information
         backgroundColor = MaterialTheme.colors.onBackground,
@@ -77,9 +100,11 @@ fun MomentDetails() {
                 modifier = Modifier
                     .fillMaxHeight()
             ) {
-                Text("Some Value", color = colors.onSecondary)
-                Text("Some Value", color = colors.onSecondary)
-                Text("Some Value", color = colors.onSecondary)
+                Text(dateFormat.format(now), color = colors.onSecondary)
+                Text(timeFormat.format(now), color = colors.onSecondary)
+                Text(
+                    cityName, color = colors.onSecondary
+                )
             }
         }
     }
@@ -97,7 +122,7 @@ fun MomentComment(
         onValueChange = { comment = it },
         shape = RoundedCornerShape(10.dp),
         //textStyle = TextStyle(color = Color.Blue),
-        label = { Text("Describe the moment...")},
+        label = { Text("Describe the moment...") },
         colors = colors,
         modifier = Modifier
             .fillMaxWidth()
@@ -134,7 +159,7 @@ fun MomentPictures() {
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
         result.value = it
         Log.d("photo", "test")
-        photoThumbnails.add( it )
+        photoThumbnails.add(it)
         Log.d("photo", photoThumbnails.toString())
     }
 
@@ -142,9 +167,9 @@ fun MomentPictures() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        LazyRow (
+        LazyRow(
             modifier = Modifier.fillMaxHeight(0.35f)
-                ) {
+        ) {
             itemsIndexed(photoThumbnails) { _, item ->
                 if (item != null) {
                     Card(
@@ -188,14 +213,14 @@ fun MomentPictures() {
 @Composable
 fun SaveOrDiscard(navController: NavController, context: Context) {
     // Contains the buttons for saving or discarding the moment
-    Row (
+    Row(
         horizontalArrangement = Arrangement.SpaceAround,
-       verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .padding(10.dp)
-            ) {
+    ) {
         Button(
             onClick = {
             /*TODO*/
