@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Lens
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +38,7 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
         modifier = Modifier
             .padding(10.dp)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceAround
+        verticalArrangement = Arrangement.SpaceEvenly
 
     ) {
         Text(
@@ -65,7 +67,7 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
                 )
             }
             Button(
-                onClick = { /*TODO Navigate Back to homeView*/ },
+                onClick = { navController.navigate(Screen.HomeScreen.route) },
                 colors = ButtonDefaults.buttonColors(Color(0xFF200217))
             ) {
                 Text(
@@ -115,7 +117,7 @@ fun MapAddressPickerView(planTripViewModel: PlanTripViewModel) {
             }
         }
         Column {
-            Row(modifier = Modifier.fillMaxWidth()) {
+            Row(modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp)) {
                 OutlinedTextField(
                     value = text,
                     onValueChange = {
@@ -126,9 +128,11 @@ fun MapAddressPickerView(planTripViewModel: PlanTripViewModel) {
                     },
                     trailingIcon = {
                         Icon(
-                            Icons.Default.Clear,
-                            contentDescription = "clear text",
-                            modifier = Modifier.clickable { text = "" })
+                            if (planTripViewModel.isMapEditable.value) {Icons.Default.Clear} else {Icons.Default.Search},
+                            contentDescription = "clear or search text",
+                            modifier = Modifier.clickable { text = ""
+                                planTripViewModel.isMapEditable.value =
+                                !planTripViewModel.isMapEditable.value })
 
                     },
                     label = { Text("What's your final destination", color = Color(0xFF2D0320)) },
@@ -143,26 +147,6 @@ fun MapAddressPickerView(planTripViewModel: PlanTripViewModel) {
                 )
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-
-            ) {
-                Button(
-                    onClick = {
-                        planTripViewModel.isMapEditable.value =
-                            !planTripViewModel.isMapEditable.value
-                    },
-                    colors = ButtonDefaults.buttonColors(Color(0xFFCBEF43))
-                ) {
-                    Text(
-                        text = if (planTripViewModel.isMapEditable.value) "Insert" else "Save",
-                        fontWeight = FontWeight.ExtraBold,
-                        color = Color(0xFF2D0320)
-                    )
-
-                }
-            }
         }
 
     }
