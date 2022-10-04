@@ -37,7 +37,7 @@ import com.example.tripsi.utils.Screen
 // TODO Important to not orientation changes clear screen
 
 @Composable
-fun AddMoment(navController: NavController, context: Context) {
+fun AddMoment(navController: NavController, context: Context, location: Location) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier

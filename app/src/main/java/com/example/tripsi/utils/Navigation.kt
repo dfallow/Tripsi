@@ -33,7 +33,7 @@ fun Navigation(context: Context, location: Location, tripDbViewModel: TripDbView
             )
         }
         composable(route = Screen.MomentScreen.route) {
-            AddMoment(navController = navController, context = context)
+            AddMoment(navController = navController, context = context, location = location)
         }
         composable(route = Screen.MediaScreen.route) {
             MediaView(navController = navController, tripDbViewModel = tripDbViewModel, tripId = tripDbViewModel.tripId, context = context)
