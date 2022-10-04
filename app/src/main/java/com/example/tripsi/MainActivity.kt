@@ -18,9 +18,7 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.example.tripsi.data.*
 import com.example.tripsi.functionality.TripDbViewModel
-import com.example.tripsi.ui.theme.TripsiTheme
 import com.example.tripsi.utils.Location
-import com.example.tripsi.utils.Navigation
 import org.osmdroid.config.Configuration
 
 class MainActivity : ComponentActivity() {
@@ -83,7 +81,7 @@ class MainActivity : ComponentActivity() {
                     val trips = tripDbViewModel.getAllTrips().observeAsState()
                     //Text(trips.value.toString())
 
-                    BottomNavigation()
+                    BottomNavigation(context = this, location, tripDbViewModel)
                     //Navigation(context = this, location, tripDbViewModel)
 
 

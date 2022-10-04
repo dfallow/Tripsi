@@ -10,7 +10,7 @@ import com.example.tripsi.screens.home.HomeView
 import com.example.tripsi.screens.planTrip.PlanTripView
 import com.example.tripsi.screens.travelHistory.TravelHistoryView
 
-@Composable
+/*@Composable
 fun BottomNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
@@ -26,4 +26,4 @@ fun BottomNavGraph(navController: NavHostController) {
             CurrentTripView(navController)
         }
     }
-}
+}*/

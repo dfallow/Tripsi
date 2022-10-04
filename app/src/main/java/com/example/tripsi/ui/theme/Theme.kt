@@ -22,13 +22,13 @@ private val LightColorPalette = lightColors(
     onSecondary = cancelBtnTextLight,
 
     primaryVariant = Purple700,
-<<<<<<< HEAD
-    secondary = darkGreen
-=======
+
+    //secondary = darkGreen
+
     onBackground = navBar,
 
 
->>>>>>> master
+
 
     /* Other default colors to override
     background = Color.White,
