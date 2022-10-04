@@ -2,16 +2,9 @@
 
 package com.example.tripsi.screens.planTrip
 
-<<<<<<< HEAD
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-
-@Composable
-fun PlanTripView(navController: NavController) {
-    Text(text = "This is PlanTrip view")
-}
-=======
 import android.app.DatePickerDialog
 import android.widget.DatePicker
 import androidx.compose.foundation.background
@@ -20,7 +13,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Lens
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.tripsi.R
 import com.example.tripsi.data.TravelMethod
 import com.example.tripsi.functionality.TripDbViewModel
@@ -318,9 +309,3 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
         }
     }
 }
-
-//@Composable
-//fun PlanTripView(navController: NavController) {
-//    Text(text = "This is PlanTripView")
-//}
->>>>>>> master
