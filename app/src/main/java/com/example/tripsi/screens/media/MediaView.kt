@@ -1,14 +1,9 @@
 package com.example.tripsi.screens.media
 
-<<<<<<< HEAD
+
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-
-@Composable
-fun MediaView(navController: NavController) {
-    Text(text = "This is MediaView view")
-=======
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -19,10 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,7 +26,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.tripsi.functionality.TripDbViewModel
 
 @Composable
@@ -288,5 +280,4 @@ fun TripNoteItem(note: String) {
         maxLines = 4,
         overflow = TextOverflow.Ellipsis
     )
->>>>>>> master
 }
