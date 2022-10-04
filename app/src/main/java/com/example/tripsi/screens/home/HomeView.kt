@@ -8,13 +8,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.example.tripsi.data.Trip
+import com.example.tripsi.data.TripStatus
+import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Screen
 
 @Composable
-fun HomeView(navController: NavController) {
+fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel) {
+    val homeViewModel = HomeViewModel()
+
     Column(
         modifier = androidx.compose.ui.Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -26,15 +32,36 @@ fun HomeView(navController: NavController) {
         }) {
             Text(text = "trip history")
         }
-        Button(onClick = {
-            navController.navigate(Screen.PlanScreen.route)
-        }) {
-            Text(text = "plan a trip")
+
+
+
+        //check for upcoming trips
+        val upcomingTrips = tripDbViewModel.getAllTripsDataByStatus(TripStatus.UPCOMING.status).observeAsState()
+        var trip: Trip? = null
+
+        if (upcomingTrips.value != null) {
+            if(upcomingTrips.value!!.isNotEmpty()) {
+                trip = upcomingTrips.value!![0].trip
+            }
         }
-        Button(onClick = {
-            navController.navigate(Screen.CurrentScreen.route)
-        }) {
-            Text(text = "start a trip")
+
+        if (trip != null ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text("Your trip to ${trip.destination} is coming up.")
+                Text("Ready to start?")
+                Button(onClick = {
+                    tripDbViewModel.tripId = trip.tripId
+                    navController.navigate(Screen.CurrentScreen.route)
+                }) {
+                    Text(text = "start a trip")
+                }
+            }
+        } else {
+            Button(onClick = {
+                navController.navigate(Screen.PlanScreen.route)
+            }) {
+                Text(text = "plan a trip")
+            }
         }
     }
 }

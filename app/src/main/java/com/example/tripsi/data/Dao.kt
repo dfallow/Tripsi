@@ -55,6 +55,11 @@ interface ImageDao : BaseDao<Image> {
     @Query("SELECT * FROM image WHERE image.trip = :tripId")
     fun getTripImages(tripId: Int): LiveData<List<Image>>
 
+    //get image by id
+    @Query("SELECT * FROM image WHERE image.imgId = :imageId")
+    fun getImageById(imageId: Int): LiveData<Image>
+
+
 }
 
 @Dao
@@ -63,6 +68,10 @@ interface NoteDao : BaseDao<Note> {
     //get all notes from a trip
     @Query("SELECT * FROM note WHERE note.trip = :tripId")
     fun getTripNotes(tripId: Int): LiveData<List<Note>>
+
+    //get one note by id
+    @Query("SELECT * FROM note WHERE note.noteId = :noteId")
+    fun getNoteById(noteId: Int): LiveData<Note>
 }
 
 @Dao
@@ -79,5 +88,4 @@ interface LocationDao : BaseDao<Location> {
     //get end coordinates of the trip
     @Query("SELECT * FROM location WHERE location.isEnd = 'true' AND location.trip = :tripId")
     fun getTripEndLocation(tripId: Int): LiveData<Location>
-
 }

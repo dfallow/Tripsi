@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.location.Geocoder
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
@@ -30,11 +31,13 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.List
+import androidx.navigation.NavController
+import com.example.tripsi.utils.Screen
 
 // TODO Important to not orientation changes clear screen
 
 @Composable
-fun AddMoment(location: Location, context: Context) {
+fun AddMoment(navController: NavController, context: Context) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -43,7 +46,7 @@ fun AddMoment(location: Location, context: Context) {
         MomentDetails(location = location, context = context)
         MomentComment()
         MomentPictures()
-        SaveOrDiscard()
+        SaveOrDiscard(navController, context)
     }
 }
 
@@ -208,7 +211,7 @@ fun MomentPictures() {
 }
 
 @Composable
-fun SaveOrDiscard() {
+fun SaveOrDiscard(navController: NavController, context: Context) {
     // Contains the buttons for saving or discarding the moment
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
@@ -220,7 +223,8 @@ fun SaveOrDiscard() {
     ) {
         Button(
             onClick = {
-                /*TODO*/
+            /*TODO*/
+                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape
@@ -229,7 +233,8 @@ fun SaveOrDiscard() {
         }
         Button(
             onClick = {
-                /*TODO*/
+                /*TODO finish functionality*/
+                      navController.navigate(Screen.CurrentScreen.route)
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape,
