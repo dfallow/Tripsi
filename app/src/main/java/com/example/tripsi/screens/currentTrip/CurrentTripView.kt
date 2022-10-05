@@ -211,7 +211,7 @@ fun GoHomeButton(navController: NavController, location: Location) {
     Spacer(modifier = Modifier.height(64.dp))
     Button(
         onClick = {
-            viewModel.goHome(navController = navController, location = location)
+            viewModel.goHome(location = location)
 
             // navigates to home screen, doesn't allow user to navigate back to CurrentTrip
             navController.navigateUp()
