@@ -69,5 +69,4 @@ class CurrentTripViewModel: ViewModel() {
     val modifier = Modifier
         .width(130.dp)
     val shape = RoundedCornerShape(10.dp)
-
 }
