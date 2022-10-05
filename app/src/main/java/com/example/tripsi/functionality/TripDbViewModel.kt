@@ -1,11 +1,13 @@
 package com.example.tripsi.functionality
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.*
 import kotlinx.coroutines.launch
+import org.osmdroid.util.GeoPoint
 
 class TripDbViewModel(application: Application) : AndroidViewModel(application) {
     private val db = TripDatabase.get(application)
@@ -13,6 +15,27 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     //this is currently used to pass tripId between Travel History View and Media View
     //TODO find a better way to pass this id between the views
     var tripId = 0
+
+    lateinit var tripData: TripData
+
+    var currentTripMoments = ArrayList<GeoPoint>()
+
+    fun getTripMoments(locations: List<Location>) {
+        if (currentTripMoments.isEmpty()) {
+            Log.d("CurrentTripMomentHello", locations.toString())
+            if (locations.isEmpty()) {
+                currentTripMoments = ArrayList()
+                Log.d("CurrentTripMoment4", currentTripMoments.toString())
+            } else {
+                for (location in locations) {
+                    currentTripMoments += GeoPoint(location.coordsLatitude, location.coordsLongitude)
+                    Log.d("CurrentTripMoment3", currentTripMoments.toString())
+                }
+            }
+        }
+
+
+    }
 
     //Trip
     fun getAllTrips(): LiveData<List<Trip>> = db.tripDao().getAll()

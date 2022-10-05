@@ -8,14 +8,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.window.Popup
 import androidx.core.content.ContextCompat
 import com.example.tripsi.R
+import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -23,47 +24,62 @@ import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 
-// Initial creation of the map
-@Composable
-fun currentTripMap(): MapView {
-    val context = LocalContext.current
-    val mapView = remember {
-        MapView(context).apply {
-            id = R.id.map
-        }
-    }
-    return mapView
-}
-
 // Display map in composable
 @Composable
-fun ShowCurrentTripMap(location: Location, context: Context) {
+fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: TripDbViewModel) {
     val currentTripMap = currentTripMap()
     var mapInitialized by remember(currentTripMap) { mutableStateOf(false) }
     val userLocation = Marker(currentTripMap)
 
-    val polyline = Polyline()
-    polyline.setPoints(viewModel.moments.toMutableList())
+    //var momentLocations = arrayOf(Marker(currentTripMap))
+    val momentsFromDatabase = tripDbViewModel.currentTripMoments
+    val currentTripMoments = viewModel.currentTripMoments.observeAsState().value
 
-    var momentLocations = arrayOf(Marker(currentTripMap))
+    val polyline: Polyline
+    var momentLocations: Array<Marker>
 
-    for (moment in viewModel.moments) {
-        val moMarker = Marker(currentTripMap)
-        moMarker.position = moment
-
-        // TODO when database is merged we can check if start/end location is true
-        if (moment == viewModel.moments.first()) {
+    /*
+    * Initially shows the locations from the database, but will use the temporary data
+    * from the viewModel, as to constantly update the UI when new locations are added
+    */
+    if ((currentTripMoments == null)) {
+        polyline = Polyline()
+        polyline.setPoints(momentsFromDatabase)
+        // Creates moment markers from locations gotten from database
+        momentLocations = arrayOf(Marker(currentTripMap))
+        for (moment in momentsFromDatabase) {
+            val moMarker = Marker(currentTripMap)
+            moMarker.position = moment
             moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
-        } else {
-            moMarker.icon = ContextCompat.getDrawable(context, R.drawable.photo_svgrepo_com)
+
+            moMarker.setOnMarkerClickListener { marker, mapView ->
+                Log.d("marker","${marker.position}")
+                viewModel.displayMoment()
+                true
+            }
+            momentLocations += moMarker
         }
-        moMarker.setOnMarkerClickListener { marker, mapView ->
-            Log.d("marker","${marker.position}")
-            viewModel.displayMoment()
-            true
+    } else  {
+        // used for updating ui
+        polyline = Polyline()
+        Log.d("CurrentTripMoments", currentTripMoments.toString())
+        polyline.setPoints(currentTripMoments)
+        momentLocations = arrayOf(Marker(currentTripMap))
+        for (moment in currentTripMoments) {
+            val moMarker = Marker(currentTripMap)
+            moMarker.position = moment
+
+            moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
+
+            moMarker.setOnMarkerClickListener { marker, mapView ->
+                Log.d("marker","${marker.position}")
+                viewModel.displayMoment()
+                true
+            }
+            momentLocations += moMarker
         }
-        momentLocations += moMarker
     }
+
 
     if (!mapInitialized) {
         currentTripMap.setTileSource(TileSourceFactory.MAPNIK)
@@ -79,9 +95,6 @@ fun ShowCurrentTripMap(location: Location, context: Context) {
         userLocation.title = location.userLocation.toString()
         userLocation.icon = ContextCompat.getDrawable(context, R.drawable.hiker_walk_svgrepo_com)
 
-        // add user location marker
-        currentTripMap.overlays.add(userLocation)
-
         // add lines that connect moments
         currentTripMap.overlays.add(polyline)
 
@@ -89,8 +102,25 @@ fun ShowCurrentTripMap(location: Location, context: Context) {
         for (moment in momentLocations) {
             currentTripMap.overlays.add(moment)
         }
+
+        // add user location marker
+        currentTripMap.overlays.add(userLocation)
+
+        // TODO not sure if this is needed
         //currentTripMap.invalidate()
     }
+}
+
+// Initial creation of the map
+@Composable
+fun currentTripMap(): MapView {
+    val context = LocalContext.current
+    val mapView = remember {
+        MapView(context).apply {
+            id = R.id.map
+        }
+    }
+    return mapView
 }
 
 // Trip Measurements Overlay

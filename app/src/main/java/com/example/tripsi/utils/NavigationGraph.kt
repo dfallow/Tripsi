@@ -28,7 +28,11 @@ fun NavigationGraph(navController: NavHostController, context: Context, location
             PlanTripView(navController = navController, tripDbViewModel = tripDbViewModel)
         }
         composable(route = Screen.CurrentScreen.route) {
-            CurrentTripView(navController = navController, context = context, location = location
+            CurrentTripView(
+                navController = navController,
+                context = context,
+                location = location,
+                tripDbViewModel = tripDbViewModel
             )
         }
         composable(route = Screen.MomentScreen.route) {

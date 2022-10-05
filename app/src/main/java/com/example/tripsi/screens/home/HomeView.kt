@@ -1,5 +1,6 @@
 package com.example.tripsi.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.*
 import com.example.tripsi.R
 import com.example.tripsi.data.Trip
+import com.example.tripsi.data.TripData
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Screen
@@ -38,11 +40,22 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel) {
     val upcomingTrips =
         tripDbViewModel.getAllTripsDataByStatus(TripStatus.UPCOMING.status)
             .observeAsState()
+    val activeTrips =
+        tripDbViewModel.getAllTripsDataByStatus(TripStatus.ACTIVE.status)
+            .observeAsState()
     var trip: Trip? = null
+    var tripData: TripData? = null
 
     if (upcomingTrips.value != null) {
         if (upcomingTrips.value!!.isNotEmpty()) {
             trip = upcomingTrips.value!![0].trip
+            tripData = upcomingTrips.value!![0]
+        }
+    }
+    if (activeTrips.value != null) {
+        if (activeTrips.value!!.isNotEmpty()) {
+            trip = activeTrips.value!![0].trip
+            tripData = activeTrips.value!![0]
         }
     }
     Column(
@@ -128,35 +141,46 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel) {
         }
 
         //check for upcoming trips
-        if (trip == null) {
-        } else {
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 20.dp)
-                .clip(shape = RoundedCornerShape(
-                    topEndPercent = 10,
-                    topStartPercent = 10
-                )
-                )
-                .background(color = Color(0xFF3C493F)),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-
-            ){
-                Text("Your trip to ${trip.destination} is coming up.", color = Color.White,fontSize = 20.sp)
-                Text("Ready to start?", color = Color.White, fontSize = 20.sp)
-                Button(onClick = {
-                    tripDbViewModel.tripId = trip.tripId
-                    navController.navigate(Screen.CurrentScreen.route)
-                },
-                        shape = RoundedCornerShape(
-                            25
-                        )
-                ) {
-                    Text(text = "start a trip")
-                }
-            }
+        if (tripData != null) {
+            UpcomingOrActiveTrip(navController = navController, tripDbViewModel = tripDbViewModel, tripData = tripData)
         }
     }
 }
 
+@Composable
+fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbViewModel, tripData: TripData) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(top = 20.dp)
+        .clip(
+            shape = RoundedCornerShape(
+                topEndPercent = 10,
+                topStartPercent = 10
+            )
+        )
+        .background(color = Color(0xFF3C493F)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+
+        ){
+        Text("Your trip to ${tripData.trip?.destination} is coming up.", color = Color.White,fontSize = 20.sp)
+        Text("Ready to start?", color = Color.White, fontSize = 20.sp)
+        Button(onClick = {
+
+            tripDbViewModel.tripData = tripData
+            tripDbViewModel.getTripMoments(tripData.location!!)
+            navController.navigate(Screen.CurrentScreen.route)
+        },
+            shape = RoundedCornerShape(
+                25
+            )
+        ) {
+            if (tripData.trip?.status == TripStatus.ACTIVE.status) {
+                Text("Continue Trip")
+            } else {
+                Text(text = "Start Trip")
+            }
+
+        }
+    }
+}
