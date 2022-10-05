@@ -1,5 +1,6 @@
 package com.example.tripsi.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -165,8 +166,9 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
         Text("Your trip to ${tripData.trip?.destination} is coming up.", color = Color.White,fontSize = 20.sp)
         Text("Ready to start?", color = Color.White, fontSize = 20.sp)
         Button(onClick = {
-            tripDbViewModel.tripId = tripData.trip!!.tripId
+
             tripDbViewModel.tripData = tripData
+            tripDbViewModel.getTripMoments(tripData.location!!)
             navController.navigate(Screen.CurrentScreen.route)
         },
             shape = RoundedCornerShape(

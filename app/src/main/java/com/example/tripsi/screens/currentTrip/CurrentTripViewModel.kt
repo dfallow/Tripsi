@@ -1,7 +1,5 @@
 package com.example.tripsi.screens.currentTrip
 
-import android.content.Intent
-import android.provider.MediaStore
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
@@ -9,13 +7,30 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.tripsi.utils.Location
 import org.osmdroid.util.GeoPoint
 
 class CurrentTripViewModel: ViewModel() {
 
     var showMoment by mutableStateOf(false)
+
+
+    // Array of GeoPoints for ViewModel
+    val currentTripMoments: MutableLiveData<ArrayList<GeoPoint>> by lazy {
+        MutableLiveData<ArrayList<GeoPoint>>()
+    }
+
+    private val tempMomentArray = ArrayList<GeoPoint>()
+
+    // Adds the users current location as the start location
+    fun addStartLocation(location: Location) {
+        tempMomentArray.clear()
+        tempMomentArray += GeoPoint(location.userLocation.latitude, location.userLocation.longitude)
+
+        currentTripMoments.value = tempMomentArray
+    }
 
     fun displayMoment()  { showMoment = true }
 

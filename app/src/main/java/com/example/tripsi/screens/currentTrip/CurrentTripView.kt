@@ -37,13 +37,13 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        CurrentTripMap(context = context, location = location)
+        CurrentTripMap(context = context, location = location, tripDbViewModel = tripDbViewModel)
 
         if (trip?.status == TripStatus.UPCOMING.status) {
             // When Trip has status UPCOMING
             Spacer(modifier = Modifier.height(64.dp))
 
-            StartTrip(context = context)
+            StartTrip(context = context, location = location, tripDbViewModel = tripDbViewModel)
         } else {
             // When Trip has status ACTIVE
             CurrentTripExtra(navController = navController, context = context)
@@ -62,11 +62,11 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
 }
 
 @Composable
-fun CurrentTripMap(context: Context, location: Location) {
+fun CurrentTripMap(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight(0.7F)) {
-        ShowCurrentTripMap(location, context)
+        ShowCurrentTripMap(location, context, tripDbViewModel)
 
         Column(
             modifier = Modifier
@@ -115,11 +115,23 @@ fun CurrentTripExtra(navController: NavController, context: Context) {
 }
 
 @Composable
-fun StartTrip(context: Context) {
+fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     Button(
         onClick = { /*TODO
                           This function should be when the user starts a trip
                         */
+            viewModel.addStartLocation(location)
+            val startLocation = com.example.tripsi.data.Location(
+                0,
+                location.userLocation.latitude,
+                location.userLocation.longitude,
+                "Today",
+                null,
+                null,
+                tripDbViewModel.tripData.trip!!.tripId,
+                true
+            )
+            tripDbViewModel.addLocation(startLocation)
             Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
         },
         modifier = viewModel.modifier,
