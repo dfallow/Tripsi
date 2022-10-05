@@ -2,6 +2,8 @@ package com.example.tripsi.utils
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.Navigation
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -13,7 +15,6 @@ import com.example.tripsi.screens.media.MediaView
 import com.example.tripsi.screens.planTrip.PlanTripView
 import com.example.tripsi.screens.travelHistory.TravelHistoryView
 
-/*
 @Composable
 fun Navigation(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     val navController = rememberNavController()
@@ -39,4 +40,4 @@ fun Navigation(context: Context, location: Location, tripDbViewModel: TripDbView
         }
 
     }
-}*/
+}

@@ -8,17 +8,16 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-
-import androidx.compose.ui.Modifier
-import com.example.tripsi.ui.theme.TripsiTheme
-import com.example.tripsi.utils.BottomNavigation
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.example.tripsi.data.*
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.ui.theme.TripsiTheme
 import com.example.tripsi.utils.Location
+import com.example.tripsi.utils.Navigation
 import org.osmdroid.config.Configuration
 
 class MainActivity : ComponentActivity() {
@@ -74,15 +73,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    //Navigation(navController = NavHostController(this))
-
 
                     //for testing purposes
                     val trips = tripDbViewModel.getAllTrips().observeAsState()
                     //Text(trips.value.toString())
 
-                    BottomNavigation(context = this, location, tripDbViewModel)
-                    //Navigation(context = this, location, tripDbViewModel)
+                    Navigation(context = this, location, tripDbViewModel)
 
 
                     //Text("Hello there")
@@ -94,7 +90,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 
 //for testing only. This will be removed later
 fun addMockData(tripDbViewModel: TripDbViewModel) {
