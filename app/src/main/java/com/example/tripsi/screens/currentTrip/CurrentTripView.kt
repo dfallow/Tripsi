@@ -31,6 +31,7 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
     val trip = tripDbViewModel.tripData.trip
     val locations = tripDbViewModel.tripData.location
 
+
     Log.d("currentTrip", trip.toString())
     Log.d("currentTrip", locations.toString())
 
@@ -40,19 +41,36 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
 
         CurrentTripMap(context = context, location = location, tripDbViewModel = tripDbViewModel)
 
-        if (trip?.status == TripStatus.UPCOMING.status) {
-            // When Trip has status UPCOMING
-            Spacer(modifier = Modifier.height(64.dp))
+        when (viewModel.currentStatus) {
+            // Upcoming
+            1 -> {
+                Spacer(modifier = Modifier.height(64.dp))
 
-            StartTrip(context = context, location = location, tripDbViewModel = tripDbViewModel)
-        } else {
-            // When Trip has status ACTIVE
-            CurrentTripExtra(navController = navController, context = context)
+                StartTrip(context = context, location = location, tripDbViewModel = tripDbViewModel)
+            }
+            // ACTIVE
+            2 -> {
+                CurrentTripExtra(navController = navController, context = context, location = location, tripDbViewModel = tripDbViewModel)
 
-            Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
-            EndTrip(context = context, location = location, tripDbViewModel = tripDbViewModel)
+                EndTrip(context = context, location = location, tripDbViewModel = tripDbViewModel)
+            }
+            // PAST
+            3 -> {
+                Spacer(modifier = Modifier.height(64.dp))
+                Button(
+                    onClick = {
+                    /*TODO*/
+                        viewModel.goHome(navController = navController)
+                    }
+                )
+                {
+                    Text("Go home")
+                }
+            }
         }
+
 
     }
 
@@ -87,7 +105,7 @@ fun CurrentTripMap(context: Context, location: Location, tripDbViewModel: TripDb
 
 // For Save Moment and Connect a Friend Buttons
 @Composable
-fun CurrentTripExtra(navController: NavController, context: Context) {
+fun CurrentTripExtra(navController: NavController, context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(top = 16.dp),
@@ -105,6 +123,20 @@ fun CurrentTripExtra(navController: NavController, context: Context) {
         Button(
             onClick = {
                 /*TODO*/
+                Log.d("addMoment", "here")
+                viewModel.addLocation(location)
+                val middleLocation = LocationData(
+                    0,
+                    location.userLocation.latitude,
+                    location.userLocation.longitude,
+                    "Today",
+                    null,
+                    null,
+                    tripDbViewModel.tripData.trip!!.tripId,
+                    isStart = true,
+                    isEnd = false
+                )
+                tripDbViewModel.addLocation(middleLocation)
                 Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
             },
             modifier = viewModel.modifier,
@@ -121,7 +153,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
         onClick = { /*TODO
                           This function should be when the user starts a trip
                         */
-            //viewModel.addStartLocation(location)
+            viewModel.addStartLocation(location)
             val startLocation = LocationData(
                 0,
                 location.userLocation.latitude,
@@ -130,9 +162,11 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
                 null,
                 null,
                 tripDbViewModel.tripData.trip!!.tripId,
-                true
+                isStart = true,
+                isEnd = false
             )
-            //tripDbViewModel.addLocation(startLocation)
+            tripDbViewModel.addLocation(startLocation)
+            viewModel.startActive()
             tripDbViewModel.updateTripStatus(TripStatus.ACTIVE.status, tripDbViewModel.tripData.trip!!.tripId)
             Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
         },
@@ -150,7 +184,21 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
         onClick = { /*TODO
                           This function should be when the user starts a trip
                         */
-            tripDbViewModel.updateTripStatus(TripStatus.UPCOMING.status, tripDbViewModel.tripData.trip!!.tripId)
+            viewModel.addLocation(location)
+            val endLocation = LocationData(
+                0,
+                location.userLocation.latitude,
+                location.userLocation.longitude,
+                "Today",
+                null,
+                null,
+                tripDbViewModel.tripData.trip!!.tripId,
+                isStart = false,
+                isEnd = true
+            )
+            tripDbViewModel.addLocation(endLocation)
+            viewModel.endActive()
+            tripDbViewModel.updateTripStatus(TripStatus.PAST.status, tripDbViewModel.tripData.trip!!.tripId)
             Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
         },
         modifier = viewModel.modifier,

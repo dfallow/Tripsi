@@ -9,6 +9,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import com.example.tripsi.data.Trip
+import com.example.tripsi.data.TripStatus
 import com.example.tripsi.utils.Location
 import org.osmdroid.util.GeoPoint
 
@@ -16,6 +19,11 @@ class CurrentTripViewModel: ViewModel() {
 
     var showMoment by mutableStateOf(false)
 
+    var currentStatus by mutableStateOf(TripStatus.UPCOMING.status)
+
+    fun startActive() { currentStatus = TripStatus.ACTIVE.status }
+
+    fun endActive() { currentStatus = TripStatus.PAST.status }
 
     // Array of GeoPoints for ViewModel
     val currentTripMoments: MutableLiveData<ArrayList<GeoPoint>> by lazy {
@@ -30,6 +38,24 @@ class CurrentTripViewModel: ViewModel() {
         tempMomentArray += GeoPoint(location.userLocation.latitude, location.userLocation.longitude)
 
         currentTripMoments.value = tempMomentArray
+    }
+
+    fun addLocation(location: Location) {
+        tempMomentArray += GeoPoint(location.userLocation.latitude, location.userLocation.longitude)
+
+        currentTripMoments.value = tempMomentArray
+
+    }
+
+    fun goHome(navController: NavController) {
+        tempMomentArray.clear()
+
+        currentTripMoments.value = tempMomentArray
+
+        // This won't affect UI in future as we will navigate to another screen
+        currentStatus = TripStatus.UPCOMING.status
+
+        // TODO add navigation back to home or history
     }
 
     fun displayMoment()  { showMoment = true }

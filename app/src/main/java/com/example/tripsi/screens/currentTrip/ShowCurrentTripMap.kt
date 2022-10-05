@@ -68,13 +68,8 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
             val moMarker = Marker(currentTripMap)
             moMarker.position = moment
 
-            Log.d("CurrentTripMoment2", moment.toString())
-            // TODO when database is merged we can check if start/end location is true
-            /*if (moment == viewModel.moments.first()) {
-                moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
-            } else {
-                moMarker.icon = ContextCompat.getDrawable(context, R.drawable.photo_svgrepo_com)
-            }*/
+            moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
+
             moMarker.setOnMarkerClickListener { marker, mapView ->
                 Log.d("marker","${marker.position}")
                 viewModel.displayMoment()
@@ -110,7 +105,7 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         // add user location marker
         currentTripMap.overlays.add(userLocation)
 
-        currentTripMap.invalidate()
+        //currentTripMap.invalidate()
     }
 }
 
