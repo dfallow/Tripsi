@@ -17,6 +17,7 @@ import androidx.compose.ui.window.Popup
 import com.example.tripsi.R
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.data.Location as LocationData
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
 
@@ -50,7 +51,7 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            EndTrip(context = context)
+            EndTrip(context = context, location = location, tripDbViewModel = tripDbViewModel)
         }
 
     }
@@ -120,8 +121,8 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
         onClick = { /*TODO
                           This function should be when the user starts a trip
                         */
-            viewModel.addStartLocation(location)
-            val startLocation = com.example.tripsi.data.Location(
+            //viewModel.addStartLocation(location)
+            val startLocation = LocationData(
                 0,
                 location.userLocation.latitude,
                 location.userLocation.longitude,
@@ -131,7 +132,8 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
                 tripDbViewModel.tripData.trip!!.tripId,
                 true
             )
-            tripDbViewModel.addLocation(startLocation)
+            //tripDbViewModel.addLocation(startLocation)
+            tripDbViewModel.updateTripStatus(TripStatus.ACTIVE.status, tripDbViewModel.tripData.trip!!.tripId)
             Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
         },
         modifier = viewModel.modifier,
@@ -143,11 +145,12 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
 }
 
 @Composable
-fun EndTrip(context: Context) {
+fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     Button(
         onClick = { /*TODO
                           This function should be when the user starts a trip
                         */
+            tripDbViewModel.updateTripStatus(TripStatus.UPCOMING.status, tripDbViewModel.tripData.trip!!.tripId)
             Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
         },
         modifier = viewModel.modifier,

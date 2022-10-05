@@ -21,16 +21,19 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     var currentTripMoments = ArrayList<GeoPoint>()
 
     fun getTripMoments(locations: List<Location>) {
-        Log.d("CurrentTripMomentHello", locations.toString())
-        if (locations.isEmpty()) {
-            currentTripMoments = ArrayList()
-            Log.d("CurrentTripMoment4", currentTripMoments.toString())
-        } else {
-            for (location in locations) {
-                currentTripMoments += GeoPoint(location.coordsLatitude, location.coordsLongitude)
-                Log.d("CurrentTripMoment3", currentTripMoments.toString())
+        if (currentTripMoments.isEmpty()) {
+            Log.d("CurrentTripMomentHello", locations.toString())
+            if (locations.isEmpty()) {
+                currentTripMoments = ArrayList()
+                Log.d("CurrentTripMoment4", currentTripMoments.toString())
+            } else {
+                for (location in locations) {
+                    currentTripMoments += GeoPoint(location.coordsLatitude, location.coordsLongitude)
+                    Log.d("CurrentTripMoment3", currentTripMoments.toString())
+                }
             }
         }
+
 
     }
 
