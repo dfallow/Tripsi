@@ -31,8 +31,6 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
     var mapInitialized by remember(currentTripMap) { mutableStateOf(false) }
     val userLocation = Marker(currentTripMap)
 
-
-
     //var momentLocations = arrayOf(Marker(currentTripMap))
     val momentsFromDatabase = tripDbViewModel.currentTripMoments
     val currentTripMoments = viewModel.currentTripMoments.observeAsState().value
@@ -40,10 +38,13 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
     val polyline: Polyline
     var momentLocations: Array<Marker>
 
+    /*
+    * Initially shows the locations from the database, but will use the temporary data
+    * from the viewModel, as to constantly update the UI when new locations are added
+    */
     if ((currentTripMoments == null)) {
         polyline = Polyline()
         polyline.setPoints(momentsFromDatabase)
-        Log.d("CurrentTripMoments", momentsFromDatabase.toString())
         // Creates moment markers from locations gotten from database
         momentLocations = arrayOf(Marker(currentTripMap))
         for (moment in momentsFromDatabase) {
@@ -105,6 +106,7 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         // add user location marker
         currentTripMap.overlays.add(userLocation)
 
+        // TODO not sure if this is needed
         //currentTripMap.invalidate()
     }
 }

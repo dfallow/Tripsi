@@ -52,13 +52,12 @@ fun CurrentTripView(
             2 -> {
                 CurrentTripExtra(navController = navController, context = context, location = location, tripDbViewModel = tripDbViewModel)
 
-
                 Spacer(modifier = Modifier.height(32.dp))
 
                 EndTrip(context = context, location = location, tripDbViewModel = tripDbViewModel)
 
                 // This helps update UI when user adds a moment
-                if (viewModel.showText) { Log.d("","") }
+                if (viewModel.showText) { }
             }
             // PAST
             3 -> {
