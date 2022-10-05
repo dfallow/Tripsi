@@ -125,7 +125,7 @@ fun addMockData(tripDbViewModel: TripDbViewModel) {
             "Weekend getaway to Paris",
             "Paris",
             TravelMethod.PLANE.method,
-            TripStatus.PAST.status,
+            TripStatus.ACTIVE.status,
             "10/10/2022"
         )
     )
@@ -174,9 +174,10 @@ fun addMockData(tripDbViewModel: TripDbViewModel) {
     tripDbViewModel.addLocation(Location(0, 65.12, 30.19, "11/11/2022", 2, null, 1))
     tripDbViewModel.addLocation(Location(0, 65.12, 35.19, "11/11/2022", 3, null, 1))
     tripDbViewModel.addLocation(Location(0, 40.12, 40.19, "11/12/2022", null, 2, 2))
-    tripDbViewModel.addLocation(Location(0, 45.12, 45.19, "10/10/2022", 4, null, 3))
-    tripDbViewModel.addLocation(Location(0, 50.12, 50.19, "10/10/2022", null, 3, 3))
-    tripDbViewModel.addLocation(Location(0, 55.12, 55.19, "10/10/2022", null, null, 3))
+    tripDbViewModel.addLocation(Location(0, 60.200, 24.786, "10/10/2022", 4, null, 3))
+    tripDbViewModel.addLocation(Location(0, 60.215, 24.647, "10/10/2022", null, 3, 3))
+    tripDbViewModel.addLocation(Location(0, 60.284, 25.025, "10/10/2022", null, 3, 3))
+    tripDbViewModel.addLocation(Location(0, 60.395, 25.124, "10/10/2022", null, null, 3))
     tripDbViewModel.addLocation(Location(0, 70.12, 70.19, "10/2/2022", null, null, 4))
     tripDbViewModel.addLocation(Location(0, 75.12, 75.19, "10/5/2022", 5, null, 5))
 }

@@ -31,14 +31,16 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
     var mapInitialized by remember(currentTripMap) { mutableStateOf(false) }
     val userLocation = Marker(currentTripMap)
 
-    //val polyline = Polyline()
-    //polyline.setPoints(viewModel.moments.toMutableList())
+
 
     var momentLocations = arrayOf(Marker(currentTripMap))
     val momentsFromDatabase = tripDbViewModel.currentTripMoments
     val currentTripMoments = viewModel.currentTripMoments.observeAsState().value
 
+    val polyline = Polyline()
+
     if ((currentTripMoments == null)) {
+        polyline.setPoints(momentsFromDatabase)
         // Creates moment markers from locations gotten from database
         for (moment in momentsFromDatabase) {
             val moMarker = Marker(currentTripMap)
@@ -55,6 +57,7 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         }
     } else  {
         // used for updating ui
+        polyline.setPoints(currentTripMoments)
         for (moment in currentTripMoments) {
             val moMarker = Marker(currentTripMap)
             moMarker.position = moment
@@ -91,7 +94,7 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         userLocation.icon = ContextCompat.getDrawable(context, R.drawable.hiker_walk_svgrepo_com)
 
         // add lines that connect moments
-        //currentTripMap.overlays.add(polyline)
+        currentTripMap.overlays.add(polyline)
 
         // adding moments to map
         for (moment in momentLocations) {
