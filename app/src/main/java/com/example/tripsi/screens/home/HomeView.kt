@@ -140,14 +140,14 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel) {
         }
 
         //check for upcoming trips
-        if (trip != null) {
-            UpcomingOrActiveTrip(navController = navController, tripDbViewModel = tripDbViewModel, trip = trip)
+        if (tripData != null) {
+            UpcomingOrActiveTrip(navController = navController, tripDbViewModel = tripDbViewModel, tripData = tripData)
         }
     }
 }
 
 @Composable
-fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbViewModel, trip: Trip) {
+fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbViewModel, tripData: TripData) {
     Column(modifier = Modifier
         .fillMaxSize()
         .padding(top = 20.dp)
@@ -162,17 +162,18 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
         verticalArrangement = Arrangement.Center,
 
         ){
-        Text("Your trip to ${trip.destination} is coming up.", color = Color.White,fontSize = 20.sp)
+        Text("Your trip to ${tripData.trip?.destination} is coming up.", color = Color.White,fontSize = 20.sp)
         Text("Ready to start?", color = Color.White, fontSize = 20.sp)
         Button(onClick = {
-            tripDbViewModel.tripId = trip.tripId
+            tripDbViewModel.tripId = tripData.trip!!.tripId
+            tripDbViewModel.tripData = tripData
             navController.navigate(Screen.CurrentScreen.route)
         },
             shape = RoundedCornerShape(
                 25
             )
         ) {
-            if (trip.status == TripStatus.ACTIVE.status) {
+            if (tripData.trip?.status == TripStatus.ACTIVE.status) {
                 Text("Continue Trip")
             } else {
                 Text(text = "Start Trip")

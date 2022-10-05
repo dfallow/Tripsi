@@ -14,6 +14,8 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     //TODO find a better way to pass this id between the views
     var tripId = 0
 
+    lateinit var tripData: TripData
+
     //Trip
     fun getAllTrips(): LiveData<List<Trip>> = db.tripDao().getAll()
 
