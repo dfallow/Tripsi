@@ -18,6 +18,9 @@ import org.osmdroid.util.GeoPoint
 class CurrentTripViewModel: ViewModel() {
 
     var showMoment by mutableStateOf(false)
+    var showText by mutableStateOf(false)
+
+    fun toggleText() { showText = !showText }
 
     var currentStatus by mutableStateOf(TripStatus.UPCOMING.status)
 
@@ -40,20 +43,22 @@ class CurrentTripViewModel: ViewModel() {
         currentTripMoments.value = tempMomentArray
     }
 
-    fun addLocation(location: Location) {
+    fun addLocation(location: Location, isEnd: Boolean) {
         tempMomentArray += GeoPoint(location.userLocation.latitude, location.userLocation.longitude)
 
         currentTripMoments.value = tempMomentArray
 
     }
 
-    fun goHome(navController: NavController) {
+    fun goHome(navController: NavController, location: Location) {
         tempMomentArray.clear()
 
         currentTripMoments.value = tempMomentArray
 
         // This won't affect UI in future as we will navigate to another screen
         currentStatus = TripStatus.UPCOMING.status
+
+        location.stopUpdatingLocation()
 
         // TODO add navigation back to home or history
     }

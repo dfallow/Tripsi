@@ -24,16 +24,16 @@ import com.example.tripsi.utils.Screen
 val viewModel = CurrentTripViewModel()
 
 @Composable
-fun CurrentTripView(location: Location, context: Context, navController: NavController, tripDbViewModel: TripDbViewModel) {
+fun CurrentTripView(
+    location: Location,
+    context: Context,
+    navController: NavController,
+    tripDbViewModel: TripDbViewModel
+) {
 
+    // Start updating users location when they are looking at the map
+    // TODO call stopUpdatingLocation() in other views?
     location.startUpdatingLocation()
-
-    val trip = tripDbViewModel.tripData.trip
-    val locations = tripDbViewModel.tripData.location
-
-
-    Log.d("currentTrip", trip.toString())
-    Log.d("currentTrip", locations.toString())
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -52,22 +52,17 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
             2 -> {
                 CurrentTripExtra(navController = navController, context = context, location = location, tripDbViewModel = tripDbViewModel)
 
+
                 Spacer(modifier = Modifier.height(32.dp))
 
                 EndTrip(context = context, location = location, tripDbViewModel = tripDbViewModel)
+
+                // This helps update UI when user adds a moment
+                if (viewModel.showText) { Log.d("","") }
             }
             // PAST
             3 -> {
-                Spacer(modifier = Modifier.height(64.dp))
-                Button(
-                    onClick = {
-                    /*TODO*/
-                        viewModel.goHome(navController = navController)
-                    }
-                )
-                {
-                    Text("Go home")
-                }
+                GoHomeButton(navController = navController, location = location)
             }
         }
 
@@ -124,7 +119,7 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
             onClick = {
                 /*TODO*/
                 Log.d("addMoment", "here")
-                viewModel.addLocation(location)
+                viewModel.addLocation(location, false)
                 val middleLocation = LocationData(
                     0,
                     location.userLocation.latitude,
@@ -137,6 +132,8 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
                     isEnd = false
                 )
                 tripDbViewModel.addLocation(middleLocation)
+                viewModel.toggleText()
+                viewModel.startActive()
                 Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
             },
             modifier = viewModel.modifier,
@@ -147,12 +144,11 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
     }
 }
 
+// Map will only show users locations until startTrip is pressed
 @Composable
 fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     Button(
-        onClick = { /*TODO
-                          This function should be when the user starts a trip
-                        */
+        onClick = {
             viewModel.addStartLocation(location)
             val startLocation = LocationData(
                 0,
@@ -178,13 +174,13 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
     }
 }
 
+// When the user wants to end their trip
+// TODO add a popup confirmation?
 @Composable
 fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     Button(
-        onClick = { /*TODO
-                          This function should be when the user starts a trip
-                        */
-            viewModel.addLocation(location)
+        onClick = {
+            viewModel.addLocation(location, true)
             val endLocation = LocationData(
                 0,
                 location.userLocation.latitude,
@@ -209,6 +205,27 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
     }
 }
 
+// Trip Status is PAST, user can still view their trip in this screen
+@Composable
+fun GoHomeButton(navController: NavController, location: Location) {
+    Spacer(modifier = Modifier.height(64.dp))
+    Button(
+        onClick = {
+            viewModel.goHome(navController = navController, location = location)
+
+            // navigates to home screen, doesn't allow user to navigate back to CurrentTrip
+            navController.navigateUp()
+        } ,
+        modifier = viewModel.modifier,
+        shape = viewModel.shape,
+        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+    )
+    {
+        Text("Go home")
+    }
+}
+
+// When the use clicks on a moment on the map
 @Composable
 fun ShowMoment() {
     Popup() {

@@ -23,9 +23,10 @@ class Location(context: Context): LocationListener {
 
     @SuppressLint("MissingPermission")
     fun startUpdatingLocation() {
+        // TODO create checks to use Network Provider when GPS doesn't work
         val startLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
         userLocation = GeoPoint(startLocation.latitude, startLocation.longitude)
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1 * 1000, 1f, this)
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10 * 1000, 1f, this)
         Log.d("Location", startLocation.toString())
     }
 
