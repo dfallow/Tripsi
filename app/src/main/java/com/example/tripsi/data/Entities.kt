@@ -64,7 +64,8 @@ data class Image(
 data class Note(
     @PrimaryKey(autoGenerate = true)
     val noteId: Int,
-    val noteText: String?,
+    val noteName: String,
+    val noteText: String,
     val trip: Int,
 )
 

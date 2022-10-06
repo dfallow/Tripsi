@@ -1,49 +1,52 @@
 package com.example.tripsi.screens.currentTrip
 
-import android.app.Application
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.provider.ContactsContract.Directory
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import com.example.tripsi.data.InternalStoragePhoto
+import com.example.tripsi.data.Image
+import com.example.tripsi.data.Note
 import com.example.tripsi.data.Trip
 import com.example.tripsi.data.TripStatus
+import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
-import java.io.File
-import java.io.IOException
 
-class CurrentTripViewModel: ViewModel() {
+class CurrentTripViewModel : ViewModel() {
 
     // Temporary status of trip, used to update UI
     var currentStatus by mutableStateOf(TripStatus.UPCOMING.status)
-    fun startActive() { currentStatus = TripStatus.ACTIVE.status }
-    fun endActive() { currentStatus = TripStatus.PAST.status }
+    fun startActive() {
+        currentStatus = TripStatus.ACTIVE.status
+    }
+
+    fun endActive() {
+        currentStatus = TripStatus.PAST.status
+    }
 
     var showMoment by mutableStateOf(false)
-    fun displayMoment()  { showMoment = true }
-    fun hideMoment() { showMoment = false }
+    fun displayMoment() {
+        showMoment = true
+    }
+
+    fun hideMoment() {
+        showMoment = false
+    }
 
     // Used to update UI when a moment is added
     // TODO find a better way
     var showText by mutableStateOf(false)
-    fun toggleText() { showText = !showText }
+    fun toggleText() {
+        showText = !showText
+    }
 
     // Array of GeoPoints for ViewModel
     val currentTripMoments: MutableLiveData<ArrayList<GeoPoint>> by lazy {
@@ -84,23 +87,7 @@ class CurrentTripViewModel: ViewModel() {
         .width(130.dp)
     val shape = RoundedCornerShape(10.dp)
 
-
-    fun savePhotoToInternalStorage(filename: String, bmp: Bitmap, app: Application) : Boolean {
-        return try {
-            Log.d("GIGI", "filename: $filename, bmp: ${bmp.width}, app: $app")
-            app.openFileOutput("$filename.jpg", Context.MODE_PRIVATE).use {
-                if (!bmp.compress(Bitmap.CompressFormat.JPEG, 95, it)) {
-                    throw IOException("Couldn't save bitmap.")
-                }
-            }
-            return true
-        } catch (e: IOException) {
-            e.printStackTrace()
-            false
-        }
-    }
-
-    suspend fun loadPhotosFromInternalStorage(context: Context) : List<InternalStoragePhoto> {
+/*    suspend fun loadPhotosFromInternalStorage(context: Context) : List<InternalStoragePhoto> {
         return withContext(Dispatchers.IO) {
             val files = context.filesDir.listFiles()
             files?.filter {
@@ -111,6 +98,75 @@ class CurrentTripViewModel: ViewModel() {
                 InternalStoragePhoto(it.name, bmp)
             }
         } ?: return listOf()
+    }*/
+
+
+    //save image data to db
+    var momentLocation: com.example.tripsi.data.Location? = null
+    var momentNote: Note? = null
+    var momentImageFilenames: MutableList<String> = mutableListOf()
+
+    fun saveImageToDb(tripDbViewModel: TripDbViewModel,  filename: String) {
+        val trip = tripDbViewModel.tripData.trip!!.tripId
+        try {
+            tripDbViewModel.addImage(Image(0, filename, trip))
+            momentImageFilenames.add(filename)
+            Log.d("DATABASE", "Image saved to database")
+            saveNoteToDb(tripDbViewModel)
+        } catch (e: Exception) {
+            Log.e("DATABASE", e.localizedMessage)
+        }
+
     }
 
+    private fun saveNoteToDb(tripDbViewModel: TripDbViewModel) {
+        val trip = tripDbViewModel.tripData.trip!!.tripId
+        if (momentNote != null) {
+            try {
+                tripDbViewModel.addNote(
+                    Note(
+                        0,
+                        momentNote!!.noteName,
+                        momentNote!!.noteText,
+                        trip
+                    )
+                )
+                Log.d("DATABASE", "Note saved to database")
+            } catch (e: Exception) {
+                Log.e("DATABASE", e.localizedMessage)
+            }
+        }
+    }
+
+    fun saveLocationToDb(tripDbViewModel: TripDbViewModel) {
+        val trip = tripDbViewModel.tripData.trip!!.tripId
+        var noteId: Int? = null
+        if(momentNote != null) {
+            val note = tripDbViewModel.getNoteByName(momentNote!!.noteName)
+            noteId = note.value?.noteId
+        }
+        val note = momentNote?.noteName?.let { tripDbViewModel.getNoteByName(it) }
+
+        if (momentLocation != null) {
+            momentImageFilenames.forEach { filename ->
+                val image = tripDbViewModel.getImageByFilename(filename)
+                val imageId = image.value?.imgId
+                try {
+                    tripDbViewModel.addLocation(
+                        com.example.tripsi.data.Location(
+                            0,
+                            momentLocation!!.coordsLatitude,
+                            momentLocation!!.coordsLongitude,
+                            momentLocation!!.date,
+                            imageId,
+                            noteId,
+                            trip
+                        )
+                    )
+                } catch (e: Exception) {
+                    Log.e("DATABASE", e.localizedMessage)
+                }
+            }
+        }
+    }
 }

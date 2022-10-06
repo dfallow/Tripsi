@@ -59,6 +59,10 @@ interface ImageDao : BaseDao<Image> {
     @Query("SELECT * FROM image WHERE image.imgId = :imageId")
     fun getImageById(imageId: Int): LiveData<Image>
 
+    //get image by filename
+    @Query("SELECT * FROM image WHERE image.filename = :filename")
+    fun getImageByFilename(filename: String): LiveData<Image>
+
 
 }
 
@@ -72,6 +76,10 @@ interface NoteDao : BaseDao<Note> {
     //get one note by id
     @Query("SELECT * FROM note WHERE note.noteId = :noteId")
     fun getNoteById(noteId: Int): LiveData<Note>
+
+    //get note by noteName
+    @Query("SELECT * FROM note WHERE note.noteName = :noteName")
+    fun getNoteByName(noteName: String): LiveData<Note>
 }
 
 @Dao

@@ -25,6 +25,7 @@ import com.example.tripsi.utils.Location
 import org.osmdroid.config.Configuration
 import java.io.File
 import java.text.SimpleDateFormat
+import java.util.UUID
 import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
@@ -170,9 +171,9 @@ fun addMockData(tripDbViewModel: TripDbViewModel) {
     tripDbViewModel.addImage(Image(0, "file5.jpg", 5))
 
     //add some notes
-    tripDbViewModel.addNote(Note(0, "Wow what a place!", 1))
-    tripDbViewModel.addNote(Note(0, "Best trip ever", 2))
-    tripDbViewModel.addNote(Note(0, "Look at this sunset!", 3))
+    tripDbViewModel.addNote(Note(0, UUID.randomUUID().toString(), "Wow what a place!", 1))
+    tripDbViewModel.addNote(Note(0, UUID.randomUUID().toString(), "Best trip ever", 2))
+    tripDbViewModel.addNote(Note(0, UUID.randomUUID().toString(), "Look at this sunset!", 3))
 
     //save some location data
     tripDbViewModel.addLocation(Location(0, 60.12, 32.19, "11/11/2022", 1, 1, 1))

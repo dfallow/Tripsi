@@ -4,9 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Geocoder
-import android.os.Environment
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -27,7 +25,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
-import com.example.tripsi.data.InternalStoragePhoto
+import com.example.tripsi.data.Note
+import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
 import kotlinx.coroutines.Dispatchers
@@ -39,22 +38,28 @@ import java.util.*
 
 // TODO Important to not orientation changes clear screen
 
+
 @Composable
-fun AddMoment(navController: NavController, context: Context, location: Location) {
+fun AddMoment(
+    navController: NavController,
+    context: Context,
+    location: Location,
+    tripDbViewModel: TripDbViewModel
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
     ) {
-        MomentDetails(location = location, context = context)
+        MomentDetails(location = location, context = context, tripDbViewModel = tripDbViewModel)
         MomentComment()
-        MomentPictures(context)
-        SaveOrDiscard(navController, context)
+        MomentPictures(context, tripDbViewModel)
+        SaveOrDiscard(navController, context, tripDbViewModel)
     }
 }
 
 @Composable
-fun MomentDetails(location: Location, context: Context) {
+fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbViewModel) {
     // define format for date and time
     val dateFormat = SimpleDateFormat("dd.MM.yyyy")
     val timeFormat = SimpleDateFormat("HH:mm")
@@ -69,6 +74,16 @@ fun MomentDetails(location: Location, context: Context) {
         1
     )
     val cityName = address[0].locality
+
+    viewModel.momentLocation = com.example.tripsi.data.Location(
+        0,
+        location.userLocation.latitude,
+        location.userLocation.longitude,
+        dateFormat.format(now),
+        null,
+        null,
+        tripDbViewModel.tripData.trip!!.tripId
+    )
 
     Card(
         // Moment Information
@@ -119,6 +134,7 @@ fun MomentComment(
 ) {
 
     var comment by remember { mutableStateOf("") }
+    val noteName = UUID.randomUUID().toString()
 
     TextField(
         value = comment,
@@ -133,6 +149,8 @@ fun MomentComment(
             .padding(10.dp)
             .border(BorderStroke(2.dp, Color.Black), shape = RoundedCornerShape(10.dp))
     )
+
+    viewModel.momentNote = Note(0, noteName, comment, 0)
 }
 
 @Composable
@@ -154,8 +172,7 @@ fun myAppTextFieldColors(
 )
 
 @Composable
-fun MomentPictures(context: Context) {
-    val currentTripViewModel = CurrentTripViewModel()
+fun MomentPictures(context: Context, tripDbViewModel: TripDbViewModel) {
     val photoThumbnails = remember { mutableListOf<Bitmap?>(null) }
 
     //val result = remember { mutableStateOf<Bitmap?>(null) }
@@ -166,34 +183,22 @@ fun MomentPictures(context: Context) {
         Log.d("photo", photoThumbnails.toString())
     }*/
 
-    //val filename = String.format("%s.%s", Date().time, Random(9).nextInt())
     val result = remember { mutableStateOf<Bitmap?>(null) }
 
     val dir = context.filesDir
-    val imageFile = File(dir, "${UUID.randomUUID()}.jpg")
+    val filename = UUID.randomUUID().toString()
+    val imageFile = File(dir, "$filename.jpg")
     val photoURI = FileProvider.getUriForFile(context, "com.example.tripsi.fileprovider", imageFile)
-
-    //val imagePath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-    //val imageFile = File.createTempFile("testfile", ".jpg", imagePath)
-    /*val photoURI = FileProvider.getUriForFile(
-        context, "com.example.tripsi.fileprovider", imageFile
-    )
-    */
-    Log.d("GIGI", "Image path $dir")
-    Log.d("GIGI", "Image file ${imageFile.absolutePath}")
-    Log.d("GIGI", "URI $photoURI")
-
     val currentPhotoPath = imageFile.absolutePath
+
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
         if (it) {
-            result.value = BitmapFactory.decodeFile(currentPhotoPath)
-            photoThumbnails.add(result.value)
+            photoThumbnails.add(BitmapFactory.decodeFile(currentPhotoPath))
+            viewModel.saveImageToDb(tripDbViewModel, filename)
         } else {
             Log.d("GIGI", "Picture not taken")
         }
     }
-    //filename = String.format("%s.%s", SimpleDateFormat.FULL, Random(9).nextInt())
-
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -224,12 +229,8 @@ fun MomentPictures(context: Context) {
             }
         }
 
-/*        result.value?.let {
-            Image(it.asImageBitmap(), null, Modifier.fillMaxWidth(0.5f))
-        }*/
-
         // TODO If I remove this the photos do not appear in the above lazyRow
-        Row() {
+        Row {
             result.value?.let { }
         }
 
@@ -237,9 +238,7 @@ fun MomentPictures(context: Context) {
         Button(
             onClick = {
                 Log.d("photo", "test")
-                //launcher.launch()
-                //launcher.launch(photoURI)
-                GlobalScope.launch (Dispatchers.IO) {
+                GlobalScope.launch(Dispatchers.IO) {
                     launcher.launch(photoURI)
                 }
             }
@@ -251,7 +250,11 @@ fun MomentPictures(context: Context) {
 }
 
 @Composable
-fun SaveOrDiscard(navController: NavController, context: Context) {
+fun SaveOrDiscard(
+    navController: NavController,
+    context: Context,
+    tripDbViewModel: TripDbViewModel
+) {
     // Contains the buttons for saving or discarding the moment
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
@@ -263,8 +266,7 @@ fun SaveOrDiscard(navController: NavController, context: Context) {
     ) {
         Button(
             onClick = {
-                /*TODO*/
-                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                viewModel.saveLocationToDb(tripDbViewModel)
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape

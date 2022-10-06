@@ -38,7 +38,7 @@ fun NavigationGraph(navController: NavHostController, context: Context, location
             )
         }
         composable(route = Screen.MomentScreen.route) {
-            AddMoment(navController = navController, context = context, location = location)
+            AddMoment(navController = navController, context = context, location = location, tripDbViewModel = tripDbViewModel)
         }
         composable(route = Screen.MediaScreen.route) {
             MediaView(navController = navController, tripDbViewModel = tripDbViewModel, tripId = tripDbViewModel.tripId, context = context)
