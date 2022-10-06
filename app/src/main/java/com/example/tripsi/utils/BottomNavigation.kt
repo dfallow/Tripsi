@@ -1,6 +1,7 @@
 package com.example.tripsi.utils
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tripsi.functionality.TripDbViewModel
+import java.io.File
 
 @Composable
 fun BottomNavigation(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {

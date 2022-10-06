@@ -2,12 +2,13 @@ package com.example.tripsi.screens.currentTrip
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Geocoder
+import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -24,15 +25,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.example.tripsi.utils.Location
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.List
+import androidx.core.content.FileProvider
 import androidx.navigation.NavController
+import com.example.tripsi.data.InternalStoragePhoto
+import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 // TODO Important to not orientation changes clear screen
 
@@ -45,7 +48,7 @@ fun AddMoment(navController: NavController, context: Context, location: Location
     ) {
         MomentDetails(location = location, context = context)
         MomentComment()
-        MomentPictures()
+        MomentPictures(context)
         SaveOrDiscard(navController, context)
     }
 }
@@ -151,17 +154,46 @@ fun myAppTextFieldColors(
 )
 
 @Composable
-fun MomentPictures() {
-
+fun MomentPictures(context: Context) {
+    val currentTripViewModel = CurrentTripViewModel()
     val photoThumbnails = remember { mutableListOf<Bitmap?>(null) }
 
-    val result = remember { mutableStateOf<Bitmap?>(null) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+    //val result = remember { mutableStateOf<Bitmap?>(null) }
+/*    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
         result.value = it
         Log.d("photo", "test")
         photoThumbnails.add(it)
         Log.d("photo", photoThumbnails.toString())
+    }*/
+
+    //val filename = String.format("%s.%s", Date().time, Random(9).nextInt())
+    val result = remember { mutableStateOf<Bitmap?>(null) }
+
+    val dir = context.filesDir
+    val imageFile = File(dir, "${UUID.randomUUID()}.jpg")
+    val photoURI = FileProvider.getUriForFile(context, "com.example.tripsi.fileprovider", imageFile)
+
+    //val imagePath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+    //val imageFile = File.createTempFile("testfile", ".jpg", imagePath)
+    /*val photoURI = FileProvider.getUriForFile(
+        context, "com.example.tripsi.fileprovider", imageFile
+    )
+    */
+    Log.d("GIGI", "Image path $dir")
+    Log.d("GIGI", "Image file ${imageFile.absolutePath}")
+    Log.d("GIGI", "URI $photoURI")
+
+    val currentPhotoPath = imageFile.absolutePath
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+        if (it) {
+            result.value = BitmapFactory.decodeFile(currentPhotoPath)
+            photoThumbnails.add(result.value)
+        } else {
+            Log.d("GIGI", "Picture not taken")
+        }
     }
+    //filename = String.format("%s.%s", SimpleDateFormat.FULL, Random(9).nextInt())
+
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -192,6 +224,10 @@ fun MomentPictures() {
             }
         }
 
+/*        result.value?.let {
+            Image(it.asImageBitmap(), null, Modifier.fillMaxWidth(0.5f))
+        }*/
+
         // TODO If I remove this the photos do not appear in the above lazyRow
         Row() {
             result.value?.let { }
@@ -201,7 +237,11 @@ fun MomentPictures() {
         Button(
             onClick = {
                 Log.d("photo", "test")
-                launcher.launch()
+                //launcher.launch()
+                //launcher.launch(photoURI)
+                GlobalScope.launch (Dispatchers.IO) {
+                    launcher.launch(photoURI)
+                }
             }
         ) {
             Text("Take Photo")
@@ -223,7 +263,7 @@ fun SaveOrDiscard(navController: NavController, context: Context) {
     ) {
         Button(
             onClick = {
-            /*TODO*/
+                /*TODO*/
                 Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
             },
             modifier = viewModel.modifier,
@@ -234,7 +274,7 @@ fun SaveOrDiscard(navController: NavController, context: Context) {
         Button(
             onClick = {
                 /*TODO finish functionality*/
-                      navController.navigate(Screen.CurrentScreen.route)
+                navController.navigate(Screen.CurrentScreen.route)
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape,

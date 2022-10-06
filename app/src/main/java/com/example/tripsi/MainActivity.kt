@@ -1,8 +1,10 @@
 package com.example.tripsi
 
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,11 +17,15 @@ import com.example.tripsi.utils.BottomNavigation
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.preference.PreferenceManager
 import com.example.tripsi.data.*
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
 import org.osmdroid.config.Configuration
+import java.io.File
+import java.text.SimpleDateFormat
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -41,7 +47,6 @@ class MainActivity : ComponentActivity() {
         it will duplicate some of the data.*/
 
         //addMockData(tripDbViewModel)
-
 
         if ((Build.VERSION.SDK_INT >= 23 &&
                     ContextCompat.checkSelfPermission(

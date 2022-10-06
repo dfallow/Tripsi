@@ -1,19 +1,33 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.app.Application
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.provider.ContactsContract.Directory
+import android.util.Log
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
+import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.data.Trip
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.utils.Location
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
+import java.io.File
+import java.io.IOException
 
 class CurrentTripViewModel: ViewModel() {
 
@@ -69,4 +83,34 @@ class CurrentTripViewModel: ViewModel() {
     val modifier = Modifier
         .width(130.dp)
     val shape = RoundedCornerShape(10.dp)
+
+
+    fun savePhotoToInternalStorage(filename: String, bmp: Bitmap, app: Application) : Boolean {
+        return try {
+            Log.d("GIGI", "filename: $filename, bmp: ${bmp.width}, app: $app")
+            app.openFileOutput("$filename.jpg", Context.MODE_PRIVATE).use {
+                if (!bmp.compress(Bitmap.CompressFormat.JPEG, 95, it)) {
+                    throw IOException("Couldn't save bitmap.")
+                }
+            }
+            return true
+        } catch (e: IOException) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    suspend fun loadPhotosFromInternalStorage(context: Context) : List<InternalStoragePhoto> {
+        return withContext(Dispatchers.IO) {
+            val files = context.filesDir.listFiles()
+            files?.filter {
+                it.canRead() && it.isFile && it.name.endsWith(".jpg")
+            }?.map {
+                val bytes = it.readBytes()
+                val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                InternalStoragePhoto(it.name, bmp)
+            }
+        } ?: return listOf()
+    }
+
 }

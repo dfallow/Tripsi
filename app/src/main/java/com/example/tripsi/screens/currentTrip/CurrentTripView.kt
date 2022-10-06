@@ -20,6 +20,7 @@ import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.data.Location as LocationData
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
+import java.io.File
 
 val viewModel = CurrentTripViewModel()
 
