@@ -87,20 +87,6 @@ class CurrentTripViewModel : ViewModel() {
         .width(130.dp)
     val shape = RoundedCornerShape(10.dp)
 
-/*    suspend fun loadPhotosFromInternalStorage(context: Context) : List<InternalStoragePhoto> {
-        return withContext(Dispatchers.IO) {
-            val files = context.filesDir.listFiles()
-            files?.filter {
-                it.canRead() && it.isFile && it.name.endsWith(".jpg")
-            }?.map {
-                val bytes = it.readBytes()
-                val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                InternalStoragePhoto(it.name, bmp)
-            }
-        } ?: return listOf()
-    }*/
-
-
     //save image data to db
     var momentLocation: com.example.tripsi.data.Location? = null
     var momentNote: Note? = null

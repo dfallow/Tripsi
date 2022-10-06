@@ -5,7 +5,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -16,28 +18,41 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tripsi.data.TripData
 import com.example.tripsi.functionality.TripDbViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
+val viewModel = MediaViewModel()
 
 @Composable
 fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavController, context: Context) {
-    val tripData = tripDbViewModel.getTripData(tripId).observeAsState()
+    //val tripData = tripDbViewModel.getTripData(tripId).observeAsState()
+    viewModel.getData(tripId, tripDbViewModel)
+    val tripData by viewModel.tripData.observeAsState()
+
+    Log.d("GIGI", "tripdata: ${tripData?.trip.toString()}")
 
     Column(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        tripData.value?.let {
+        tripData?.let {
             DisplayTitle(it.trip?.tripName ?: "")
             DisplayRoute(it.trip?.destination ?: "")
             DisplayStats(
@@ -50,7 +65,7 @@ fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavC
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxHeight()
             ) {
-                DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel)
+                DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
@@ -209,11 +224,23 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
 }
 
 @Composable
-fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel) {
-    //this retrieves all coordinates saved for the trip
-    val tripMedia = tripDbViewModel.getTripLocationData(tripId).observeAsState(listOf())
+fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context: Context) {
+    //val tripData = tripDbViewModel.getTripData(tripId)
+    val images = tripDbViewModel.getTripImages(tripId).observeAsState()
+    Log.d("GIGI", "images: ${images.value?.size ?: "no images"}")
 
-    LazyRow(Modifier.padding(horizontal = 10.dp)) {
+    //val tripMedia = tripData.value?.location
+
+    if (!images.value.isNullOrEmpty())
+    LazyRow() {
+        itemsIndexed(images.value!!) { _, image ->
+            image.filename?.let { TripPhotoItem(context = context, fileName = it) }
+        }
+    }
+
+    //this retrieves all coordinates saved for the trip
+    //val tripMedia = tripDbViewModel.getTripLocationData(tripId).observeAsState(listOf())
+   /* LazyRow(Modifier.padding(horizontal = 10.dp)) {
         itemsIndexed(tripMedia.value) { _, item ->
             //if imageId/noteId is associated with the coordinates, retrieve all Image and Note data by their ids
             val img = item.image?.let { tripDbViewModel.getImageById(it).observeAsState() }
@@ -230,7 +257,7 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
-                        TripPhotoItem(img.value?.filename.toString())
+                        TripPhotoItem(context, img.value?.filename.toString())
                         Spacer(
                             modifier = Modifier
                                 .size(10.dp)
@@ -255,20 +282,22 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel) {
                 }
             }
         }
-    }
+    }*/
 }
 
-//TODO: display actual image
 @Composable
-fun TripPhotoItem(fileName: String) {
-    Text(
-        fileName,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .size(250.dp)
-            .clip(RoundedCornerShape(15.dp))
-            .background(Color.Gray)
-    )
+fun TripPhotoItem(context: Context, fileName: String) {
+
+    Log.d("GIGI", fileName)
+    val image = viewModel.loadPhotosFromInternalStorage(context, fileName)
+    if (image.isNotEmpty()) {
+        Image(
+            image[0].bmp.asImageBitmap(), "trip photo", modifier = Modifier
+                .size(250.dp)
+            //.clip(RoundedCornerShape(15.dp))
+            //.background(Color.Gray)
+        )
+    }
 }
 
 @Composable
