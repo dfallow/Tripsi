@@ -63,11 +63,12 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         // used for updating ui
         polyline = Polyline()
         Log.d("CurrentTripMoments", currentTripMoments.toString())
-        polyline.setPoints(currentTripMoments)
+        val polylinePoints = viewModel.createPolylinePoints()
+        polyline.setPoints(polylinePoints)
         momentLocations = arrayOf(Marker(currentTripMap))
         for (moment in currentTripMoments) {
             val moMarker = Marker(currentTripMap)
-            moMarker.position = moment
+            moMarker.position = moment.location
 
             moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
 

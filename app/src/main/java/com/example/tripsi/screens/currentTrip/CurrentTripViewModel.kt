@@ -40,6 +40,19 @@ class CurrentTripViewModel: ViewModel() {
         MutableLiveData<ArrayList<Moment>>()
     }
 
+    val polylinePoints: MutableLiveData<ArrayList<GeoPoint>> by lazy {
+        MutableLiveData<ArrayList<GeoPoint>>()
+    }
+
+    fun createPolylinePoints(): List<GeoPoint> {
+        val tempPolylineArray = ArrayList<GeoPoint>()
+        for (moment in currentTripMoments.value!!) {
+            tempPolylineArray += moment.location
+        }
+        polylinePoints.value = tempPolylineArray
+        return polylinePoints.value!!
+    }
+
     // value is just used to update the MutableLiveData object
     private val tempMomentArray = ArrayList<Moment>()
 
@@ -65,6 +78,15 @@ class CurrentTripViewModel: ViewModel() {
             MomentPosition.MIDDLE.position
         )
         currentTripMoments.value = tempMomentArray
+    }
+
+    fun addEndLocation(location: Location) {
+        tempMomentArray += Moment(
+            GeoPoint(location.userLocation.latitude, location.userLocation.longitude),
+            null,
+            null,
+            MomentPosition.END.position
+        )
     }
 
     // clears temporary value and resets the currentStatus, also removes location updates
