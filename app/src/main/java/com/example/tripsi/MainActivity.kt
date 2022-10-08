@@ -74,21 +74,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    //Navigation(navController = NavHostController(this))
-
 
                     //for testing purposes
                     val trips = tripDbViewModel.getAllTrips().observeAsState()
                     //Text(trips.value.toString())
 
                     BottomNavigation(context = this, location, tripDbViewModel)
-                    //Navigation(context = this, location, tripDbViewModel)
-
-
-                    //Text("Hello there")
-                    //CurrentTripView(location, this, application)
-                    //AddMoment(location, context = this)
-                    //PlanTrip()
                 }
             }
         }

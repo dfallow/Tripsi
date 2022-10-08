@@ -1,6 +1,7 @@
 package com.example.tripsi.utils
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -36,17 +37,20 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation(
-        elevation = 8.dp
-    ) {
-        screens.forEach { screens ->
-            AddItem(
-                screen = screens,
-                currentDestination = currentDestination,
-                navController = navController
-            )
+    if (currentDestination != navController.findDestination(Screen.HomeScreen.route)) {
+        BottomNavigation(
+            elevation = 8.dp
+        ) {
+            screens.forEach { screens ->
+                AddItem(
+                    screen = screens,
+                    currentDestination = currentDestination,
+                    navController = navController
+                )
+            }
         }
     }
+
 }
 
 @Composable
