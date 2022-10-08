@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.startActivityForResult
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.osmdroid.util.GeoPoint
 
@@ -33,5 +34,21 @@ class CurrentTripViewModel: ViewModel() {
         GeoPoint(60.259, 24.683),
         GeoPoint(60.301, 24.958)
     )
+
+
+    val currentSteps = MutableLiveData(0)
+    private val stepsBottomLine = MutableLiveData<Int>(null)
+
+    val isRunning = MutableLiveData<Boolean?>(null)
+
+    fun setSteps(stepAmount: Int) {
+        var steps = stepAmount
+        if (stepsBottomLine.value == null) {
+            stepsBottomLine.value = stepAmount
+            steps ++
+        }
+        currentSteps.value = steps - (stepsBottomLine.value ?: 0)
+    }
+
 
 }

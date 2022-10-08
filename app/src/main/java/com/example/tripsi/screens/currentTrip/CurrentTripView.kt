@@ -7,12 +7,15 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.lifecycle.MutableLiveData
 import com.example.tripsi.R
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
@@ -23,6 +26,7 @@ val viewModel = CurrentTripViewModel()
 fun CurrentTripView(location: Location, context: Context, navController: NavController) {
 
     location.startUpdatingLocation()
+    var currentSteps = StepCounter().toString()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -41,10 +45,9 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
                 verticalArrangement = Arrangement.Bottom
             ) {
                 TripInfoOverlay(type = "Distance", measurement = "79km")
-                TripInfoOverlay(type = "Speed", measurement = "40km/h")
+                TripInfoOverlay(type = "Steps", measurement = currentSteps)
                 TripInfoOverlay(type = "Time", measurement = "2-3hours")
             }
-
         }
 
         Row(modifier = Modifier
