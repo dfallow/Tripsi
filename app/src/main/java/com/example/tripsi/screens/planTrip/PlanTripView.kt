@@ -7,9 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import android.app.DatePickerDialog
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -17,24 +20,29 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tripsi.R
 import com.example.tripsi.data.TravelMethod
 import com.example.tripsi.functionality.TripDbViewModel
-import com.example.tripsi.utils.Screen
 import java.util.*
+
+
 
 @Composable
 fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel) {
     val planTripViewModel = PlanTripViewModel()
     val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .padding(10.dp)
@@ -49,7 +57,8 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
         )
         DatePicker(planTripViewModel)
         TextInput(planTripViewModel)
-        MapAddressPickerView(planTripViewModel)
+        //MapAddressPickerView(planTripViewModel)
+        FinalLocationPicker(planTripViewModel)
         TripType(planTripViewModel)
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -93,7 +102,89 @@ fun TextInput(planTripViewModel: PlanTripViewModel) {
         label = { Text("Name of your trip", color = Color(0xFF2D0320)) },
         modifier = Modifier
             .fillMaxWidth(),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = Color(0xFFCBEF43),
+            unfocusedBorderColor = Color(0xFF3C493F)
+        )
+    )
+}
 
+@Composable
+fun FinalLocationPicker(planTripViewModel: PlanTripViewModel) {
+    val focusManager = LocalFocusManager.current
+    val focusRequester = FocusRequester()
+    val context = LocalContext.current
+    var text by remember { mutableStateOf("") }
+    val currentLocation = planTripViewModel.location.collectAsState()
+
+
+    currentLocation.value.let {
+        if (planTripViewModel.searchState.value == SearchState.SAVED.status) {
+            text = planTripViewModel.getAddressFromLocation(context)
+        }
+    }
+    OutlinedTextField(
+        value = text,
+        onValueChange = {
+            planTripViewModel.tripDestination = it
+            text = it
+            if (planTripViewModel.searchState.value == SearchState.SEARCHING.status) {
+                planTripViewModel.onTextChanged(context, text)
+            }
+        },
+        trailingIcon = {
+            when (planTripViewModel.searchState.value) {
+                SearchState.EMPTY.status -> {
+                }
+                SearchState.SEARCHING.status -> {
+                    Icon(
+                        Icons.Default.Search,
+                        contentDescription = "search text",
+                        modifier = Modifier.clickable {
+                            if (text != "") {
+                                    focusManager.clearFocus(true)
+                                    planTripViewModel.searchState.value = SearchState.SAVED.status
+                            } else {
+                                Toast.makeText(context, "Please Enter a Destination", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    )
+                }
+                SearchState.SAVED.status -> {
+                    Icon(
+                        Icons.Default.Clear,
+                        contentDescription = "clear text",
+                        modifier = Modifier.clickable {
+                            text = ""
+                            planTripViewModel.searchState.value = SearchState.SEARCHING.status
+                            focusRequester.requestFocus()
+                        }
+                    )
+                }
+            }
+
+        },
+        label = { Text("What's your final destination", color = Color(0xFF2D0320)) },
+
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
+            .onFocusChanged {
+                planTripViewModel.addressText.value = ""
+                planTripViewModel.searchState.value = SearchState.SEARCHING.status
+            },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                if (text != "") {
+                    focusManager.clearFocus(true)
+                    planTripViewModel.searchState.value = SearchState.SAVED.status
+                } else {
+                    Toast.makeText(context, "Please Enter a Destination", Toast.LENGTH_SHORT).show()
+                }
+            }
+        ),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Color(0xFFCBEF43),
             unfocusedBorderColor = Color(0xFF3C493F)
@@ -118,7 +209,9 @@ fun MapAddressPickerView(planTripViewModel: PlanTripViewModel) {
             }
         }
         Column {
-            Row(modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp)) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp)) {
                 OutlinedTextField(
                     value = text,
                     onValueChange = {
