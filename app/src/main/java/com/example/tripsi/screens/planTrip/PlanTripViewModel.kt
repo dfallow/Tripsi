@@ -22,6 +22,8 @@ class PlanTripViewModel() : ViewModel() {
     var isMapEditable = mutableStateOf(true)
     private var timer: CountDownTimer? = null
 
+    val searchState = mutableStateOf(SearchState.EMPTY.status)
+
     //information to be saved to database
     var tripDate: String? = null
     var tripName: String? = null
@@ -95,11 +97,13 @@ class PlanTripViewModel() : ViewModel() {
             ex.printStackTrace()
         }
 
-        val address: Address? = addresses?.get(0)
-        addressText = address?.getAddressLine(0) ?: ""
+        val city = addresses?.get(0)?.locality ?: ""
+        val country = addresses?.get(0)?.countryName
+        //val address: Address? = addresses?.get(0)
+        //addressText = address?.getAddressLine(0) ?: ""
 
 
-        return addressText
+        return "$city, $country"
     }
 
     fun onTextChanged(context: Context, text: String) {

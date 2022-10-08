@@ -36,21 +36,24 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation(
-        elevation = 8.dp
-    ) {
-        screens.forEach { screens ->
-            addItem(
-                screen = screens,
-                currentDestination = currentDestination,
-                navController = navController
-            )
+    if (currentDestination != navController.findDestination(Screen.HomeScreen.route)) {
+        BottomNavigation(
+            elevation = 8.dp
+        ) {
+            screens.forEach { screens ->
+                AddItem(
+                    screen = screens,
+                    currentDestination = currentDestination,
+                    navController = navController
+                )
+            }
         }
     }
+
 }
 
 @Composable
-fun RowScope.addItem(
+fun RowScope.AddItem(
     screen: Screen,
     currentDestination: NavDestination?,
     navController: NavHostController
