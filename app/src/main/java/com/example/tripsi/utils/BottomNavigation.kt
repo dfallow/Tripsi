@@ -1,7 +1,6 @@
 package com.example.tripsi.utils
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable

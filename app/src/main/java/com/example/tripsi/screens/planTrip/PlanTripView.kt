@@ -58,7 +58,7 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
             Button(
                 onClick = {
                     val saved = planTripViewModel.saveTrip(tripDbViewModel, context)
-                    if (saved) navController.navigate(Screen.HomeScreen.route)
+                    if (saved) navController.navigateUp()
                 },
                 colors = ButtonDefaults.buttonColors(Color(0xFFCBEF43))
             ) {
@@ -68,7 +68,7 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
                 )
             }
             Button(
-                onClick = { navController.navigate(Screen.HomeScreen.route) },
+                onClick = { navController.navigateUp() },
                 colors = ButtonDefaults.buttonColors(Color(0xFF200217))
             ) {
                 Text(
