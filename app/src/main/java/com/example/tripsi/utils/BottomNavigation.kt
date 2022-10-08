@@ -40,7 +40,7 @@ fun BottomBar(navController: NavHostController) {
         elevation = 8.dp
     ) {
         screens.forEach { screens ->
-            addItem(
+            AddItem(
                 screen = screens,
                 currentDestination = currentDestination,
                 navController = navController
@@ -50,7 +50,7 @@ fun BottomBar(navController: NavHostController) {
 }
 
 @Composable
-fun RowScope.addItem(
+fun RowScope.AddItem(
     screen: Screen,
     currentDestination: NavDestination?,
     navController: NavHostController
