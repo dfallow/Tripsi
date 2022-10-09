@@ -46,7 +46,7 @@ fun AddMoment(navController: NavController, context: Context, location: Location
         MomentDetails(location = location, context = context)
         MomentComment()
         MomentPictures()
-        SaveOrDiscard(navController, context)
+        SaveOrDiscard(navController, context, location)
     }
 }
 
@@ -119,7 +119,10 @@ fun MomentComment(
 
     TextField(
         value = comment,
-        onValueChange = { comment = it },
+        onValueChange = {
+            comment = it
+            viewModel.momentComment.value = comment
+                        },
         shape = RoundedCornerShape(10.dp),
         //textStyle = TextStyle(color = Color.Blue),
         label = { Text("Describe the moment...") },
@@ -161,6 +164,7 @@ fun MomentPictures() {
         Log.d("photo", "test")
         photoThumbnails.add(it)
         Log.d("photo", photoThumbnails.toString())
+        viewModel.momentPhotos.add(it)
     }
 
     Column(
@@ -211,7 +215,7 @@ fun MomentPictures() {
 }
 
 @Composable
-fun SaveOrDiscard(navController: NavController, context: Context) {
+fun SaveOrDiscard(navController: NavController, context: Context, location: Location) {
     // Contains the buttons for saving or discarding the moment
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
@@ -224,7 +228,12 @@ fun SaveOrDiscard(navController: NavController, context: Context) {
         Button(
             onClick = {
             /*TODO*/
-                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                      viewModel.addLocation(
+                          location = location,
+                          description = viewModel.momentComment.value,
+                          photos = viewModel.momentPhotos
+                      )
+                navController.navigateUp()
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape

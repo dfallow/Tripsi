@@ -70,7 +70,7 @@ class CurrentTripViewModel: ViewModel() {
 
     // Used for adding moments and endLocation to UI temporarily
     // TODO Create an object that holds both GeoPoint and Boolean?
-    fun addLocation(location: Location, description: String?, photos: MutableList<Bitmap?>?, isEnd: Boolean) {
+    fun addLocation(location: Location, description: String?, photos: MutableList<Bitmap?>?) {
         tempMomentArray += Moment(
             GeoPoint(location.userLocation.latitude, location.userLocation.longitude),
             description,
@@ -88,6 +88,10 @@ class CurrentTripViewModel: ViewModel() {
             MomentPosition.END.position
         )
     }
+
+    // AddMoment values
+    val momentComment = mutableStateOf("")
+    val momentPhotos = mutableListOf<Bitmap?>()
 
     // clears temporary value and resets the currentStatus, also removes location updates
     fun goHome(location: Location) {
