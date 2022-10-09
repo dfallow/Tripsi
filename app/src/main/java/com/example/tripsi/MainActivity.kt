@@ -1,10 +1,14 @@
 package com.example.tripsi
 
+import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -18,16 +22,29 @@ import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.example.tripsi.data.*
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.Location
 import org.osmdroid.config.Configuration
 
 class MainActivity : ComponentActivity() {
     companion object {
         private lateinit var tripDbViewModel: TripDbViewModel
+        private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+
     }
+    private val weatherViewModel: WeatherViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
+            weatherViewModel.loadWeatherInfo()
+        }
+        permissionLauncher.launch(arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+        ))
 
         //initialize database view model
         tripDbViewModel = TripDbViewModel(application)
@@ -46,13 +63,13 @@ class MainActivity : ComponentActivity() {
         if ((Build.VERSION.SDK_INT >= 23 &&
                     ContextCompat.checkSelfPermission(
                         this,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                        Manifest.permission.ACCESS_FINE_LOCATION
                     ) !=
                     PackageManager.PERMISSION_GRANTED)
         ) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 0
             )
         }
@@ -81,7 +98,7 @@ class MainActivity : ComponentActivity() {
                     val trips = tripDbViewModel.getAllTrips().observeAsState()
                     //Text(trips.value.toString())
 
-                    BottomNavigation(context = this, location, tripDbViewModel)
+                    BottomNavigation(context = this, location, tripDbViewModel, weatherViewModel)
                     //Navigation(context = this, location, tripDbViewModel)
 
 
@@ -125,7 +142,7 @@ fun addMockData(tripDbViewModel: TripDbViewModel) {
             "Weekend getaway to Paris",
             "Paris",
             TravelMethod.PLANE.method,
-            TripStatus.ACTIVE.status,
+            TripStatus.PAST.status,
             "10/10/2022"
         )
     )
@@ -174,10 +191,9 @@ fun addMockData(tripDbViewModel: TripDbViewModel) {
     tripDbViewModel.addLocation(Location(0, 65.12, 30.19, "11/11/2022", 2, null, 1))
     tripDbViewModel.addLocation(Location(0, 65.12, 35.19, "11/11/2022", 3, null, 1))
     tripDbViewModel.addLocation(Location(0, 40.12, 40.19, "11/12/2022", null, 2, 2))
-    tripDbViewModel.addLocation(Location(0, 60.200, 24.786, "10/10/2022", 4, null, 3))
-    tripDbViewModel.addLocation(Location(0, 60.215, 24.647, "10/10/2022", null, 3, 3))
-    tripDbViewModel.addLocation(Location(0, 60.284, 25.025, "10/10/2022", null, 3, 3))
-    tripDbViewModel.addLocation(Location(0, 60.395, 25.124, "10/10/2022", null, null, 3))
+    tripDbViewModel.addLocation(Location(0, 45.12, 45.19, "10/10/2022", 4, null, 3))
+    tripDbViewModel.addLocation(Location(0, 50.12, 50.19, "10/10/2022", null, 3, 3))
+    tripDbViewModel.addLocation(Location(0, 55.12, 55.19, "10/10/2022", null, null, 3))
     tripDbViewModel.addLocation(Location(0, 70.12, 70.19, "10/2/2022", null, null, 4))
     tripDbViewModel.addLocation(Location(0, 75.12, 75.19, "10/5/2022", 5, null, 5))
 }

@@ -189,6 +189,7 @@ fun DatePicker(planTripViewModel: PlanTripViewModel) {
             planTripViewModel.tripDate = mDate.value
         }, mYear, mMonth, mDay
     )
+    mDatePickerDialog.datePicker.minDate = mCalendar.timeInMillis
 
     Row(
         modifier = Modifier
