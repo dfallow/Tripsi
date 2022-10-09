@@ -93,6 +93,8 @@ class CurrentTripViewModel: ViewModel() {
     val momentComment = mutableStateOf("")
     val momentPhotos = mutableListOf<Bitmap?>()
 
+    val momentId = mutableStateOf("")
+
     // clears temporary value and resets the currentStatus, also removes location updates
     fun goHome(location: Location) {
         tempMomentArray.clear()

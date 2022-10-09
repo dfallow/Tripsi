@@ -68,13 +68,15 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         momentLocations = arrayOf(Marker(currentTripMap))
         for (moment in currentTripMoments) {
             val moMarker = Marker(currentTripMap)
+            moMarker.id = moment.location.toString()
             moMarker.position = moment.location
-
             moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
 
             moMarker.setOnMarkerClickListener { marker, mapView ->
                 Log.d("marker","${marker.position}")
+                viewModel.momentId.value = moMarker.id
                 viewModel.displayMoment()
+                Log.d("marker", "test")
                 true
             }
             momentLocations += moMarker
