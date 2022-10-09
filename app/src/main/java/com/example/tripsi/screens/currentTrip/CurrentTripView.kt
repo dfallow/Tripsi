@@ -241,6 +241,8 @@ fun ShowMoment() {
                                 .fillMaxHeight()
 
                         ) {
+                            //Log.d("momentSent", viewModel.currentTripMoments.value.toString())
+                            Log.d("momentSent", moment.toString())
                             PopupMoment(R.drawable.location_svgrepo_com, moment)
                         }
                     }

@@ -161,15 +161,15 @@ fun myAppTextFieldColors(
 
 @Composable
 fun MomentPictures() {
-
+    //if (viewModel.momentSaved.value) {
+    //    viewModel.momentPhotos.clear()
+    //    viewModel.momentSaved.value = false
+    //}
     val photoThumbnails = remember { mutableListOf<Bitmap?>(null) }
-
     val result = remember { mutableStateOf<Bitmap?>(null) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
         result.value = it
-        Log.d("photo", "test")
         photoThumbnails.add(it)
-        Log.d("photo", photoThumbnails.toString())
         viewModel.momentPhotos.add(it)
     }
 
@@ -239,6 +239,7 @@ fun SaveOrDiscard(navController: NavController, context: Context, location: Loca
                           description = viewModel.momentComment.value,
                           photos = viewModel.momentPhotos
                       )
+                //viewModel.momentSaved.value = true
                 navController.navigateUp()
             },
             modifier = viewModel.modifier,

@@ -93,6 +93,7 @@ class CurrentTripViewModel: ViewModel() {
     data class MomentInfo(val date: String, val time: String, val location: String)
 
     // AddMoment values
+    val momentSaved = mutableStateOf(true)
     val momentComment = mutableStateOf("")
     val momentPhotos = mutableListOf<Bitmap?>()
     val momentId = mutableStateOf("")
