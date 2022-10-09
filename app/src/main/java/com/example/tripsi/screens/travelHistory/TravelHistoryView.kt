@@ -1,5 +1,6 @@
 package com.example.tripsi.screens.travelHistory
 
+import android.util.Log
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController

@@ -4,7 +4,9 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.room.Transaction
 import com.example.tripsi.data.*
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
@@ -101,8 +103,6 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getNoteById(noteId: Int): LiveData<Note> = db.noteDao().getNoteById(noteId)
 
-    fun getNoteByName(noteName: String): LiveData<Note> = db.noteDao().getNoteByName(noteName)
-
     fun addNote(note: Note) {
         viewModelScope.launch {
             db.noteDao().insert(note)
@@ -131,6 +131,8 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     fun getTripEndCoords(tripId: Int): LiveData<Location> =
         db.locationDao().getTripEndLocation(tripId)
 
+    fun getLocationWithMedia(tripId: Int): LiveData<List<Location>> = db.locationDao().getLocationsWithMedia(tripId)
+
     fun addLocation(location: Location) {
         viewModelScope.launch {
             db.locationDao().insert(location)
@@ -152,5 +154,9 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     //get all trips and their data by trip status
     fun getAllTripsDataByStatus(status: Int): LiveData<List<TripData>> =
         db.tripDao().getAllTripDataByStatus(status)
+
+    //get location with all its images
+    fun getAllLocationImagesAndNote(locationId: String): LiveData<LocationWithImagesAndNotes> =
+        db.locationDao().getAllLocationImagesAndNote(locationId)
 
 }

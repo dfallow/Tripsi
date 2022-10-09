@@ -30,12 +30,15 @@ interface TripDao : BaseDao<Trip> {
     @Query("UPDATE trip SET status = :status WHERE trip.tripId = :tripId")
     suspend fun updateTripStatus(status: Int, tripId: Int)
 
+    @Transaction
     @Query("SELECT * FROM trip WHERE trip.tripId = :tripId")
     fun getTripData(tripId: Int): LiveData<TripData>
 
+    @Transaction
     @Query("SELECT * FROM trip")
     fun getAllTripsData(): LiveData<List<TripData>>
 
+    @Transaction
     @Query("SELECT * FROM trip WHERE trip.status = :status")
     fun getAllTripDataByStatus(status: Int): LiveData<List<TripData>>
 }
@@ -76,10 +79,6 @@ interface NoteDao : BaseDao<Note> {
     //get one note by id
     @Query("SELECT * FROM note WHERE note.noteId = :noteId")
     fun getNoteById(noteId: Int): LiveData<Note>
-
-    //get note by noteName
-    @Query("SELECT * FROM note WHERE note.noteName = :noteName")
-    fun getNoteByName(noteName: String): LiveData<Note>
 }
 
 @Dao
@@ -96,4 +95,13 @@ interface LocationDao : BaseDao<Location> {
     //get end coordinates of the trip
     @Query("SELECT * FROM location WHERE location.isEnd = 'true' AND location.trip = :tripId")
     fun getTripEndLocation(tripId: Int): LiveData<Location>
+
+    //get only those locations of the trip that have media
+    @Query("SELECT * FROM location WHERE location.trip = :tripId AND location.hasMedia = :hasMedia")
+    fun getLocationsWithMedia(tripId: Int, hasMedia: Boolean = true): LiveData<List<Location>>
+
+    //get all images and a note for a particular location
+    @Transaction
+    @Query("SELECT * FROM location WHERE location.locationId = :locationId")
+    fun getAllLocationImagesAndNote(locationId: String): LiveData<LocationWithImagesAndNotes>
 }
