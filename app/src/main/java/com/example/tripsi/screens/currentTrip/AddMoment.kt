@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.location.Geocoder
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
@@ -26,11 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.example.tripsi.utils.Location
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.collections.List
 import androidx.navigation.NavController
 import com.example.tripsi.utils.Screen
 
@@ -75,7 +70,7 @@ fun MomentDetails(location: Location, context: Context) {
 
     Card(
         // Moment Information
-        backgroundColor = MaterialTheme.colors.onBackground,
+        backgroundColor = colors.onBackground,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.15f)

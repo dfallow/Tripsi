@@ -19,6 +19,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PopupMoment(imageId: Int, moment: CurrentTripViewModel.Moment) {
+
+    /* TODO Known issue -> each moment displays all photos that have been temporarily stored,
+    *   instead of only the photos associated with the moment */
+
     Box(
         Modifier
             .fillMaxWidth()
@@ -39,7 +43,6 @@ fun PopupMoment(imageId: Int, moment: CurrentTripViewModel.Moment) {
                 shape = RoundedCornerShape(10)
             ) {
                 var momentNumber by remember { mutableStateOf(0) }
-                //Image(painter = painterResource(imageId), contentDescription = "something")
                 if (moment.photos != null) {
                     Box(modifier = Modifier.fillMaxSize()){
                         Image(

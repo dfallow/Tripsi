@@ -20,13 +20,17 @@ import java.text.SimpleDateFormat
 
 class CurrentTripViewModel: ViewModel() {
 
+
+    // Data classes for temporary information for moments which update the UI without data stored in database
+    data class Moment(val location: GeoPoint, val description: String?, val photos: MutableList<Bitmap?>?, val position: Int)
+    data class MomentInfo(val date: String, val time: String, val location: String)
+
     // Temporary status of trip, used to update UI
     var currentStatus by mutableStateOf(TripStatus.UPCOMING.status)
     fun startActive() { currentStatus = TripStatus.ACTIVE.status }
     fun endActive() { currentStatus = TripStatus.PAST.status }
 
-    data class Moment(val location: GeoPoint, val description: String?, val photos: MutableList<Bitmap?>?, val position: Int)
-
+    // Used for the PopupMoment
     var showMoment by mutableStateOf(false)
     fun displayMoment()  { showMoment = true }
     fun hideMoment() { showMoment = false }
@@ -41,6 +45,7 @@ class CurrentTripViewModel: ViewModel() {
         MutableLiveData<ArrayList<Moment>>()
     }
 
+    // Array of Points for which the polyline will draw between
     val polylinePoints: MutableLiveData<ArrayList<GeoPoint>> by lazy {
         MutableLiveData<ArrayList<GeoPoint>>()
     }
@@ -89,8 +94,6 @@ class CurrentTripViewModel: ViewModel() {
             MomentPosition.END.position
         )
     }
-
-    data class MomentInfo(val date: String, val time: String, val location: String)
 
     // AddMoment values
     val momentSaved = mutableStateOf(true)
