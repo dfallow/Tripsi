@@ -67,6 +67,12 @@ fun MomentDetails(location: Location, context: Context) {
     )
     val cityName = address[0].locality
 
+    viewModel.momentInfo = CurrentTripViewModel.MomentInfo(
+        dateFormat.format(now),
+        timeFormat.format(now),
+        cityName
+        )
+
     Card(
         // Moment Information
         backgroundColor = MaterialTheme.colors.onBackground,

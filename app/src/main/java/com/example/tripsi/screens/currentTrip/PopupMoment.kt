@@ -92,32 +92,7 @@ fun PopupMoment(imageId: Int, moment: CurrentTripViewModel.Moment) {
                         }
 
                     }
-
-                   /*LazyRow() {
-                       itemsIndexed(moment.photos) { _, item ->
-                           if (item != null && isVisble) {
-
-                               Card(
-                                   shape = RoundedCornerShape(10.dp),
-                                   modifier = Modifier
-                                       .size(150.dp, 150.dp)
-                                       .padding(10.dp)
-                               ) {
-                                   Image(
-                                       item.asImageBitmap(),
-                                       null,
-                                       contentScale = ContentScale.FillBounds,
-                                       modifier = Modifier
-                                           .fillMaxSize()
-
-                                   )
-                               }
-                           }
-                       }
-                   }*/
                 }
-
-                viewModel.momentPhotos[0]
             }
             Column(
                 // Contains the moment information such as date, location, time
@@ -127,9 +102,9 @@ fun PopupMoment(imageId: Int, moment: CurrentTripViewModel.Moment) {
                     .padding(horizontal = 5.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text("Date", color = Color.Black)
-                Text("Time")
-                Text(moment.location.toString())
+                Text(viewModel.momentInfo.date, color = Color.Black)
+                Text(viewModel.momentInfo.time)
+                Text(viewModel.momentInfo.location)
 
             }
         }

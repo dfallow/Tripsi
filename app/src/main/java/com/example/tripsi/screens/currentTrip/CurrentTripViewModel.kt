@@ -16,6 +16,7 @@ import com.example.tripsi.data.TripStatus
 import com.example.tripsi.utils.Location
 import org.osmdroid.util.GeoPoint
 import java.text.FieldPosition
+import java.text.SimpleDateFormat
 
 class CurrentTripViewModel: ViewModel() {
 
@@ -89,11 +90,13 @@ class CurrentTripViewModel: ViewModel() {
         )
     }
 
+    data class MomentInfo(val date: String, val time: String, val location: String)
+
     // AddMoment values
     val momentComment = mutableStateOf("")
     val momentPhotos = mutableListOf<Bitmap?>()
-
     val momentId = mutableStateOf("")
+    lateinit var momentInfo: MomentInfo
 
     // clears temporary value and resets the currentStatus, also removes location updates
     fun goHome(location: Location) {

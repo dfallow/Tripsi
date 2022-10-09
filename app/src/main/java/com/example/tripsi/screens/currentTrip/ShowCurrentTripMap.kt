@@ -70,7 +70,13 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
             val moMarker = Marker(currentTripMap)
             moMarker.id = moment.location.toString()
             moMarker.position = moment.location
-            moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
+
+            // Shows different icon if moment is either Start/End or Middle
+            if (moment.position == MomentPosition.START.position || moment.position == MomentPosition.END.position) {
+                moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
+            } else {
+                moMarker.icon = ContextCompat.getDrawable(context, R.drawable.photo_svgrepo_com)
+            }
 
             moMarker.setOnMarkerClickListener { marker, mapView ->
                 Log.d("marker","${marker.position}")

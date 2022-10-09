@@ -117,8 +117,6 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
 
         Button(
             onClick = {
-                /*TODO*/
-                Log.d("addMoment", "here")
                 viewModel.addLocation(location,"",null)
                 val middleLocation = LocationData(
                     0,
@@ -134,7 +132,6 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
                 tripDbViewModel.addLocation(middleLocation)
                 viewModel.toggleText()
                 viewModel.startActive()
-                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape
@@ -180,7 +177,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
 fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     Button(
         onClick = {
-            viewModel.addLocation(location, "",null)
+            viewModel.addEndLocation(location)
             val endLocation = LocationData(
                 0,
                 location.userLocation.latitude,
