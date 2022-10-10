@@ -108,7 +108,7 @@ class CurrentTripViewModel : ViewModel() {
 
     }
 
-     fun saveNoteToDb(tripDbViewModel: TripDbViewModel) {
+    fun saveNoteToDb(tripDbViewModel: TripDbViewModel) {
         val trip = tripDbViewModel.tripData.trip!!.tripId
 
         if (momentNote != null && !noteSaved && momentLocation != null) {
@@ -123,7 +123,7 @@ class CurrentTripViewModel : ViewModel() {
                         )
                     )
                     noteSaved = true
-                    Log.d("GIGI", "Note saved to database")
+                    Log.d("ROOM", "Note saved to database")
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -147,12 +147,12 @@ class CurrentTripViewModel : ViewModel() {
                             hasMedia = true
                         )
                     )
-                    Log.d("GIGI", "Location saved succesfully")
+                    Log.d("ROOM", "Location saved succesfully")
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             } else {
-                Log.d("GIGI", "MomentLocation is null")
+                Log.d("ROOM", "MomentLocation is null")
             }
         }
     }

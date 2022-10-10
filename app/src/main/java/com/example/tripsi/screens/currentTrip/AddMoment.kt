@@ -5,13 +5,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Geocoder
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -19,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,15 +24,14 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
-import com.example.tripsi.data.Image
 import com.example.tripsi.data.Note
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
-import kotlinx.coroutines.*
+import com.example.tripsi.utils.rotateImageIfRequired
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -176,8 +172,7 @@ fun myAppTextFieldColors(
 
 @Composable
 fun MomentPictures(context: Context) {
-    val photoThumbnails =  remember { mutableListOf<Bitmap?>(null) }
-
+    val photoThumbnails = remember { mutableListOf<Bitmap?>(null) }
     val result = remember { mutableStateOf<Bitmap?>(null) }
 
     val dir = context.filesDir
@@ -189,7 +184,9 @@ fun MomentPictures(context: Context) {
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
         if (it) {
             try {
-                result.value = BitmapFactory.decodeFile(currentPhotoPath)
+                val bmp = BitmapFactory.decodeFile(currentPhotoPath)
+                val rotatedImg = rotateImageIfRequired(bmp, currentPhotoPath)
+                result.value = rotatedImg
                 photoThumbnails.add(result.value)
                 viewModel.momentImageFilenames.add(filename)
             } catch (e: IOException) {
@@ -233,8 +230,7 @@ fun MomentPictures(context: Context) {
         // TODO If I remove this the photos do not appear in the above lazyRow
         Row {
             result.value?.let {
-                Image(result.value!!.asImageBitmap(), null, Modifier
-                    .fillMaxWidth(0.3f))
+                //TODO
             }
         }
 
