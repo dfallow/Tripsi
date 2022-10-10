@@ -6,15 +6,17 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
+import org.osmdroid.util.Distance
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 val stepViewModel = CurrentTripViewModel()
 
 @Composable
-fun StepCounter() {
+fun StepCounterSensor() {
     val ctx = LocalContext.current
 
     val sensorManager: SensorManager = ctx.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -43,20 +45,35 @@ fun StepCounter() {
         stepSensor,
         SensorManager.SENSOR_DELAY_NORMAL
     )
-    CounterScreen(stepVM = stepViewModel)
-
+    //viewModel.reset()
+    StepCounter(stepVM = stepViewModel)
+    //DistanceCounter(stepVM = stepViewModel)
 }
 
 @Composable
-fun LaunchStepCounter(
+fun ShowSteps(
     currentSteps: Int
 ) {
     TripInfoOverlay(type = "Steps", measurement = "$currentSteps")
 }
+@Composable
+fun ShowDistance(
+    currentSteps: Int
+
+) {
+//    var roundedDistance = String.format("%.2f", currentDistance)
+//    val bd = BigDecimal(currentDistance)
+//    val roundoff = bd.setScale(2, RoundingMode.DOWN)
+
+    var distance = viewModel.setDistance(currentSteps)
+
+    TripInfoOverlay(type = "Distance", measurement = "$distance m")
+}
 
 @Composable
-fun CounterScreen(stepVM: CurrentTripViewModel) {
+fun StepCounter(stepVM: CurrentTripViewModel) {
     val steps by stepVM.currentSteps.observeAsState(0)
-    LaunchStepCounter(currentSteps = steps)
+    ShowSteps(currentSteps = steps)
+    ShowDistance(currentSteps = steps)
 
 }

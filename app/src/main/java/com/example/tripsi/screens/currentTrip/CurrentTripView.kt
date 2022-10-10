@@ -7,15 +7,12 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
-import androidx.lifecycle.MutableLiveData
 import com.example.tripsi.R
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
@@ -43,8 +40,7 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                TripInfoOverlay(type = "Distance", measurement = "79km")
-                StepCounter()
+                StepCounterSensor()
                 TripInfoOverlay(type = "Time", measurement = "2-3hours")
             }
         }

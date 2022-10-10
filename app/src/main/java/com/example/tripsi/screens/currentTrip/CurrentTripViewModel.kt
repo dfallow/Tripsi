@@ -1,7 +1,6 @@
 package com.example.tripsi.screens.currentTrip
 
-import android.content.Intent
-import android.provider.MediaStore
+import android.util.Log
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
@@ -9,10 +8,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.osmdroid.util.GeoPoint
+import java.text.DecimalFormat
 
 class CurrentTripViewModel: ViewModel() {
 
@@ -38,7 +37,10 @@ class CurrentTripViewModel: ViewModel() {
     // Variables and fun for counting steps
     val currentSteps = MutableLiveData(0)
     private val stepsBottomLine = MutableLiveData<Int>(null)
+    var distance = MutableLiveData(0)
 
+
+    // Setting step counting
     fun setSteps(stepAmount: Int) {
         var steps = stepAmount
         if (stepsBottomLine.value == null) {
@@ -46,6 +48,21 @@ class CurrentTripViewModel: ViewModel() {
             steps ++
         }
         currentSteps.value = steps - (stepsBottomLine.value ?: 0)
+    }
+
+    /*fun reset() {
+        currentSteps.value?.let { stepsBottomLine.value = (stepsBottomLine.value ?: 0).plus(it) }
+        setSteps(stepsBottomLine.value ?: 0)
+    }*/
+
+    // Calculating distance based on steps
+    // 74cm is average step distance
+    fun setDistance(stepAmount: Int) : Int {
+        Log.d("msg", "step amount $stepAmount ")
+
+        distance.value = (stepAmount * 74) / 100
+        Log.d("msg", "distance in set ${distance.value}")
+        return distance.value!!
     }
 
 
