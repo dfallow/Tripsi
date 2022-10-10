@@ -1,7 +1,6 @@
 package com.example.tripsi.screens.currentTrip
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +30,6 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
     var mapInitialized by remember(currentTripMap) { mutableStateOf(false) }
     val userLocation = Marker(currentTripMap)
 
-    //var momentLocations = arrayOf(Marker(currentTripMap))
     val momentsFromDatabase = tripDbViewModel.currentTripMoments
 
     // TODO viewModel.currentTripMoments needs to be ArrayList<Moment>
@@ -41,8 +39,9 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
     var momentLocations: Array<Marker> = arrayOf(Marker(currentTripMap))
 
     fun createMomentMarkers(fromDatabase: Boolean, tripMoments: ArrayList<GeoPoint>) {
+        for ((index, moment) in tripMoments.withIndex()) {
 
-        for (moment in tripMoments) {
+            viewModel.mapMoments.add(index)
             val moMarker = Marker(currentTripMap)
             moMarker.position = moment
             moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
@@ -50,6 +49,7 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
             if (fromDatabase) { moMarker.id = "true" } else { moMarker.id = "false" }
 
             moMarker.setOnMarkerClickListener { _, _ ->
+                viewModel.currentIndex.value = index
                 viewModel.temporaryMoment.value = fromDatabase
                 viewModel.displayMoment()
                 true
