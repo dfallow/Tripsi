@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,24 +12,22 @@ import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.data.TripData
 import com.example.tripsi.functionality.TripDbViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.IOException
 
 class MediaViewModel : ViewModel() {
 
-    var image: MutableLiveData<InternalStoragePhoto>? = null
+    val imageBmps: MutableLiveData<MutableList<InternalStoragePhoto>> = MutableLiveData()
 
-    fun loadPhotosFromInternalStorage(
+    suspend fun loadPhotosFromInternalStorage(
         context: Context,
         filename: String
-    ) {
+    ): InternalStoragePhoto {
         var images: List<InternalStoragePhoto>? = null
-        viewModelScope.launch(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             val files = context.filesDir.listFiles()
             images = files?.filter {
-                //it.canRead() && it.isFile &&
+                it.canRead() && it.isFile &&
                         it.name.equals("$filename.jpg")
             }?.map {
                 val bytes = it.readBytes()
@@ -36,9 +35,6 @@ class MediaViewModel : ViewModel() {
                 InternalStoragePhoto(it.name, bmp)
             }
         }
-        if (images != null) {
-            image!!.postValue(images!![0])
-        }
-        //return images?.get(0)
+        return images!![0]
     }
 }

@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -27,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.tripsi.data.Image
 import com.example.tripsi.data.Note
@@ -35,6 +37,7 @@ import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
 import kotlinx.coroutines.*
 import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -173,29 +176,26 @@ fun myAppTextFieldColors(
 
 @Composable
 fun MomentPictures(context: Context) {
-    val photoThumbnails = remember { mutableListOf<Bitmap?>(null) }
-
-    //val result = remember { mutableStateOf<Bitmap?>(null) }
-/*    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-        result.value = it
-        Log.d("photo", "test")
-        photoThumbnails.add(it)
-        Log.d("photo", photoThumbnails.toString())
-    }*/
+    val photoThumbnails =  remember { mutableListOf<Bitmap?>(null) }
 
     val result = remember { mutableStateOf<Bitmap?>(null) }
 
     val dir = context.filesDir
-    val filename = UUID.randomUUID().toString()
-    val imageFile = File(dir, "$filename.jpg")
+    var filename = UUID.randomUUID().toString()
+    val imageFile = File(dir, "${filename}.jpg")
     val photoURI = FileProvider.getUriForFile(context, "com.example.tripsi.fileprovider", imageFile)
     val currentPhotoPath = imageFile.absolutePath
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
         if (it) {
-            val bmp = BitmapFactory.decodeFile(currentPhotoPath)
-            photoThumbnails.add(bmp)
-            viewModel.momentImageFilenames.add(filename)
+            try {
+                result.value = BitmapFactory.decodeFile(currentPhotoPath)
+                photoThumbnails.add(result.value)
+                viewModel.momentImageFilenames.add(filename)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
         } else {
             Log.d("GIGI", "Picture not taken")
         }
@@ -232,15 +232,17 @@ fun MomentPictures(context: Context) {
 
         // TODO If I remove this the photos do not appear in the above lazyRow
         Row {
-            result.value?.let { }
+            result.value?.let {
+                Image(result.value!!.asImageBitmap(), null, Modifier
+                    .fillMaxWidth(0.3f))
+            }
         }
 
         val scope = rememberCoroutineScope()
         // TODO Replace button with some kind of camera clickable icon
         Button(
             onClick = {
-                Log.d("photo", "test")
-                scope.launch (Dispatchers.Main) {
+                scope.launch {
                     launcher.launch(photoURI)
                 }
             }

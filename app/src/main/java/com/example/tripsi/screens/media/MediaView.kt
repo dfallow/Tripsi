@@ -2,7 +2,6 @@ package com.example.tripsi.screens.media
 
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -18,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,9 +29,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
+import kotlinx.coroutines.delay
 
 val viewModel = MediaViewModel()
 
@@ -237,40 +239,51 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
         }
     }
 
-    val images: MutableList<InternalStoragePhoto> = mutableListOf()
 
-    imagesFilenames.forEach { filename ->
-        viewModel.loadPhotosFromInternalStorage(context, filename)
-        val internalStoragePhoto = viewModel.image?.observeAsState()
-        if (internalStoragePhoto != null) {
-            internalStoragePhoto.value?.let { images.add(it) }
+    LaunchedEffect(imagesFilenames) {
+        val images: MutableList<InternalStoragePhoto> = mutableListOf()
+
+        imagesFilenames.forEach { filename ->
+            val internalStoragePhoto = viewModel.loadPhotosFromInternalStorage(context, filename)
+            //delay(1)
+            internalStoragePhoto?.let {
+                images.add(it)
+            }
         }
+        viewModel.imageBmps.postValue(images)
     }
 
+    val imageBmps = viewModel.imageBmps.observeAsState()
+
     LazyRow(Modifier.padding(horizontal = 10.dp)) {
-        itemsIndexed(images) { _, image ->
-            //if there is at least one image, display the card
-            Column(
-                modifier = Modifier
-                    .padding(15.dp)
-                    .size(270.dp, 370.dp)
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(Color(0xFFD1CCDC)),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Column(modifier = Modifier.padding(20.dp)) {
-                    Image(image.bmp.asImageBitmap(),"trip photo", modifier = Modifier
-                        .size(250.dp))
-                    //TripPhotoItem(context, image.name)
-                    Spacer(
-                        modifier = Modifier
-                            .size(10.dp)
-                            .padding(20.dp)
-                    )
+        imageBmps.value?.let {
+            itemsIndexed(it.toList()) { _, image ->
+                //if there is at least one image, display the card
+                Column(
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .size(270.dp, 370.dp)
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(Color(0xFFD1CCDC)),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Column(modifier = Modifier.padding(20.dp)) {
+                        Image(
+                            image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
+                                .size(250.dp)
+                        )
+                        //TripPhotoItem(context, image.name)
+                        Spacer(
+                            modifier = Modifier
+                                .size(10.dp)
+                                .padding(20.dp)
+                        )
+                    }
                 }
             }
         }
     }
+
 
     //this retrieves all coordinates saved for the trip
     //val tripMedia = tripDbViewModel.getTripLocationData(tripId).observeAsState(listOf())
@@ -322,7 +335,7 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
 @Composable
 fun TripPhotoItem(context: Context, fileName: String) {
 
-    Log.d("GIGI", fileName)
+    /*Log.d("GIGI", fileName)
     viewModel.loadPhotosFromInternalStorage(context, fileName)
     val image = viewModel.image?.observeAsState()
     if (image != null) {
@@ -333,7 +346,7 @@ fun TripPhotoItem(context: Context, fileName: String) {
             //.background(Color.Gray)
         )
         Log.d("GIGI", "testing")
-    }
+    }*/
 }
 
 @Composable
