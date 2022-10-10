@@ -1,19 +1,12 @@
 package com.example.tripsi.screens.media
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.InternalStoragePhoto
-import com.example.tripsi.data.TripData
-import com.example.tripsi.functionality.TripDbViewModel
-import kotlinx.coroutines.*
-import java.io.IOException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MediaViewModel : ViewModel() {
 
@@ -32,7 +25,7 @@ class MediaViewModel : ViewModel() {
             }?.map {
                 val bytes = it.readBytes()
                 val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                InternalStoragePhoto(it.name, bmp)
+                InternalStoragePhoto(it.name, bmp, it.absolutePath)
             }
         }
         return images!![0]

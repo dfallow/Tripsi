@@ -176,7 +176,7 @@ fun MomentPictures(context: Context) {
     val result = remember { mutableStateOf<Bitmap?>(null) }
 
     val dir = context.filesDir
-    var filename = UUID.randomUUID().toString()
+    val filename = UUID.randomUUID().toString()
     val imageFile = File(dir, "${filename}.jpg")
     val photoURI = FileProvider.getUriForFile(context, "com.example.tripsi.fileprovider", imageFile)
     val currentPhotoPath = imageFile.absolutePath

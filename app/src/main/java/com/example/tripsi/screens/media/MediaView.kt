@@ -19,6 +19,8 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,6 +35,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.utils.LoadingSpinner
+import com.example.tripsi.utils.rotateImageIfRequired
 import kotlinx.coroutines.delay
 
 val viewModel = MediaViewModel()
@@ -240,21 +244,25 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
     }
 
 
+    val loading = remember {mutableStateOf(false)}
+
     LaunchedEffect(imagesFilenames) {
         val images: MutableList<InternalStoragePhoto> = mutableListOf()
 
         imagesFilenames.forEach { filename ->
-            val internalStoragePhoto = viewModel.loadPhotosFromInternalStorage(context, filename)
-            //delay(1)
-            internalStoragePhoto?.let {
-                images.add(it)
-            }
+            loading.value = true
+            val result = viewModel.loadPhotosFromInternalStorage(context, filename)
+            val rotatedImg = rotateImageIfRequired(result.bmp, result.path)
+            images.add(InternalStoragePhoto(result.name, rotatedImg, result.path))
         }
         viewModel.imageBmps.postValue(images)
+        loading.value = false
     }
 
     val imageBmps = viewModel.imageBmps.observeAsState()
 
+
+    LoadingSpinner(isDisplayed = loading.value)
     LazyRow(Modifier.padding(horizontal = 10.dp)) {
         imageBmps.value?.let {
             itemsIndexed(it.toList()) { _, image ->
@@ -268,10 +276,14 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
-                        Image(
-                            image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
-                                .size(250.dp)
-                        )
+                        if (loading.value) {
+                            LoadingSpinner(isDisplayed = loading.value)
+                        } else {
+                            Image(
+                                image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
+                                    .size(250.dp)
+                            )
+                        }
                         //TripPhotoItem(context, image.name)
                         Spacer(
                             modifier = Modifier
