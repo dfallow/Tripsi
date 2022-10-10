@@ -58,6 +58,7 @@ class CurrentTripViewModel: ViewModel() {
     val temporaryMoment = mutableStateOf(false)
     val mapMoments = mutableListOf<Int>()
     val currentIndex = mutableStateOf(0)
+    val momentFromDatabase = mutableStateOf("")
 
     // clears temporary value and resets the currentStatus, also removes location updates
     fun goHome(location: Location) {

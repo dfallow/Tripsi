@@ -15,10 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import org.osmdroid.util.GeoPoint
 
 
 @Composable
-fun TemporaryMoment(imageId: Int) {
+fun TemporaryMoment(imageId: Int, moment: GeoPoint) {
     Box(
         Modifier
             .fillMaxWidth()
@@ -50,7 +51,7 @@ fun TemporaryMoment(imageId: Int) {
             ) {
                 Text("Date", color = Color.Black)
                 Text("Time")
-                Text("Location")
+                Text(moment.toString())
 
             }
         }

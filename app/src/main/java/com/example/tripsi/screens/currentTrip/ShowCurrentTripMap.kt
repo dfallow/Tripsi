@@ -50,6 +50,7 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
 
             moMarker.setOnMarkerClickListener { _, _ ->
                 viewModel.currentIndex.value = index
+                viewModel.momentFromDatabase.value = moMarker.id
                 viewModel.temporaryMoment.value = fromDatabase
                 viewModel.displayMoment()
                 true

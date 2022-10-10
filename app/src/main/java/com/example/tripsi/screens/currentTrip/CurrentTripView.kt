@@ -70,7 +70,7 @@ fun CurrentTripView(
     }
 
     if (viewModel.showMoment) {
-        ShowMoment()
+        ShowMoment(tripDbViewModel)
     }
 
 }
@@ -227,10 +227,10 @@ fun GoHomeButton(navController: NavController, location: Location) {
 
 // When the use clicks on a moment on the map
 @Composable
-fun ShowMoment() {
-    val moments = viewModel.currentTripMoments.observeAsState().value
-    if (moments != null) {
+fun ShowMoment(tripDbViewModel: TripDbViewModel) {
+        val moments = viewModel.currentTripMoments.observeAsState().value ?: tripDbViewModel.currentTripMoments
         Popup() {
+            Log.d("momentsMap", moments.toString())
             Surface(
                 color = Color.Black.copy(alpha = 0.6f),
                 modifier = Modifier.fillMaxSize()
@@ -240,16 +240,19 @@ fun ShowMoment() {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
                         .fillMaxHeight()
-
-                ) {
-                    if (viewModel.temporaryMoment.value) {
-                        TemporaryMoment(R.drawable.location_svgrepo_com)
-                    } else {
-                        PopupMoment(R.drawable.photo_svgrepo_com)
-                    }
+                        ) {
+                            for (moment in moments) {
+                                Log.d("momentFrom", viewModel.momentFromDatabase.value)
+                                if (viewModel.currentIndex.value == moments.indexOf(moment)) {
+                                    if (viewModel.momentFromDatabase.value == "true") {
+                                        TemporaryMoment(R.drawable.location_svgrepo_com, moment)
+                                    }
+                                    if (viewModel.momentFromDatabase.value == "false") {
+                                        PopupMoment(R.drawable.photo_svgrepo_com, moment)
+                                    }
+                                }
+                            }
                 }
             }
         }
-    }
-
 }
