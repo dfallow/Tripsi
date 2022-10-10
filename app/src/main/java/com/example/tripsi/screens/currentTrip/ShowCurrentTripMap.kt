@@ -43,6 +43,7 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
     * from the viewModel, as to constantly update the UI when new locations are added
     */
     if ((currentTripMoments == null)) {
+        viewModel.currentStatus = tripDbViewModel.tripData.trip!!.status
         polyline = Polyline()
         polyline.setPoints(momentsFromDatabase)
         // Creates moment markers from locations gotten from database
