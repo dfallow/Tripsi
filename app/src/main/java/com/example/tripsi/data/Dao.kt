@@ -70,35 +70,23 @@ interface ImageDao : BaseDao<Image> {
 }
 
 @Dao
-interface NoteDao : BaseDao<Note> {
-
-    //get all notes from a trip
-    @Query("SELECT * FROM note WHERE note.trip = :tripId")
-    fun getTripNotes(tripId: Int): LiveData<List<Note>>
-
-    //get one note by id
-    @Query("SELECT * FROM note WHERE note.noteId = :noteId")
-    fun getNoteById(noteId: Int): LiveData<Note>
-}
-
-@Dao
 interface LocationDao : BaseDao<Location> {
 
     //get all coordinates from the trip
     @Query("SELECT * FROM location WHERE location.trip = :tripId")
-    fun getTripLocationData(tripId: Int): LiveData<List<Location>>
+    fun getTripLocationData(tripId: Int): LiveData<List<LocationWithImagesAndNotes>>
 
     //get start coordinates of trip
     @Query("SELECT * FROM location WHERE location.isStart = 'true' AND location.trip = :tripId")
-    fun getTripStartLocation(tripId: Int): LiveData<Location>
+    fun getTripStartLocation(tripId: Int): LiveData<LocationWithImagesAndNotes>
 
     //get end coordinates of the trip
     @Query("SELECT * FROM location WHERE location.isEnd = 'true' AND location.trip = :tripId")
-    fun getTripEndLocation(tripId: Int): LiveData<Location>
+    fun getTripEndLocation(tripId: Int): LiveData<LocationWithImagesAndNotes>
 
     //get only those locations of the trip that have media
     @Query("SELECT * FROM location WHERE location.trip = :tripId AND location.hasMedia = :hasMedia")
-    fun getLocationsWithMedia(tripId: Int, hasMedia: Boolean = true): LiveData<List<Location>>
+    fun getLocationsWithMedia(tripId: Int, hasMedia: Boolean = true): LiveData<List<LocationWithImagesAndNotes>>
 
     //get all images and a note for a particular location
     @Transaction

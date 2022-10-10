@@ -228,43 +228,30 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
 
 @Composable
 fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context: Context) {
-    val tripLocations = tripDbViewModel.getLocationWithMedia(tripId).observeAsState()
+    val tripLocationsWithMedia = tripDbViewModel.getLocationWithMedia(tripId).observeAsState()
 
     val imagesFilenames: MutableList<String> = mutableListOf()
 
-    tripLocations.value?.forEach {
-        val locationMedia =
-            tripDbViewModel.getAllLocationImagesAndNote(it.locationId).observeAsState()
-        if (locationMedia.value != null) {
-            val imagesFromOneLocation = locationMedia.value!!.locationImages
-            imagesFromOneLocation?.forEach { image ->
-                image.filename?.let { filename -> imagesFilenames.add(filename) }
-            }
+    tripLocationsWithMedia.value?.forEach { locationWithMedia ->
+        val images = locationWithMedia.locationImages
+        images?.forEach { image ->
+            image.filename?.let { imagesFilenames.add(it) }
         }
     }
-
 
     val loading = remember {mutableStateOf(false)}
 
     LaunchedEffect(imagesFilenames) {
-        val images: MutableList<InternalStoragePhoto> = mutableListOf()
-
-        imagesFilenames.forEach { filename ->
-            loading.value = true
-            val result = viewModel.loadPhotosFromInternalStorage(context, filename)
-            val rotatedImg = rotateImageIfRequired(result.bmp, result.path)
-            images.add(InternalStoragePhoto(result.name, rotatedImg, result.path))
-        }
-        viewModel.imageBmps.postValue(images)
+        loading.value = true
+        viewModel.loadPhotosFromInternalStorage(context, imagesFilenames)
         loading.value = false
     }
 
-    val imageBmps = viewModel.imageBmps.observeAsState()
-
+    val imageBitmaps = viewModel.imageBitmaps.observeAsState()
 
     LoadingSpinner(isDisplayed = loading.value)
     LazyRow(Modifier.padding(horizontal = 10.dp)) {
-        imageBmps.value?.let {
+        imageBitmaps.value?.let {
             itemsIndexed(it.toList()) { _, image ->
                 //if there is at least one image, display the card
                 Column(
@@ -279,10 +266,12 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
                         if (loading.value) {
                             LoadingSpinner(isDisplayed = loading.value)
                         } else {
-                            Image(
-                                image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
-                                    .size(250.dp)
-                            )
+                            if (image != null) {
+                                Image(
+                                    image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
+                                        .size(250.dp)
+                                )
+                            }
                         }
                         //TripPhotoItem(context, image.name)
                         Spacer(
@@ -295,53 +284,6 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
             }
         }
     }
-
-
-    //this retrieves all coordinates saved for the trip
-    //val tripMedia = tripDbViewModel.getTripLocationData(tripId).observeAsState(listOf())
-    /* LazyRow(Modifier.padding(horizontal = 10.dp)) {
-         itemsIndexed(tripMedia.value) { _, item ->
-             //if imageId/noteId is associated with the coordinates, retrieve all Image and Note data by their ids
-             val img = item.image?.let { tripDbViewModel.getImageById(it).observeAsState() }
-             val txt = item.note?.let { tripDbViewModel.getNoteById(it).observeAsState() }
-
-             //if there is at least one image, display the card
-             if (img != null) {
-                 Column(
-                     modifier = Modifier
-                         .padding(15.dp)
-                         .size(270.dp, 370.dp)
-                         .clip(RoundedCornerShape(15.dp))
-                         .background(Color(0xFFD1CCDC)),
-                     horizontalAlignment = Alignment.CenterHorizontally
-                 ) {
-                     Column(modifier = Modifier.padding(20.dp)) {
-                         TripPhotoItem(context, img.value?.filename.toString())
-                         Spacer(
-                             modifier = Modifier
-                                 .size(10.dp)
-                                 .padding(20.dp)
-                         )
-                         if (txt != null) {
-                             TripNoteItem(txt.value?.noteText.toString())
-                         }
-                     }
-                 }
-                 // if there's only a note but no image, display just the note
-             } else if (txt != null) {
-                 Column(
-                     Modifier
-                         .padding(15.dp)
-                         .size(270.dp, 370.dp),
-                     horizontalAlignment = Alignment.CenterHorizontally,
-                     verticalArrangement = Arrangement.Center
-                 ) {
-                     TripNoteItem(txt.value?.noteText.toString())
-
-                 }
-             }
-         }
-     }*/
 }
 
 @Composable

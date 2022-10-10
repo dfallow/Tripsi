@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2392e080175dd94a739c5acfba9c48cc",
+    "identityHash": "56c50e154380b08b07aaac1048d5a242",
     "entities": [
       {
         "tableName": "Trip",
@@ -122,7 +122,7 @@
       },
       {
         "tableName": "Image",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`imgId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `filename` TEXT, `trip` INTEGER NOT NULL, `location` TEXT NOT NULL, FOREIGN KEY(`trip`) REFERENCES `Trip`(`tripId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`location`) REFERENCES `Location`(`locationId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`imgId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `filename` TEXT, `comment` TEXT, `trip` INTEGER NOT NULL, `location` TEXT NOT NULL, FOREIGN KEY(`trip`) REFERENCES `Trip`(`tripId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`location`) REFERENCES `Location`(`locationId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "imgId",
@@ -133,6 +133,12 @@
           {
             "fieldPath": "filename",
             "columnName": "filename",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "comment",
+            "columnName": "comment",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -173,86 +179,6 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_Image_location` ON `${TABLE_NAME}` (`location`)"
-          }
-        ],
-        "foreignKeys": [
-          {
-            "table": "Trip",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "trip"
-            ],
-            "referencedColumns": [
-              "tripId"
-            ]
-          },
-          {
-            "table": "Location",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "location"
-            ],
-            "referencedColumns": [
-              "locationId"
-            ]
-          }
-        ]
-      },
-      {
-        "tableName": "Note",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`noteId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `noteText` TEXT NOT NULL, `trip` INTEGER NOT NULL, `location` TEXT NOT NULL, FOREIGN KEY(`trip`) REFERENCES `Trip`(`tripId`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`location`) REFERENCES `Location`(`locationId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "noteId",
-            "columnName": "noteId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "noteText",
-            "columnName": "noteText",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "trip",
-            "columnName": "trip",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "location",
-            "columnName": "location",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "noteId"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [
-          {
-            "name": "index_Note_trip",
-            "unique": false,
-            "columnNames": [
-              "trip"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_Note_trip` ON `${TABLE_NAME}` (`trip`)"
-          },
-          {
-            "name": "index_Note_location",
-            "unique": false,
-            "columnNames": [
-              "location"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_Note_location` ON `${TABLE_NAME}` (`location`)"
           }
         ],
         "foreignKeys": [
@@ -368,7 +294,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2392e080175dd94a739c5acfba9c48cc')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '56c50e154380b08b07aaac1048d5a242')"
     ]
   }
 }

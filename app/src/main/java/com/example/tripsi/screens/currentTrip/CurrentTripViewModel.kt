@@ -12,13 +12,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.Image
-import com.example.tripsi.data.Note
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
+import java.util.*
 
 class CurrentTripViewModel : ViewModel() {
 
@@ -89,9 +89,9 @@ class CurrentTripViewModel : ViewModel() {
 
     //save data to db
     var momentLocation: com.example.tripsi.data.Location? = null
-    var momentNote: Note? = null
+    val locationId = UUID.randomUUID().toString()
+    var momentNote: String? = null
     var momentImageFilenames: MutableList<String> = mutableListOf()
-    var noteSaved = false
 
     fun saveImageToDb(tripDbViewModel: TripDbViewModel, filename: String) {
         val trip = tripDbViewModel.tripData.trip!!.tripId
@@ -99,36 +99,13 @@ class CurrentTripViewModel : ViewModel() {
         if (momentLocation != null)
             viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    tripDbViewModel.addImage(Image(0, filename, trip, momentLocation!!.locationId))
+                    tripDbViewModel.addImage(Image(0, filename, momentNote, trip, locationId))
                     Log.d("GIGI", "Image saved to database")
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
 
-    }
-
-    fun saveNoteToDb(tripDbViewModel: TripDbViewModel) {
-        val trip = tripDbViewModel.tripData.trip!!.tripId
-
-        if (momentNote != null && !noteSaved && momentLocation != null) {
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    tripDbViewModel.addNote(
-                        Note(
-                            0,
-                            momentNote!!.noteText,
-                            trip,
-                            momentLocation!!.locationId
-                        )
-                    )
-                    noteSaved = true
-                    Log.d("ROOM", "Note saved to database")
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
     }
 
     fun saveLocationToDb(tripDbViewModel: TripDbViewModel) {
@@ -139,7 +116,7 @@ class CurrentTripViewModel : ViewModel() {
                 try {
                     tripDbViewModel.addLocation(
                         com.example.tripsi.data.Location(
-                            momentLocation!!.locationId,
+                            locationId,
                             momentLocation!!.coordsLatitude,
                             momentLocation!!.coordsLongitude,
                             momentLocation!!.date,
@@ -161,7 +138,6 @@ class CurrentTripViewModel : ViewModel() {
         momentLocation = null
         momentNote = null
         momentImageFilenames = mutableListOf()
-        noteSaved = false
     }
 
 }

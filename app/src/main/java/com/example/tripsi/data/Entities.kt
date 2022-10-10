@@ -54,28 +54,7 @@ data class Image(
     @PrimaryKey(autoGenerate = true)
     val imgId: Int,
     val filename: String?,
-    val trip: Int,
-    val location: String
-)
-
-@Entity(
-    foreignKeys = [ForeignKey(
-        entity = Trip::class,
-        onDelete = CASCADE,
-        parentColumns = ["tripId"],
-        childColumns = ["trip"]
-    ),
-        ForeignKey(entity = Location::class,
-        onDelete = CASCADE,
-        parentColumns = ["locationId"],
-        childColumns = ["location"]
-)],
-    indices = [Index("trip"), Index("location")]
-)
-data class Note(
-    @PrimaryKey(autoGenerate = true)
-    val noteId: Int,
-    val noteText: String,
+    val comment: String?,
     val trip: Int,
     val location: String
 )

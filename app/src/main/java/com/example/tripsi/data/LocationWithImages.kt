@@ -9,7 +9,4 @@ class LocationWithImagesAndNotes {
 
     @Relation(parentColumn = "locationId", entityColumn = "location")
     var locationImages: List<Image>? = null
-
-    @Relation(parentColumn = "locationId", entityColumn = "location")
-    var locationNote: Note? = null
 }

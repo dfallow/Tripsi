@@ -25,7 +25,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
-import com.example.tripsi.data.Note
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
@@ -75,10 +74,9 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
         1
     )
     val cityName = address[0].locality
-    val locationId = UUID.randomUUID().toString()
 
     viewModel.momentLocation = com.example.tripsi.data.Location(
-        locationId,
+        "",
         location.userLocation.latitude,
         location.userLocation.longitude,
         dateFormat.format(now),
@@ -148,8 +146,7 @@ fun MomentComment(
             .padding(10.dp)
             .border(BorderStroke(2.dp, Color.Black), shape = RoundedCornerShape(10.dp))
     )
-
-    viewModel.momentNote = Note(0, comment, 0, "")
+    viewModel.momentNote = comment
 }
 
 @Composable
@@ -268,14 +265,15 @@ fun SaveOrDiscard(
         Button(
             onClick = {
                 viewModel.saveLocationToDb(tripDbViewModel)
-                viewModel.saveNoteToDb(tripDbViewModel)
+                //viewModel.saveNoteToDb(tripDbViewModel)
 
                 scope.launch {
                     val listOfFilenames = viewModel.momentImageFilenames
                     listOfFilenames.forEach {
                         viewModel.saveImageToDb(tripDbViewModel, it)
                     }
-                    delay(2000)
+                    //TODO shouldn't use delay
+                    delay(1000)
                     viewModel.clearData()
                 }
                 navController.navigate(Screen.CurrentScreen.route)
