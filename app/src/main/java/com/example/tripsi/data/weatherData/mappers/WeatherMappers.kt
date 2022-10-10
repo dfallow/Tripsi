@@ -1,10 +1,10 @@
- package com.example.tripsi.data.mappers
+ package com.example.tripsi.data.weatherData.mappers
 
-import com.example.tripsi.data.remote.WeatherDataDto
-import com.example.tripsi.domain.weather.WeatherData
-import com.example.tripsi.data.remote.WeatherDto
-import com.example.tripsi.domain.weather.WeatherInfo
-import com.example.tripsi.domain.weather.WeatherType
+import com.example.tripsi.data.weatherData.remote.WeatherDataDto
+import com.example.tripsi.data.weatherData.domain.weather.WeatherData
+import com.example.tripsi.data.weatherData.remote.WeatherDto
+import com.example.tripsi.data.weatherData.domain.weather.WeatherInfo
+import com.example.tripsi.data.weatherData.domain.weather.WeatherType
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 

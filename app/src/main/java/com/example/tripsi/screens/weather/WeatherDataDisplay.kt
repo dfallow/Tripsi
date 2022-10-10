@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.example.tripsi.domain.weather.WeatherInfo
+import com.example.tripsi.data.weatherData.domain.weather.WeatherInfo
 
 
 data class WeatherState(

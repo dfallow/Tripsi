@@ -71,13 +71,10 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, wea
             modifier = Modifier.fillMaxWidth()
         ) {
             Column(
-                modifier = Modifier
-                   // .fillMaxSize()
-                    .background(color = Color.Blue)
             ) {
                 WeatherCard(
                     state = weatherViewModel.state,
-                    backgroundColor = Color(0xFF00796B)
+                    backgroundColor = Color(0xFF3C493F),
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }

@@ -1,4 +1,4 @@
-package com.example.tripsi.data.remote
+package com.example.tripsi.data.weatherData.remote
 
 import retrofit2.http.GET
 import retrofit2.http.Query

@@ -1,7 +1,7 @@
-package com.example.tripsi.di
+package com.example.tripsi.data.weatherData.di
 
-import com.example.tripsi.data.repository.WeatherRepositoryImpl
-import com.example.tripsi.domain.repository.WeatherRepository
+import com.example.tripsi.data.weatherData.repository.WeatherRepositoryImpl
+import com.example.tripsi.data.weatherData.domain.repository.WeatherRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

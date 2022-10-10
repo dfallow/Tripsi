@@ -1,4 +1,4 @@
-package com.example.tripsi.domain.location
+package com.example.tripsi.data.weatherData.domain.location
 
 import android.location.Location
 

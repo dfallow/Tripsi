@@ -5,8 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.tripsi.domain.location.LocationTracker
-import com.example.tripsi.domain.repository.WeatherRepository
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.currentTrip.AddMoment
 import com.example.tripsi.screens.currentTrip.CurrentTripView

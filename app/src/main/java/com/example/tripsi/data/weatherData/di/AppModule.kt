@@ -1,9 +1,9 @@
-package com.example.tripsi.di
+package com.example.tripsi.data.weatherData.di
 
 import android.app.Application
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.example.tripsi.data.remote.WeatherApi
+import com.example.tripsi.data.weatherData.remote.WeatherApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

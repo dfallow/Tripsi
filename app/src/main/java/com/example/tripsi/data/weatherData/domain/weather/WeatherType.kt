@@ -1,4 +1,4 @@
-package com.example.tripsi.domain.weather
+package com.example.tripsi.data.weatherData.domain.weather
 
 import androidx.annotation.DrawableRes
 import com.example.tripsi.R

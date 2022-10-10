@@ -1,10 +1,10 @@
-package com.example.tripsi.data.repository
+package com.example.tripsi.data.weatherData.repository
 
-import com.example.tripsi.data.mappers.toWeatherInfo
-import com.example.tripsi.data.remote.WeatherApi
-import com.example.tripsi.domain.repository.WeatherRepository
-import com.example.tripsi.domain.util.Resource
-import com.example.tripsi.domain.weather.WeatherInfo
+import com.example.tripsi.data.weatherData.mappers.toWeatherInfo
+import com.example.tripsi.data.weatherData.remote.WeatherApi
+import com.example.tripsi.data.weatherData.domain.repository.WeatherRepository
+import com.example.tripsi.data.weatherData.domain.util.Resource
+import com.example.tripsi.data.weatherData.domain.weather.WeatherInfo
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(

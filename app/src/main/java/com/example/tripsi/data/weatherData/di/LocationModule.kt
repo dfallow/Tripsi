@@ -1,7 +1,7 @@
-package com.example.tripsi.di
+package com.example.tripsi.data.weatherData.di
 
-import com.example.tripsi.data.location.DefaultLocationTracker
-import com.example.tripsi.domain.location.LocationTracker
+import com.example.tripsi.data.weatherData.location.DefaultLocationTracker
+import com.example.tripsi.data.weatherData.domain.location.LocationTracker
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

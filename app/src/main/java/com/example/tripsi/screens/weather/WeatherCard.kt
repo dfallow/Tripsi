@@ -34,39 +34,29 @@ fun WeatherCard(
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = "Today ${
-                        data.time.format(
-                            DateTimeFormatter.ofPattern("HH:mm")
-                        )
-                    }",
-                    modifier = Modifier.align(Alignment.End),
-                    color = Color.White
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+
+                Spacer(modifier = Modifier.height(10.dp))
                 Image(
                     painter = painterResource(id = data.weatherType.iconRes),
                     contentDescription = null,
-                    modifier = Modifier.width(100.dp)
+                    modifier = Modifier.width(20.dp)
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = "${data.temperatureCelsius}°C",
-                    fontSize = 30.sp,
+                    fontSize = 10.sp,
                     color = Color.White
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = data.weatherType.weatherDesc,
-                    fontSize = 20.sp,
+                    fontSize = 10.sp,
                     color = Color.White
                 )
-                Spacer(modifier = Modifier.height(32.dp))
-                Row(
+          /*      Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
@@ -91,7 +81,7 @@ fun WeatherCard(
                         iconTint = Color.White,
                         textStyle = TextStyle(color = Color.White)
                     )
-                }
+                }*/
             }
         }
     }
