@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -227,25 +228,28 @@ fun GoHomeButton(navController: NavController, location: Location) {
 // When the use clicks on a moment on the map
 @Composable
 fun ShowMoment() {
-    Popup() {
-        Surface(
-            color = Color.Black.copy(alpha = 0.6f),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Column(
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxHeight()
-
+    val moments = viewModel.currentTripMoments.observeAsState().value
+    if (moments != null) {
+        Popup() {
+            Surface(
+                color = Color.Black.copy(alpha = 0.6f),
+                modifier = Modifier.fillMaxSize()
             ) {
-                if (viewModel.temporaryMoment.value) {
-                    //PopupMoment(R.drawable.location_svgrepo_com)
-                    TemporaryMoment(R.drawable.location_svgrepo_com)
-                } else {
-                    PopupMoment(R.drawable.photo_svgrepo_com)
+                Column(
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxHeight()
+
+                ) {
+                    if (viewModel.temporaryMoment.value) {
+                        TemporaryMoment(R.drawable.location_svgrepo_com)
+                    } else {
+                        PopupMoment(R.drawable.photo_svgrepo_com)
+                    }
                 }
             }
         }
     }
+
 }
