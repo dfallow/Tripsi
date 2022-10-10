@@ -4,6 +4,8 @@ package com.example.tripsi.screens.media
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.collection.ArrayMap
+import androidx.collection.arrayMapOf
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -31,13 +33,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
-import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
-import com.example.tripsi.utils.rotateImageIfRequired
-import kotlinx.coroutines.delay
 
 val viewModel = MediaViewModel()
 
@@ -230,20 +228,24 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
 fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context: Context) {
     val tripLocationsWithMedia = tripDbViewModel.getLocationWithMedia(tripId).observeAsState()
 
-    val imagesFilenames: MutableList<String> = mutableListOf()
+    //val imagesFilenames: MutableList<String> = mutableListOf()
+    val filenamesAndNotes: MutableList<ArrayMap<String, String?>> = mutableListOf()
 
     tripLocationsWithMedia.value?.forEach { locationWithMedia ->
         val images = locationWithMedia.locationImages
         images?.forEach { image ->
-            image.filename?.let { imagesFilenames.add(it) }
+            //image.filename?.let { imagesFilenames.add(it) }
+            if (image.filename != null) {
+                filenamesAndNotes.add(arrayMapOf(Pair(image.filename, image.comment)))
+            }
         }
     }
 
-    val loading = remember {mutableStateOf(false)}
+    val loading = remember { mutableStateOf(false) }
 
-    LaunchedEffect(imagesFilenames) {
+    LaunchedEffect(filenamesAndNotes) {
         loading.value = true
-        viewModel.loadPhotosFromInternalStorage(context, imagesFilenames)
+        viewModel.loadPhotosFromInternalStorage(context, filenamesAndNotes)
         loading.value = false
     }
 
@@ -271,9 +273,9 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
                                     image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
                                         .size(250.dp)
                                 )
+                                image.note?.let { note -> TripNoteItem(note) }
                             }
                         }
-                        //TripPhotoItem(context, image.name)
                         Spacer(
                             modifier = Modifier
                                 .size(10.dp)
@@ -286,10 +288,10 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
     }
 }
 
-@Composable
+/*@Composable
 fun TripPhotoItem(context: Context, fileName: String) {
 
-    /*Log.d("GIGI", fileName)
+    Log.d("GIGI", fileName)
     viewModel.loadPhotosFromInternalStorage(context, fileName)
     val image = viewModel.image?.observeAsState()
     if (image != null) {
@@ -300,8 +302,9 @@ fun TripPhotoItem(context: Context, fileName: String) {
             //.background(Color.Gray)
         )
         Log.d("GIGI", "testing")
-    }*/
-}
+    }
+}*/
+
 
 @Composable
 fun TripNoteItem(note: String) {

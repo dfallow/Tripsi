@@ -11,5 +11,6 @@ import android.graphics.Bitmap
 data class InternalStoragePhoto(
     val name: String,
     val bmp: Bitmap,
-    val path: String
+    val path: String,
+    val note: String?
 )

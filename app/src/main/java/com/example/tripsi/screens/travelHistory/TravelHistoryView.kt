@@ -55,8 +55,7 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
                     TravelHistoryItem(
                         trip = it,
                         imageCount = trip.image?.size ?: 0,
-                        //todo note count
-                        noteCount = 0,
+                        //noteCount = 0,
                         tripDbViewModel = tripDbViewModel,
                         navController = navController
                     )
@@ -70,7 +69,7 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
 fun TravelHistoryItem(
     trip: Trip,
     imageCount: Int,
-    noteCount: Int,
+    //noteCount: Int,
     tripDbViewModel: TripDbViewModel,
     navController: NavController
 ) {
@@ -92,18 +91,18 @@ fun TravelHistoryItem(
                 Spacer(Modifier.size(10.dp))
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth(0.5f)
+                    modifier = Modifier.fillMaxWidth(0.3f)
                 ) {
                     Row() {
                         Icon(Icons.Rounded.Image, "image icon", tint = Color(0xFFFFFFFF))
                         Spacer(Modifier.size(5.dp))
                         Text(imageCount.toString(), fontSize = 16.sp, color = Color(0xFFFFFFFF))
                     }
-                    Row() {
+/*                    Row() {
                         Icon(Icons.Rounded.EditNote, "note icon", tint = Color(0xFFFFFFFF))
                         Spacer(Modifier.size(5.dp))
                         Text(noteCount.toString(), fontSize = 16.sp, color = Color(0xFFFFFFFF))
-                    }
+                    }*/
                     Row() {
                         Icon(Icons.Rounded.Group, "friends icon", tint = Color(0xFFFFFFFF))
                         Spacer(Modifier.size(5.dp))
