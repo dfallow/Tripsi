@@ -239,7 +239,11 @@ fun ShowMoment() {
                     .fillMaxHeight()
 
             ) {
-                PopupMoment(R.drawable.location_svgrepo_com)
+                if (viewModel.temporaryMoment.value) {
+                    PopupMoment(R.drawable.location_svgrepo_com)
+                } else {
+                    PopupMoment(R.drawable.photo_svgrepo_com)
+                }
             }
         }
     }

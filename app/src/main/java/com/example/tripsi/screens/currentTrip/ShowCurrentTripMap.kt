@@ -33,47 +33,24 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
 
     //var momentLocations = arrayOf(Marker(currentTripMap))
     val momentsFromDatabase = tripDbViewModel.currentTripMoments
+
+    // TODO viewModel.currentTripMoments needs to be ArrayList<Moment>
     val currentTripMoments = viewModel.currentTripMoments.observeAsState().value
 
     val polyline: Polyline
-    var momentLocations: Array<Marker>
+    var momentLocations: Array<Marker> = arrayOf(Marker(currentTripMap))
 
-    /*
-    * Initially shows the locations from the database, but will use the temporary data
-    * from the viewModel, as to constantly update the UI when new locations are added
-    */
-    if ((currentTripMoments == null)) {
-        viewModel.currentStatus = tripDbViewModel.tripData.trip!!.status
-        polyline = Polyline()
-        polyline.setPoints(momentsFromDatabase)
-        // Creates moment markers from locations gotten from database
-        momentLocations = arrayOf(Marker(currentTripMap))
-        for (moment in momentsFromDatabase) {
+    fun createMomentMarkers(fromDatabase: Boolean, tripMoments: ArrayList<GeoPoint>) {
+
+        for (moment in tripMoments) {
             val moMarker = Marker(currentTripMap)
             moMarker.position = moment
             moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
 
-            moMarker.setOnMarkerClickListener { marker, mapView ->
-                Log.d("marker","${marker.position}")
-                viewModel.displayMoment()
-                true
-            }
-            momentLocations += moMarker
-        }
-    } else  {
-        // used for updating ui
-        polyline = Polyline()
-        Log.d("CurrentTripMoments", currentTripMoments.toString())
-        polyline.setPoints(currentTripMoments)
-        momentLocations = arrayOf(Marker(currentTripMap))
-        for (moment in currentTripMoments) {
-            val moMarker = Marker(currentTripMap)
-            moMarker.position = moment
+            if (fromDatabase) { moMarker.id = "true" } else { moMarker.id = "false" }
 
-            moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
-
-            moMarker.setOnMarkerClickListener { marker, mapView ->
-                Log.d("marker","${marker.position}")
+            moMarker.setOnMarkerClickListener { _, _ ->
+                viewModel.temporaryMoment.value = fromDatabase
                 viewModel.displayMoment()
                 true
             }
@@ -81,6 +58,29 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         }
     }
 
+    /*
+    * Initially shows the locations from the database, but will use the temporary data
+    * from the viewModel, as to constantly update the UI when new locations are added
+    */
+    if ((currentTripMoments == null)) {
+        viewModel.fromDatabase.value = true
+        viewModel.currentStatus = tripDbViewModel.tripData.trip!!.status
+        polyline = Polyline()
+        polyline.setPoints(momentsFromDatabase)
+
+        createMomentMarkers(viewModel.fromDatabase.value, momentsFromDatabase)
+
+    } else  {
+        viewModel.fromDatabase.value = false
+
+        polyline = Polyline()
+        val polylinePoints: ArrayList<GeoPoint> = ArrayList()
+        polylinePoints.add(momentsFromDatabase.last())
+        for (moment in currentTripMoments) { polylinePoints.add(moment) }
+        polyline.setPoints(polylinePoints)
+
+        createMomentMarkers(viewModel.fromDatabase.value, currentTripMoments)
+    }
 
     if (!mapInitialized) {
         currentTripMap.setTileSource(TileSourceFactory.MAPNIK)
