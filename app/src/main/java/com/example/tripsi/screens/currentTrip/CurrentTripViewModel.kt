@@ -35,11 +35,9 @@ class CurrentTripViewModel: ViewModel() {
         GeoPoint(60.301, 24.958)
     )
 
-
+    // Variables and fun for counting steps
     val currentSteps = MutableLiveData(0)
     private val stepsBottomLine = MutableLiveData<Int>(null)
-
-    val isRunning = MutableLiveData<Boolean?>(null)
 
     fun setSteps(stepAmount: Int) {
         var steps = stepAmount

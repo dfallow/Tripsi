@@ -26,7 +26,6 @@ val viewModel = CurrentTripViewModel()
 fun CurrentTripView(location: Location, context: Context, navController: NavController) {
 
     location.startUpdatingLocation()
-    var currentSteps = StepCounter().toString()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -45,7 +44,7 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
                 verticalArrangement = Arrangement.Bottom
             ) {
                 TripInfoOverlay(type = "Distance", measurement = "79km")
-                TripInfoOverlay(type = "Steps", measurement = currentSteps)
+                StepCounter()
                 TripInfoOverlay(type = "Time", measurement = "2-3hours")
             }
         }
