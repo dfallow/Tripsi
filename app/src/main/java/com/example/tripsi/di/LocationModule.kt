@@ -1,7 +1,7 @@
 package com.example.tripsi.di
 
+import com.example.tripsi.data.location.DefaultLocationTracker
 import com.example.tripsi.domain.location.LocationTracker
-import com.example.tripsi.utils.DefaultLocationTracker
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

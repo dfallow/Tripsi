@@ -12,25 +12,25 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-
-import androidx.compose.ui.Modifier
-import com.example.tripsi.ui.theme.TripsiTheme
-import com.example.tripsi.utils.BottomNavigation
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.example.tripsi.data.*
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.weather.WeatherViewModel
+import com.example.tripsi.ui.theme.TripsiTheme
+import com.example.tripsi.utils.BottomNavigation
 import com.example.tripsi.utils.Location
+import dagger.hilt.android.AndroidEntryPoint
 import org.osmdroid.config.Configuration
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     companion object {
         private lateinit var tripDbViewModel: TripDbViewModel
         private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
-
     }
     private val weatherViewModel: WeatherViewModel by viewModels()
 
