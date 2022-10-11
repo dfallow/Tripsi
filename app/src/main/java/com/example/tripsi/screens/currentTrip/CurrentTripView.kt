@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -76,7 +77,31 @@ fun CurrentTripView(
     }
 
     if (viewModel.showMoment) {
-        ShowMoment()
+
+        val currentMoments = viewModel.currentTripMomentsNew.observeAsState().value
+        var match = false
+        if (currentMoments == null) {
+            // This will only popup moments from the database i.e. when the map first loads
+            ShowMoment(true)
+        } else {
+            // When the user has just added a moment
+            for (moment in currentMoments) {
+                if (viewModel.currentMomentId == moment.id) {
+                    match = true
+                    ShowMoment(false)
+
+                }
+            }
+            if (!match) {
+                for (moment in tripDbViewModel.currentTripMomentsNew) {
+                    if (viewModel.currentMomentId == moment.id) {
+                        ShowMoment(true)
+                    }
+                }
+            }
+        }
+
+
     }
 
 }
@@ -234,7 +259,7 @@ fun GoHomeButton(navController: NavController, location: Location) {
 
 // When the use clicks on a moment on the map
 @Composable
-fun ShowMoment() {
+fun ShowMoment(fromDatabase: Boolean) {
     Popup() {
         Surface(
             color = Color.Black.copy(alpha = 0.6f),
@@ -247,7 +272,14 @@ fun ShowMoment() {
                     .fillMaxHeight()
 
             ) {
-                PopupMoment(R.drawable.location_svgrepo_com)
+                if (fromDatabase) {
+                    Log.d("momentType", "Database")
+                    DatabaseMoment()
+                } else {
+                    Log.d("momentType", "Temporary")
+                    TemporaryMoment()
+                }
+                // PopupMoment(R.drawable.location_svgrepo_com)
             }
         }
     }

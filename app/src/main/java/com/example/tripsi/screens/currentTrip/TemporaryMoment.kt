@@ -6,7 +6,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,9 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 
-
 @Composable
-fun PopupMoment(imageId: Int) {
+fun TemporaryMoment() {
     Log.d("currentMoment", viewModel.currentMomentId)
     Box(
         Modifier
@@ -38,7 +38,7 @@ fun PopupMoment(imageId: Int) {
                     .fillMaxHeight(0.55f),
                 shape = RoundedCornerShape(10)
             ) {
-                Image(painter = painterResource(imageId), contentDescription = "something")
+                //Image(painter = painterResource(imageId), contentDescription = "something")
             }
             Column(
                 // Contains the moment information such as date, location, time

@@ -2,6 +2,7 @@ package com.example.tripsi.screens.currentTrip
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -57,7 +58,13 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
             if (moment.position == MomentPosition.MIDDLE.position) {
                 moMarker.setOnMarkerClickListener { _, _ ->
                     viewModel.currentIndex.value = index
+                    viewModel.currentMomentId = moMarker.id
                     viewModel.displayMoment()
+                    true
+                }
+            } else {
+                moMarker.setOnMarkerClickListener { _, _ ->
+                    Toast.makeText(context, "This is your Start/End location", Toast.LENGTH_SHORT).show()
                     true
                 }
             }
@@ -71,28 +78,28 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
     * from the viewModel, as to constantly update the UI when new locations are added
     */
     if ((currentTripMomentsNew == null)) {
-        Log.d("userLocationFirstnull1", "$momentsFromDatabaseNew")
-        Log.d("userLocationFirstnull2","$currentTripMomentsNew")
         viewModel.fromDatabase.value = true
         viewModel.currentStatus = tripDbViewModel.tripData.trip!!.status
         polyline = Polyline()
         polyline.setPoints(momentsFromDatabase)
 
         createMomentMarkers(viewModel.fromDatabase.value, momentsFromDatabaseNew)
+        Log.d("userLocationDatabase", "$momentsFromDatabaseNew")
+        Log.d("userLocationTemporary","$currentTripMomentsNew")
 
     } else  {
-        Log.d("userLocationFirsttrue1", "$momentsFromDatabaseNew")
-        Log.d("userLocationFirsttrue2","$currentTripMomentsNew")
+        Log.d("userLocationDatabase", "$momentsFromDatabaseNew")
+        Log.d("userLocationTemporary","$currentTripMomentsNew")
         // used for updating ui
         viewModel.fromDatabase.value = false
         polyline = Polyline()
         val polylinePoints: ArrayList<GeoPoint> = ArrayList()
-
         // Used to connect the new points added by the user to the existing database entries
         if (momentsFromDatabase.isNotEmpty()) { polylinePoints.add(momentsFromDatabase.last()) }
         for (moment in currentTripMomentsNew) { polylinePoints.add(moment.location) }
         polyline.setPoints(polylinePoints)
 
+        createMomentMarkers(viewModel.fromDatabase.value, momentsFromDatabaseNew)
         createMomentMarkers(viewModel.fromDatabase.value, currentTripMomentsNew)
     }
 

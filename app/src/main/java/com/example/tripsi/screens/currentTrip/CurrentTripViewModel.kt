@@ -2,7 +2,6 @@ package com.example.tripsi.screens.currentTrip
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -63,6 +62,19 @@ class CurrentTripViewModel : ViewModel() {
     // Array of Points for which the polyline will draw between
     val polylinePoints: MutableLiveData<ArrayList<GeoPoint>> by lazy {
         MutableLiveData<ArrayList<GeoPoint>>()
+    }
+
+    val allTripMoments: MutableLiveData<ArrayList<Moment>> by lazy {
+        MutableLiveData<ArrayList<Moment>>()
+    }
+    var allTripMomentsNew = ArrayList<Moment>()
+
+    fun joinAllMoments(temporary: ArrayList<Moment>, database: ArrayList<Moment>): ArrayList<Moment> {
+        for (moment in temporary) {
+            database += moment
+        }
+
+        return database
     }
 
     fun createPolylinePoints(): List<GeoPoint> {
@@ -132,6 +144,7 @@ class CurrentTripViewModel : ViewModel() {
     lateinit var momentInfo: MomentInfo
     val momentFromDatabase = mutableStateOf("")
     lateinit var currentLocation: GeoPoint
+    lateinit var currentMomentId: String
 
     // clears temporary value and resets the currentStatus, also removes location updates
     fun goHome(location: Location) {
