@@ -1,24 +1,20 @@
 package com.example.tripsi.screens.home
 
-import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.example.tripsi.R
 import com.example.tripsi.data.Trip
@@ -142,35 +138,49 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel) {
 
         //check for upcoming trips
         if (tripData != null) {
-            UpcomingOrActiveTrip(navController = navController, tripDbViewModel = tripDbViewModel, tripData = tripData)
+            UpcomingOrActiveTrip(
+                navController = navController,
+                tripDbViewModel = tripDbViewModel,
+                tripData = tripData
+            )
         }
     }
 }
 
 @Composable
-fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbViewModel, tripData: TripData) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 20.dp)
-        .clip(
-            shape = RoundedCornerShape(
-                topEndPercent = 10,
-                topStartPercent = 10
+fun UpcomingOrActiveTrip(
+    navController: NavController,
+    tripDbViewModel: TripDbViewModel,
+    tripData: TripData
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 20.dp)
+            .clip(
+                shape = RoundedCornerShape(
+                    topEndPercent = 10,
+                    topStartPercent = 10
+                )
             )
-        )
-        .background(color = Color(0xFF3C493F)),
+            .background(color = Color(0xFF3C493F)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
 
-        ){
-        Text("Your trip to ${tripData.trip?.destination} is coming up.", color = Color.White,fontSize = 20.sp)
+        ) {
+        Text(
+            "Your trip to ${tripData.trip?.destination} is coming up.",
+            color = Color.White,
+            fontSize = 20.sp
+        )
         Text("Ready to start?", color = Color.White, fontSize = 20.sp)
-        Button(onClick = {
+        Button(
+            onClick = {
 
-            tripDbViewModel.tripData = tripData
-            tripDbViewModel.getTripMoments(tripData.location!!)
-            navController.navigate(Screen.CurrentScreen.route)
-        },
+                tripDbViewModel.tripData = tripData
+                tripDbViewModel.getTripMoments(tripData.location!!)
+                navController.navigate(Screen.CurrentScreen.route)
+            },
             shape = RoundedCornerShape(
                 25
             )
