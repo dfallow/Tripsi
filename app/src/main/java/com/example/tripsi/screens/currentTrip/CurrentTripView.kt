@@ -121,9 +121,7 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
 
         Button(
             onClick = {
-                /*TODO*/
-                Log.d("addMoment", "here")
-                viewModel.addLocation(location, false)
+                viewModel.addLocationNew(location, null,null)
                 val middleLocation = LocationData(
                     UUID.randomUUID().toString(),
                     location.userLocation.latitude,
@@ -151,7 +149,7 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
 fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     Button(
         onClick = {
-            viewModel.addStartLocation(location)
+            viewModel.addStartLocationNew(location)
             val startLocation = LocationData(
                 UUID.randomUUID().toString(),
                 location.userLocation.latitude,
@@ -180,7 +178,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
 fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     Button(
         onClick = {
-            viewModel.addLocation(location, true)
+            viewModel.addEndLocationNew(location)
             val endLocation = LocationData(
                 UUID.randomUUID().toString(),
                 location.userLocation.latitude,

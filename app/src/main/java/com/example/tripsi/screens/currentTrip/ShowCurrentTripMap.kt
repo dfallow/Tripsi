@@ -33,52 +33,66 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
 
     //var momentLocations = arrayOf(Marker(currentTripMap))
     val momentsFromDatabase = tripDbViewModel.currentTripMoments
-    val currentTripMoments = viewModel.currentTripMoments.observeAsState().value
+
+    // TODO
+    val momentsFromDatabaseNew = tripDbViewModel.currentTripMomentsNew
+
+    Log.d("userLocationData", "$momentsFromDatabase")
+
+    // TODO
+    val currentTripMomentsNew = viewModel.currentTripMomentsNew.observeAsState().value
 
     val polyline: Polyline
-    var momentLocations: Array<Marker>
+    var momentLocations: Array<Marker> = arrayOf(Marker(currentTripMap))
+
+    fun createMomentMarkers(fromDatabase: Boolean, tripMoments: ArrayList<CurrentTripViewModel.Moment>) {
+        for ((index, moment) in tripMoments.withIndex()) {
+            viewModel.mapMoments.add(index)
+            val moMarker = Marker(currentTripMap)
+            moMarker.position = moment.location
+            moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
+
+            if (fromDatabase) { moMarker.id = "true" } else { moMarker.id = "false" }
+
+            moMarker.setOnMarkerClickListener { _, _ ->
+                viewModel.currentIndex.value = index
+                viewModel.momentFromDatabase.value = moMarker.id
+                viewModel.temporaryMoment.value = fromDatabase
+                viewModel.displayMoment()
+                true
+            }
+            momentLocations += moMarker
+        }
+    }
 
     /*
     * Initially shows the locations from the database, but will use the temporary data
     * from the viewModel, as to constantly update the UI when new locations are added
     */
-    if ((currentTripMoments == null)) {
+    //Log.d("currentTripMoments", "$currentTripMomentsNew")
+    Log.d("currentTripMoments", "$momentsFromDatabaseNew")
+
+    if ((currentTripMomentsNew == null)) {
+        viewModel.fromDatabase.value = true
         viewModel.currentStatus = tripDbViewModel.tripData.trip!!.status
         polyline = Polyline()
         polyline.setPoints(momentsFromDatabase)
-        // Creates moment markers from locations gotten from database
-        momentLocations = arrayOf(Marker(currentTripMap))
-        for (moment in momentsFromDatabase) {
-            val moMarker = Marker(currentTripMap)
-            moMarker.position = moment
-            moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
 
-            moMarker.setOnMarkerClickListener { marker, mapView ->
-                Log.d("marker","${marker.position}")
-                viewModel.displayMoment()
-                true
-            }
-            momentLocations += moMarker
-        }
+        createMomentMarkers(viewModel.fromDatabase.value, momentsFromDatabaseNew)
+
     } else  {
+        Log.d("userLocationFirst","$currentTripMomentsNew")
         // used for updating ui
+        viewModel.fromDatabase.value = false
         polyline = Polyline()
-        Log.d("CurrentTripMoments", currentTripMoments.toString())
-        polyline.setPoints(currentTripMoments)
-        momentLocations = arrayOf(Marker(currentTripMap))
-        for (moment in currentTripMoments) {
-            val moMarker = Marker(currentTripMap)
-            moMarker.position = moment
+        val polylinePoints: ArrayList<GeoPoint> = ArrayList()
 
-            moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
+        if (momentsFromDatabase.isNotEmpty()) { polylinePoints.add(momentsFromDatabase.last()) }
 
-            moMarker.setOnMarkerClickListener { marker, mapView ->
-                Log.d("marker","${marker.position}")
-                viewModel.displayMoment()
-                true
-            }
-            momentLocations += moMarker
-        }
+        for (moment in currentTripMomentsNew) { polylinePoints.add(moment.location) }
+        polyline.setPoints(polylinePoints)
+
+        createMomentMarkers(viewModel.fromDatabase.value, currentTripMomentsNew)
     }
 
 

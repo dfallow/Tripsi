@@ -6,6 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.*
+import com.example.tripsi.screens.currentTrip.CurrentTripViewModel
+import com.example.tripsi.screens.currentTrip.MomentPosition
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 
@@ -18,6 +20,26 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     lateinit var tripData: TripData
 
     var currentTripMoments = ArrayList<GeoPoint>()
+
+    var currentTripMomentsNew = ArrayList<CurrentTripViewModel.Moment>()
+
+    fun getCurrentTripMomentsNew(locations: List<Location>) {
+        Log.d("momentLocations", "$locations")
+        if (locations.isEmpty()) {
+            currentTripMomentsNew = ArrayList()
+        } else {
+            for (location in locations) {
+                currentTripMomentsNew += CurrentTripViewModel.Moment(
+                    GeoPoint(location.coordsLatitude, location.coordsLongitude),
+                    description = "need to get",
+                    photos = null,
+                    position = MomentPosition.MIDDLE.position,
+                    CurrentTripViewModel.MomentInfo("", "", "")
+                )
+            }
+        }
+        Log.d("momentLocations","$currentTripMomentsNew")
+    }
 
     fun getTripMoments(locations: List<Location>) {
         if (currentTripMoments.isEmpty()) {

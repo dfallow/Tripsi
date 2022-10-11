@@ -1,6 +1,7 @@
 package com.example.tripsi.screens.currentTrip
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.width
@@ -22,61 +23,103 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
 import java.util.*
+import kotlin.collections.ArrayList
 
 class CurrentTripViewModel : ViewModel() {
 
+    // Data classes for temporary information for moments which update the UI without data stored in database
+    data class Moment(
+        val location: GeoPoint,
+        val description: String?,
+        val photos: MutableList<Bitmap?>?,
+        val position: Int,
+        val info: MomentInfo
+    )
+    data class MomentInfo(val date: String, val time: String, val location: String)
+
     // Temporary status of trip, used to update UI
     var currentStatus by mutableStateOf(TripStatus.UPCOMING.status)
-    fun startActive() {
-        currentStatus = TripStatus.ACTIVE.status
-    }
+    fun startActive() { currentStatus = TripStatus.ACTIVE.status }
+    fun endActive() { currentStatus = TripStatus.PAST.status }
 
-    fun endActive() {
-        currentStatus = TripStatus.PAST.status
-    }
-
+    // Displays popupMoment when user clicks on icon
     var showMoment by mutableStateOf(false)
-    fun displayMoment() {
-        showMoment = true
-    }
-
-    fun hideMoment() {
-        showMoment = false
-    }
+    fun displayMoment() { showMoment = true }
+    fun hideMoment() { showMoment = false }
 
     // Used to update UI when a moment is added
     // TODO find a better way
     var showText by mutableStateOf(false)
-    fun toggleText() {
-        showText = !showText
-    }
+    fun toggleText() { showText = !showText }
 
     // Array of GeoPoints for ViewModel
-    val currentTripMoments: MutableLiveData<ArrayList<GeoPoint>> by lazy {
+    val currentTripMomentsNew: MutableLiveData<ArrayList<Moment>> by lazy {
+        MutableLiveData<ArrayList<Moment>>()
+    }
+
+    // Array of Points for which the polyline will draw between
+    val polylinePoints: MutableLiveData<ArrayList<GeoPoint>> by lazy {
         MutableLiveData<ArrayList<GeoPoint>>()
+    }
+
+    fun createPolylinePoints(): List<GeoPoint> {
+        val tempPolylineArray = ArrayList<GeoPoint>()
+        for (moment in currentTripMomentsNew.value!!) {
+            tempPolylineArray += moment.location
+        }
+        polylinePoints.value = tempPolylineArray
+        return polylinePoints.value!!
     }
 
     // value is just used to update the MutableLiveData object
     private val tempMomentArray = ArrayList<GeoPoint>()
+    private var tempMomentArrayNew = ArrayList<Moment>()
 
-    // Adds the users current location as the start location, for temporary UI changes
-    fun addStartLocation(location: Location) {
-        tempMomentArray.clear()
-        tempMomentArray += GeoPoint(location.userLocation.latitude, location.userLocation.longitude)
-        currentTripMoments.value = tempMomentArray
+    fun addStartLocationNew(location: Location) {
+        tempMomentArrayNew.clear()
+        tempMomentArrayNew += Moment(
+            GeoPoint(location.userLocation.latitude, location.userLocation.longitude),
+            null,
+            null,
+            MomentPosition.START.position,
+            MomentInfo("","","")
+        )
+        currentTripMomentsNew.value = tempMomentArrayNew
     }
 
-    // Used for adding moments and endLocation to UI temporarily
-    // TODO Create an object that holds both GeoPoint and Boolean?
-    fun addLocation(location: Location, isEnd: Boolean) {
-        tempMomentArray += GeoPoint(location.userLocation.latitude, location.userLocation.longitude)
-        currentTripMoments.value = tempMomentArray
+    fun addLocationNew(location: Location, description: String?, photos: MutableList<Bitmap?>?) {
+        tempMomentArrayNew += Moment(
+            GeoPoint(location.userLocation.latitude, location.userLocation.longitude),
+            description,
+            photos,
+            MomentPosition.MIDDLE.position,
+            MomentInfo("","","")
+        )
+        currentTripMomentsNew.value = tempMomentArrayNew
     }
+
+    fun addEndLocationNew(location: Location) {
+        tempMomentArrayNew += Moment(
+            GeoPoint(location.userLocation.latitude, location.userLocation.longitude),
+            null,
+            null,
+            MomentPosition.END.position,
+            MomentInfo("","","")
+        )
+        currentTripMomentsNew.value = tempMomentArrayNew
+    }
+
+    // Moment variables
+    val fromDatabase = mutableStateOf(false)
+    val temporaryMoment = mutableStateOf(false)
+    val mapMoments = mutableListOf<Int>()
+    val currentIndex = mutableStateOf(0)
+    val momentFromDatabase = mutableStateOf("")
 
     // clears temporary value and resets the currentStatus, also removes location updates
     fun goHome(location: Location) {
-        tempMomentArray.clear()
-        currentTripMoments.value = tempMomentArray
+        tempMomentArrayNew.clear()
+        currentTripMomentsNew.value = tempMomentArrayNew
 
         // This won't affect UI in future as we will navigate to another screen
         currentStatus = TripStatus.UPCOMING.status
