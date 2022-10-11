@@ -74,6 +74,9 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
     )
     val cityName = address[0].locality
 
+    // Temporary for UI updating
+    viewModel.momentInfo = CurrentTripViewModel.MomentInfo(dateFormat.format(now), timeFormat.format(now), cityName)
+
     //save location information to viewModel
     viewModel.momentLocation = com.example.tripsi.data.Location(
         "",
@@ -200,8 +203,8 @@ fun MomentPictures(context: Context) {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-
         }
+        viewModel.temporaryPhotos = photoThumbnails
     }
 
     Column(
@@ -277,6 +280,15 @@ fun SaveOrDiscard(
                 //TODO only allow saving if there's at least ONE photo
                 //save location to database
                 viewModel.saveLocationToDb(tripDbViewModel, context)
+
+                Log.d("momentInfo", "${viewModel.momentInfo}")
+                viewModel.addLocationNew(
+                    viewModel.momentLocation!!,
+                    viewModel.momentNote.value,
+                    viewModel.temporaryPhotos,
+                    viewModel.momentInfo
+                )
+                viewModel.momentId.value = UUID.randomUUID().toString()
 
                 //save images to database
                 scope.launch {

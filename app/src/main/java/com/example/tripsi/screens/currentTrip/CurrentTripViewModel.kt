@@ -91,14 +91,19 @@ class CurrentTripViewModel : ViewModel() {
         currentTripMomentsNew.value = tempMomentArrayNew
     }
 
-    fun addLocationNew(location: Location, description: String?, photos: MutableList<Bitmap?>?) {
+    fun addLocationNew(
+        location: com.example.tripsi.data.Location,
+        description: String?,
+        photos: MutableList<Bitmap?>?,
+        info: MomentInfo
+    ) {
         tempMomentArrayNew += Moment(
             viewModel.momentId.value,
-            GeoPoint(location.userLocation.latitude, location.userLocation.longitude),
+            GeoPoint(location.coordsLatitude, location.coordsLongitude),
             description,
             photos,
             MomentPosition.MIDDLE.position,
-            MomentInfo("","","")
+            info
         )
         currentTripMomentsNew.value = tempMomentArrayNew
     }
@@ -121,8 +126,10 @@ class CurrentTripViewModel : ViewModel() {
     val momentId = mutableStateOf("firstTemp")
     val fromDatabase = mutableStateOf(false)
     val temporaryMoment = mutableStateOf(false)
+    var temporaryPhotos = mutableListOf<Bitmap?>()
     val mapMoments = mutableListOf<Int>()
     val currentIndex = mutableStateOf(0)
+    lateinit var momentInfo: MomentInfo
     val momentFromDatabase = mutableStateOf("")
 
     // clears temporary value and resets the currentStatus, also removes location updates

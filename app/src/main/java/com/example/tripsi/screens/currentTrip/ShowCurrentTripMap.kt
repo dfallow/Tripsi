@@ -79,7 +79,8 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         createMomentMarkers(viewModel.fromDatabase.value, momentsFromDatabaseNew)
 
     } else  {
-        Log.d("userLocationFirst","$currentTripMomentsNew")
+        Log.d("userLocationFirstFirst", "$momentsFromDatabaseNew")
+        Log.d("userLocationFirstSecond","$currentTripMomentsNew")
         // used for updating ui
         viewModel.fromDatabase.value = false
         polyline = Polyline()

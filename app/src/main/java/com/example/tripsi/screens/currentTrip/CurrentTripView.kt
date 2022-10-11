@@ -125,8 +125,8 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
 
         Button(
             onClick = {
-                viewModel.addLocationNew(location, null,null)
-                val middleLocation = LocationData(
+                //viewModel.addLocationNew(location, null,null)
+                /*val middleLocation = LocationData(
                     UUID.randomUUID().toString(),
                     location.userLocation.latitude,
                     location.userLocation.longitude,
@@ -136,9 +136,9 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
                     isStart = true,
                     isEnd = false
                 )
-                tripDbViewModel.addLocation(middleLocation)
-                viewModel.toggleText()
-                viewModel.startActive()
+                //tripDbViewModel.addLocation(middleLocation)*/
+                /*viewModel.toggleText()
+                viewModel.startActive()*/
                 Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
             },
             modifier = viewModel.modifier,
@@ -156,7 +156,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
         onClick = {
             viewModel.addStartLocationNew(location)
             val startLocation = LocationData(
-                UUID.randomUUID().toString(),
+                viewModel.momentId.value,
                 location.userLocation.latitude,
                 location.userLocation.longitude,
                 "Today",
@@ -168,6 +168,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
             tripDbViewModel.addLocation(startLocation)
             viewModel.startActive()
             tripDbViewModel.updateTripStatus(TripStatus.ACTIVE.status, tripDbViewModel.tripData.trip!!.tripId)
+            viewModel.momentId.value = UUID.randomUUID().toString()
             Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
         },
         modifier = viewModel.modifier,
@@ -186,7 +187,7 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
         onClick = {
             viewModel.addEndLocationNew(location)
             val endLocation = LocationData(
-                UUID.randomUUID().toString(),
+                viewModel.momentId.value,
                 location.userLocation.latitude,
                 location.userLocation.longitude,
                 "Today",
@@ -198,6 +199,7 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
             tripDbViewModel.addLocation(endLocation)
             viewModel.endActive()
             tripDbViewModel.updateTripStatus(TripStatus.PAST.status, tripDbViewModel.tripData.trip!!.tripId)
+            viewModel.momentId.value = UUID.randomUUID().toString()
             Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
         },
         modifier = viewModel.modifier,
