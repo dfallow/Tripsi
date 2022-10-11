@@ -32,7 +32,8 @@ fun NavigationGraph(navController: NavHostController, context: Context, location
                 navController = navController,
                 context = context,
                 location = location,
-                tripDbViewModel = tripDbViewModel
+                tripDbViewModel = tripDbViewModel,
+                weatherViewModel = weatherViewModel
             )
         }
         composable(route = Screen.MomentScreen.route) {

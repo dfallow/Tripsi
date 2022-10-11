@@ -67,31 +67,6 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, wea
         )
 
     {
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-            ) {
-                WeatherCard(
-                    state = weatherViewModel.state,
-                    backgroundColor = Color(0xFF3C493F),
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            if(weatherViewModel.state.isLoading) {
-                CircularProgressIndicator(
-                   // modifier = Modifier.align(Alignment.Center)
-                )
-            }
-            weatherViewModel.state.error?.let { error ->
-                Text(
-                    text = error,
-                    color = Color.Red,
-                    textAlign = TextAlign.Center,
-                    //modifier = Modifier.align(Alignment.Center)
-                )
-            }
-        }
 
         LottieAnimation(
             composition = composition,

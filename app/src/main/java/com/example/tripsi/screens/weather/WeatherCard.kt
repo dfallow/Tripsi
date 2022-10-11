@@ -30,33 +30,40 @@ fun WeatherCard(
         Card(
             backgroundColor = backgroundColor,
             shape = RoundedCornerShape(10.dp),
-            modifier = modifier.padding(16.dp)
+            modifier = modifier.padding()
         ) {
             Column(
                 modifier = Modifier
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.Start
             ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
 
-                Spacer(modifier = Modifier.height(10.dp))
+                
+                Spacer(modifier = Modifier.padding(10.dp))
                 Image(
                     painter = painterResource(id = data.weatherType.iconRes),
                     contentDescription = null,
-                    modifier = Modifier.width(20.dp)
+                    modifier = Modifier.width(30.dp)
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.padding(10.dp))
                 Text(
                     text = "${data.temperatureCelsius}°C",
-                    fontSize = 10.sp,
+                    fontSize = 16.sp,
                     color = Color.White
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.padding(10.dp))
                 Text(
                     text = data.weatherType.weatherDesc,
-                    fontSize = 10.sp,
+                    fontSize = 16.sp,
                     color = Color.White
                 )
-          /*      Row(
+            }
+                 Spacer(modifier = Modifier.padding(5.dp))
+                Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
@@ -81,7 +88,7 @@ fun WeatherCard(
                         iconTint = Color.White,
                         textStyle = TextStyle(color = Color.White)
                     )
-                }*/
+                }
             }
         }
     }
