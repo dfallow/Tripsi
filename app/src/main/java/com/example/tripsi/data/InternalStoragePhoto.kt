@@ -2,12 +2,7 @@ package com.example.tripsi.data
 
 import android.graphics.Bitmap
 
-
-/**
- * Created by Gintare Saali on 06/10/2022.
- *
- * Description:
- */
+// This is used to display images from storage in MediaView
 data class InternalStoragePhoto(
     val name: String,
     val bmp: Bitmap,

@@ -2,44 +2,80 @@ package com.example.tripsi.screens.media
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.util.Log
+import android.location.Geocoder
 import androidx.collection.ArrayMap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.tripsi.data.InternalStoragePhoto
+import com.example.tripsi.data.LocationWithImagesAndNotes
 import com.example.tripsi.utils.rotateImageIfRequired
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class MediaViewModel : ViewModel() {
 
     val imageBitmaps: MutableLiveData<MutableList<InternalStoragePhoto?>> = MutableLiveData()
 
-    suspend fun loadPhotosFromInternalStorage(
+    suspend fun loadPhotosFromStorage(
         context: Context,
         filenamesAndNotes: List<ArrayMap<String, String?>>
     ) {
         var image: InternalStoragePhoto?
+
         val images: MutableList<InternalStoragePhoto?> = mutableListOf()
+
         withContext(Dispatchers.IO) {
+            // for each filename in filenamesAndNotes list, retrieve a photo from storage
             filenamesAndNotes.forEach { item ->
                 item.forEach { (filename, note) ->
+                    //first, get the list of files in filesDir
                     val files = context.filesDir.listFiles()
+
+                    //second, filter through the list looking for a file matching the filename
                     image = files?.filter {
                         it.canRead() && it.isFile &&
                                 it.name.equals("$filename.jpg")
                     }?.map {
+                        //then transform the file into InternalStoragePhoto
                         val bytes = it.readBytes()
                         val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                         InternalStoragePhoto(it.name, bmp, it.absolutePath, note)
-                    }?.first()
+                    }
+                        ?.first() //there will always be just one image with the same name, so only return that from the list
                     if (image != null) {
+                        //check if the image needs to be rotated to display in correct orientation
                         val rotatedImg = rotateImageIfRequired(image!!.bmp, image!!.path)
-                        images.add(InternalStoragePhoto(image!!.name, rotatedImg, image!!.path, note))
+
+                        //every rotated image is added to the images list, until the code runs through all filenames
+                        images.add(
+                            InternalStoragePhoto(
+                                image!!.name,
+                                rotatedImg,
+                                image!!.path,
+                                note
+                            )
+                        )
                     }
                 }
             }
         }
+        //post all the images to imageBitmaps
         imageBitmaps.postValue(images)
+    }
+
+    //this function converts trip start coordinates into a city name
+    fun getStartLocation(startCoordinates: LocationWithImagesAndNotes?, context: Context): String {
+        val startLocation: String
+        val geoCoder = Geocoder(context, Locale.getDefault())
+        val address = startCoordinates?.location?.let {
+            geoCoder.getFromLocation(
+                it.coordsLatitude,
+                it.coordsLongitude,
+                1
+            )
+        }
+        startLocation = address?.get(0)?.locality ?: "Home"
+        return startLocation
     }
 }

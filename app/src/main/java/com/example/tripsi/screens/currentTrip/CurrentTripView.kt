@@ -108,6 +108,9 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
         horizontalArrangement = Arrangement.SpaceAround) {
         Button(
             onClick = {
+                //clear all previous moment's data from viewModel
+                viewModel.clearData()
+                //then navigate to MomentScreen
                 navController.navigate(Screen.MomentScreen.route)
             },
             modifier = viewModel.modifier,

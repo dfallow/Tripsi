@@ -29,7 +29,6 @@ import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
 import com.example.tripsi.utils.rotateImageIfRequired
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.IOException
@@ -51,10 +50,10 @@ fun AddMoment(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        MomentDetails(location = location, context = context, tripDbViewModel = tripDbViewModel)
+        MomentDetails(location, context, tripDbViewModel)
         MomentComment()
         MomentPictures(context)
-        SaveOrDiscard(navController, tripDbViewModel)
+        SaveOrDiscard(navController, tripDbViewModel, context)
     }
 }
 
@@ -75,6 +74,7 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
     )
     val cityName = address[0].locality
 
+    //save location information to viewModel
     viewModel.momentLocation = com.example.tripsi.data.Location(
         "",
         location.userLocation.latitude,
@@ -146,7 +146,9 @@ fun MomentComment(
             .padding(10.dp)
             .border(BorderStroke(2.dp, Color.Black), shape = RoundedCornerShape(10.dp))
     )
-    viewModel.momentNote = comment
+
+    //save comment to viewModel
+    viewModel.momentNote.value = comment
 }
 
 @Composable
@@ -172,26 +174,32 @@ fun MomentPictures(context: Context) {
     val photoThumbnails = remember { mutableListOf<Bitmap?>(null) }
     val result = remember { mutableStateOf<Bitmap?>(null) }
 
+    //directory in which photos will be stored
     val dir = context.filesDir
+    //generate unique filename
     val filename = UUID.randomUUID().toString()
     val imageFile = File(dir, "${filename}.jpg")
     val photoURI = FileProvider.getUriForFile(context, "com.example.tripsi.fileprovider", imageFile)
     val currentPhotoPath = imageFile.absolutePath
 
+    //launches the camera
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
         if (it) {
             try {
                 val bmp = BitmapFactory.decodeFile(currentPhotoPath)
+                //Images taken in portrait mode on some phones are always displayed incorrectly
+                //This checks if the image needs to be rotated and then rotates it
                 val rotatedImg = rotateImageIfRequired(bmp, currentPhotoPath)
                 result.value = rotatedImg
+                //image is added to the list of images that are then displayed in a LazyRow
                 photoThumbnails.add(result.value)
+                //save the filename to list of filenames in viewmodel
+                //this is needed to later iterate through the list and save information of each image to database
                 viewModel.momentImageFilenames.add(filename)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
 
-        } else {
-            Log.d("GIGI", "Picture not taken")
         }
     }
 
@@ -249,7 +257,8 @@ fun MomentPictures(context: Context) {
 @Composable
 fun SaveOrDiscard(
     navController: NavController,
-    tripDbViewModel: TripDbViewModel
+    tripDbViewModel: TripDbViewModel,
+    context: Context
 ) {
 
     val scope = rememberCoroutineScope()
@@ -264,18 +273,18 @@ fun SaveOrDiscard(
     ) {
         Button(
             onClick = {
-                viewModel.saveLocationToDb(tripDbViewModel)
-                //viewModel.saveNoteToDb(tripDbViewModel)
+                //TODO only allow saving if there's at least ONE photo
+                //save location to database
+                viewModel.saveLocationToDb(tripDbViewModel, context)
 
+                //save images to database
                 scope.launch {
                     val listOfFilenames = viewModel.momentImageFilenames
                     listOfFilenames.forEach {
                         viewModel.saveImageToDb(tripDbViewModel, it)
                     }
-                    //TODO shouldn't use delay
-                    delay(1000)
-                    viewModel.clearData()
                 }
+
                 navController.navigate(Screen.CurrentScreen.route)
             },
             modifier = viewModel.modifier,

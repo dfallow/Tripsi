@@ -9,6 +9,7 @@ import android.media.ExifInterface
  * https://www.digitalocean.com/community/tutorials/android-capture-image-camera-gallery
  */
 
+//this returns a rotated image
 private fun rotateImage(img: Bitmap, degree: Float): Bitmap {
     val matrix = Matrix()
     matrix.postRotate(degree)
@@ -17,6 +18,8 @@ private fun rotateImage(img: Bitmap, degree: Float): Bitmap {
     return rotatedImg
 }
 
+//this checks Exif data of an image to get the Orientation tag
+//based on the orientation tag, the function determines if the image has to be rotated to display properly
 fun rotateImageIfRequired(img: Bitmap, path: String): Bitmap {
     val ei = ExifInterface(path)
 

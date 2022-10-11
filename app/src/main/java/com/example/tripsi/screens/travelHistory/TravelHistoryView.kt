@@ -31,12 +31,13 @@ import com.example.tripsi.utils.Screen
 // TODO: cleanup the code from all the formatting, modifiers, etc
 
 
+//retrieve all trips that already happened (status = PAST) and display them in a list
 @Composable
 fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavController) {
     val pastTrips =
         tripDbViewModel.getAllTripsDataByStatus(TripStatus.PAST.status).observeAsState(listOf())
 
-    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = Modifier.fillMaxWidth().padding(bottom = 70.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             "Your trip history",
             Modifier.padding(vertical = 15.dp),
@@ -69,7 +70,6 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
 fun TravelHistoryItem(
     trip: Trip,
     imageCount: Int,
-    //noteCount: Int,
     tripDbViewModel: TripDbViewModel,
     navController: NavController
 ) {
@@ -98,11 +98,6 @@ fun TravelHistoryItem(
                         Spacer(Modifier.size(5.dp))
                         Text(imageCount.toString(), fontSize = 16.sp, color = Color(0xFFFFFFFF))
                     }
-/*                    Row() {
-                        Icon(Icons.Rounded.EditNote, "note icon", tint = Color(0xFFFFFFFF))
-                        Spacer(Modifier.size(5.dp))
-                        Text(noteCount.toString(), fontSize = 16.sp, color = Color(0xFFFFFFFF))
-                    }*/
                     Row() {
                         Icon(Icons.Rounded.Group, "friends icon", tint = Color(0xFFFFFFFF))
                         Spacer(Modifier.size(5.dp))

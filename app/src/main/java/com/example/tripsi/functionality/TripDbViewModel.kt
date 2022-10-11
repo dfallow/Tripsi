@@ -12,8 +12,7 @@ import org.osmdroid.util.GeoPoint
 class TripDbViewModel(application: Application) : AndroidViewModel(application) {
     private val db = TripDatabase.get(application)
 
-    //this is currently used to pass tripId between Travel History View and Media View
-    //TODO find a better way to pass this id between the views
+    //this is used to pass tripId between Travel History View and Media View
     var tripId = 0
 
     lateinit var tripData: TripData
@@ -36,11 +35,11 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
         }
-
-
     }
 
+
     //Trip
+
     fun getAllTrips(): LiveData<List<Trip>> = db.tripDao().getAll()
 
     fun getTripsByStatus(status: Int): LiveData<List<Trip>> = db.tripDao().getTripsByStatus(status)
@@ -65,7 +64,9 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+
     //Statistics
+
     fun getTripStats(tripId: Int): LiveData<Statistics> = db.statisticsDao().getTripStats(tripId)
 
     fun addTripStats(stats: Statistics) {
@@ -80,7 +81,9 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+
     //Image
+
     fun getTripImages(tripId: Int): LiveData<List<Image>> = db.imageDao().getTripImages(tripId)
 
     fun getImageById(imageId: Int): LiveData<Image> = db.imageDao().getImageById(imageId)
@@ -102,6 +105,7 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
 
 
     //Location
+
     fun getTripLocationData(tripId: Int): LiveData<List<LocationWithImagesAndNotes>> =
         db.locationDao().getTripLocationData(tripId)
 
@@ -126,6 +130,9 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+
+    //TripData
+
     // get one trip and all of its related data
     fun getTripData(tripId: Int): LiveData<TripData> = db.tripDao().getTripData(tripId)
 
@@ -135,6 +142,9 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     //get all trips and their data by trip status
     fun getAllTripsDataByStatus(status: Int): LiveData<List<TripData>> =
         db.tripDao().getAllTripDataByStatus(status)
+
+
+    //LocationWithImagesAndNotes
 
     //get location with all its images
     fun getAllLocationImagesAndNote(locationId: String): LiveData<LocationWithImagesAndNotes> =

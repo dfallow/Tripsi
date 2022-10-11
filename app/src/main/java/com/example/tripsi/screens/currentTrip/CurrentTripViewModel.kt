@@ -1,6 +1,8 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
@@ -17,6 +19,7 @@ import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
 import java.util.*
 
@@ -87,20 +90,22 @@ class CurrentTripViewModel : ViewModel() {
         .width(130.dp)
     val shape = RoundedCornerShape(10.dp)
 
-    //save data to db
-    var momentLocation: com.example.tripsi.data.Location? = null
-    val locationId = UUID.randomUUID().toString()
-    var momentNote: String? = null
-    var momentImageFilenames: MutableList<String> = mutableListOf()
 
-    fun saveImageToDb(tripDbViewModel: TripDbViewModel, filename: String) {
+    //Information needed for storing data to database
+    var momentLocation: com.example.tripsi.data.Location? = null //current location data
+    private var locationId = UUID.randomUUID().toString() //unique id for location that will be used to store the entry in db
+    var momentNote: MutableLiveData<String?> = MutableLiveData(null) //note/comment that the user enters
+    var momentImageFilenames: MutableList<String> = mutableListOf() //list of filenames of all images that were taken in a moment
+
+    suspend fun saveImageToDb(tripDbViewModel: TripDbViewModel, filename: String) {
+        //get current tripId
         val trip = tripDbViewModel.tripData.trip!!.tripId
 
         if (momentLocation != null)
-            viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
                 try {
-                    tripDbViewModel.addImage(Image(0, filename, momentNote, trip, locationId))
-                    Log.d("GIGI", "Image saved to database")
+                    //save image data to database
+                    tripDbViewModel.addImage(Image(0, filename, momentNote.value, trip, locationId))
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -108,12 +113,14 @@ class CurrentTripViewModel : ViewModel() {
 
     }
 
-    fun saveLocationToDb(tripDbViewModel: TripDbViewModel) {
+    fun saveLocationToDb(tripDbViewModel: TripDbViewModel, context: Context) {
+        //get current tripId
         val trip = tripDbViewModel.tripData.trip!!.tripId
 
         viewModelScope.launch(Dispatchers.IO) {
             if (momentLocation != null) {
                 try {
+                    //save location data to database
                     tripDbViewModel.addLocation(
                         com.example.tripsi.data.Location(
                             locationId,
@@ -121,23 +128,23 @@ class CurrentTripViewModel : ViewModel() {
                             momentLocation!!.coordsLongitude,
                             momentLocation!!.date,
                             trip,
-                            hasMedia = true
+                            hasMedia = true //this indicates that the location has images associated with it
                         )
                     )
-                    Log.d("ROOM", "Location saved succesfully")
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             } else {
-                Log.d("ROOM", "MomentLocation is null")
+                Toast.makeText(context, "Something went wrong. Please try again.", Toast.LENGTH_LONG).show()
             }
         }
     }
 
     fun clearData() {
         momentLocation = null
-        momentNote = null
-        momentImageFilenames = mutableListOf()
+        momentNote.value = null
+        momentImageFilenames.clear()
+        locationId = UUID.randomUUID().toString()
     }
 
 }
