@@ -30,12 +30,15 @@ interface TripDao : BaseDao<Trip> {
     @Query("UPDATE trip SET status = :status WHERE trip.tripId = :tripId")
     suspend fun updateTripStatus(status: Int, tripId: Int)
 
+    @Transaction
     @Query("SELECT * FROM trip WHERE trip.tripId = :tripId")
     fun getTripData(tripId: Int): LiveData<TripData>
 
+    @Transaction
     @Query("SELECT * FROM trip")
     fun getAllTripsData(): LiveData<List<TripData>>
 
+    @Transaction
     @Query("SELECT * FROM trip WHERE trip.status = :status")
     fun getAllTripDataByStatus(status: Int): LiveData<List<TripData>>
 }
@@ -59,19 +62,11 @@ interface ImageDao : BaseDao<Image> {
     @Query("SELECT * FROM image WHERE image.imgId = :imageId")
     fun getImageById(imageId: Int): LiveData<Image>
 
+    //get image by filename
+    @Query("SELECT * FROM image WHERE image.filename = :filename")
+    fun getImageByFilename(filename: String): LiveData<Image>
 
-}
 
-@Dao
-interface NoteDao : BaseDao<Note> {
-
-    //get all notes from a trip
-    @Query("SELECT * FROM note WHERE note.trip = :tripId")
-    fun getTripNotes(tripId: Int): LiveData<List<Note>>
-
-    //get one note by id
-    @Query("SELECT * FROM note WHERE note.noteId = :noteId")
-    fun getNoteById(noteId: Int): LiveData<Note>
 }
 
 @Dao
@@ -79,13 +74,22 @@ interface LocationDao : BaseDao<Location> {
 
     //get all coordinates from the trip
     @Query("SELECT * FROM location WHERE location.trip = :tripId")
-    fun getTripLocationData(tripId: Int): LiveData<List<Location>>
+    fun getTripLocationData(tripId: Int): LiveData<List<LocationWithImagesAndNotes>>
 
     //get start coordinates of trip
     @Query("SELECT * FROM location WHERE location.isStart = 'true' AND location.trip = :tripId")
-    fun getTripStartLocation(tripId: Int): LiveData<Location>
+    fun getTripStartLocation(tripId: Int): LiveData<LocationWithImagesAndNotes>
 
     //get end coordinates of the trip
     @Query("SELECT * FROM location WHERE location.isEnd = 'true' AND location.trip = :tripId")
-    fun getTripEndLocation(tripId: Int): LiveData<Location>
+    fun getTripEndLocation(tripId: Int): LiveData<LocationWithImagesAndNotes>
+
+    //get only those locations of the trip that have media
+    @Query("SELECT * FROM location WHERE location.trip = :tripId AND location.hasMedia = :hasMedia")
+    fun getLocationsWithMedia(tripId: Int, hasMedia: Boolean = true): LiveData<List<LocationWithImagesAndNotes>>
+
+    //get all images and a note for a particular location
+    @Transaction
+    @Query("SELECT * FROM location WHERE location.locationId = :locationId")
+    fun getAllLocationImagesAndNote(locationId: String): LiveData<LocationWithImagesAndNotes>
 }
