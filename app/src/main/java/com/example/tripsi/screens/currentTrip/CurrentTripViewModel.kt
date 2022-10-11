@@ -131,6 +131,7 @@ class CurrentTripViewModel : ViewModel() {
     val currentIndex = mutableStateOf(0)
     lateinit var momentInfo: MomentInfo
     val momentFromDatabase = mutableStateOf("")
+    lateinit var currentLocation: GeoPoint
 
     // clears temporary value and resets the currentStatus, also removes location updates
     fun goHome(location: Location) {

@@ -47,21 +47,21 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
             viewModel.mapMoments.add(index)
             val moMarker = Marker(currentTripMap)
             moMarker.position = moment.location
-
+            moMarker.id = moment.id
             if (moment.position == MomentPosition.START.position || moment.position == MomentPosition.END.position) {
                 moMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
             } else {
                 moMarker.icon = ContextCompat.getDrawable(context, R.drawable.photo_svgrepo_com)
             }
 
-            moMarker.id = moment.id
-
-            moMarker.setOnMarkerClickListener { _, _ ->
-                viewModel.currentIndex.value = index
-
-                viewModel.displayMoment()
-                true
+            if (moment.position == MomentPosition.MIDDLE.position) {
+                moMarker.setOnMarkerClickListener { _, _ ->
+                    viewModel.currentIndex.value = index
+                    viewModel.displayMoment()
+                    true
+                }
             }
+
             momentLocations += moMarker
         }
     }
@@ -71,6 +71,8 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
     * from the viewModel, as to constantly update the UI when new locations are added
     */
     if ((currentTripMomentsNew == null)) {
+        Log.d("userLocationFirstnull1", "$momentsFromDatabaseNew")
+        Log.d("userLocationFirstnull2","$currentTripMomentsNew")
         viewModel.fromDatabase.value = true
         viewModel.currentStatus = tripDbViewModel.tripData.trip!!.status
         polyline = Polyline()
@@ -79,8 +81,8 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         createMomentMarkers(viewModel.fromDatabase.value, momentsFromDatabaseNew)
 
     } else  {
-        Log.d("userLocationFirstFirst", "$momentsFromDatabaseNew")
-        Log.d("userLocationFirstSecond","$currentTripMomentsNew")
+        Log.d("userLocationFirsttrue1", "$momentsFromDatabaseNew")
+        Log.d("userLocationFirsttrue2","$currentTripMomentsNew")
         // used for updating ui
         viewModel.fromDatabase.value = false
         polyline = Polyline()
@@ -103,11 +105,10 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         mapInitialized = true
     }
     AndroidView({ currentTripMap }) {
-        // TODO Find A way to update UI when moment is added
         it.controller.animateTo(location.userLocation)
         userLocation.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         userLocation.position = location.userLocation
-        userLocation.title = location.userLocation.toString()
+        //userLocation.title = location.userLocation.toString()
         userLocation.icon = ContextCompat.getDrawable(context, R.drawable.hiker_walk_svgrepo_com)
 
         // add lines that connect moments

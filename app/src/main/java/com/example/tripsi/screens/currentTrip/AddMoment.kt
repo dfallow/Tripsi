@@ -65,11 +65,11 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
     val now = Date()
 
     // update location to display city name
-    location.startUpdatingLocation()
+    //location.startUpdatingLocation()
     val geoCoder = Geocoder(context, Locale.getDefault())
     val address = geoCoder.getFromLocation(
-        location.userLocation.latitude,
-        location.userLocation.longitude,
+        viewModel.currentLocation.latitude,
+        viewModel.currentLocation.longitude,
         1
     )
     val cityName = address[0].locality
@@ -298,7 +298,7 @@ fun SaveOrDiscard(
                     }
                 }
 
-                navController.navigate(Screen.CurrentScreen.route)
+                navController.navigateUp()
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape

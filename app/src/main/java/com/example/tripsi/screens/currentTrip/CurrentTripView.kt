@@ -21,6 +21,7 @@ import com.example.tripsi.data.Location as LocationData
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
 import kotlinx.coroutines.delay
+import org.osmdroid.util.GeoPoint
 import java.io.File
 import java.util.Timer
 import java.util.TimerTask
@@ -112,6 +113,7 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
         horizontalArrangement = Arrangement.SpaceAround) {
         Button(
             onClick = {
+                viewModel.currentLocation = location.userLocation
                 //clear all previous moment's data from viewModel
                 viewModel.clearData()
                 //then navigate to MomentScreen
