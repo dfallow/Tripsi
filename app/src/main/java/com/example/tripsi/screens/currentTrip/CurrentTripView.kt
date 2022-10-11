@@ -7,6 +7,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,6 +17,7 @@ import androidx.compose.ui.window.Popup
 import com.example.tripsi.R
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
+import com.example.tripsi.utils.StopWatch
 
 val viewModel = CurrentTripViewModel()
 
@@ -40,8 +42,11 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Bottom
             ) {
+                val stopWatch = remember { StopWatch() }
+                stopWatch.start()
+
                 StepCounterSensor()
-                TripInfoOverlay(type = "Time", measurement = "2-3hours")
+                TripInfoOverlay(type = "Time", measurement = stopWatch.formattedTime)
             }
         }
 

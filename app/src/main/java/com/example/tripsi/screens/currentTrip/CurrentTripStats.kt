@@ -6,9 +6,18 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import org.osmdroid.util.Distance
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -59,7 +68,6 @@ fun ShowSteps(
 @Composable
 fun ShowDistance(
     currentSteps: Int
-
 ) {
 //    var roundedDistance = String.format("%.2f", currentDistance)
 //    val bd = BigDecimal(currentDistance)
@@ -76,4 +84,42 @@ fun StepCounter(stepVM: CurrentTripViewModel) {
     ShowSteps(currentSteps = steps)
     ShowDistance(currentSteps = steps)
 
+}
+
+@Composable
+fun ShowTime(formattedTime: String) {
+    Text(text = formattedTime)
+}
+
+@Composable
+fun StopWatchDisplay(
+    onStartClick: () -> Unit,
+    onPauseClick: () -> Unit,
+    onResetClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(Modifier.height(16.dp))
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Button(onStartClick) {
+                Text("Start")
+            }
+            Spacer(Modifier.width(16.dp))
+            Button(onPauseClick) {
+                Text("Pause")
+            }
+            Spacer(Modifier.width(16.dp))
+            Button(onResetClick) {
+                Text("Reset")
+            }
+        }
+    }
 }
