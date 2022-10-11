@@ -1,6 +1,7 @@
 package com.example.tripsi.screens.currentTrip
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +23,8 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
+import java.util.Timer
+import java.util.TimerTask
 
 // Display map in composable
 @Composable
@@ -71,15 +74,18 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
 
         createMomentMarkers(viewModel.fromDatabase.value, momentsFromDatabase)
 
-    } else  {
+    } else {
         viewModel.fromDatabase.value = false
-
+        Log.d("userLocation", "$currentTripMoments")
         polyline = Polyline()
         val polylinePoints: ArrayList<GeoPoint> = ArrayList()
-        polylinePoints.add(momentsFromDatabase.last())
+
+        if (momentsFromDatabase.isNotEmpty()) { polylinePoints.add(momentsFromDatabase.last()) }
+
         for (moment in currentTripMoments) { polylinePoints.add(moment) }
         polyline.setPoints(polylinePoints)
 
+        Log.d("userLocation", "$currentTripMoments")
         createMomentMarkers(viewModel.fromDatabase.value, currentTripMoments)
     }
 
