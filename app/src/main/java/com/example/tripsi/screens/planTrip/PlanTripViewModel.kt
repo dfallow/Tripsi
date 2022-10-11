@@ -53,7 +53,7 @@ class PlanTripViewModel() : ViewModel() {
                 Toast.makeText(context, "Trip planned successfully!", Toast.LENGTH_LONG).show()
                 success = true
             } catch (e: Exception) {
-                Log.e("DATABASE", e.localizedMessage)
+                e.printStackTrace()
                 Toast.makeText(
                     context,
                     "Something went wrong. Please try again.",

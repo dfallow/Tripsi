@@ -10,7 +10,6 @@ import androidx.room.RoomDatabase
         (Trip::class),
         (Statistics::class),
         (Image::class),
-        (Note::class),
         (Location::class)],
     version = 1
 )
@@ -18,7 +17,6 @@ abstract class TripDatabase : RoomDatabase() {
     abstract fun tripDao(): TripDao
     abstract fun statisticsDao(): StatisticsDao
     abstract fun imageDao(): ImageDao
-    abstract fun noteDao(): NoteDao
     abstract fun locationDao(): LocationDao
 
     //ensure that there is only ONE instance of the database

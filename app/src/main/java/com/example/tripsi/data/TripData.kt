@@ -15,8 +15,5 @@ class TripData {
     var image: List<Image>? = null
 
     @Relation(parentColumn = "tripId", entityColumn = "trip")
-    var note: List<Note>? = null
-
-    @Relation(parentColumn = "tripId", entityColumn = "trip")
     var location: List<Location>? = null
 }

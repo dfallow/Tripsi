@@ -95,6 +95,7 @@ dependencies {
     implementation "androidx.compose.runtime:runtime-livedata:$compose_ui_version"
     //material design icons
     implementation "androidx.compose.material:material-icons-extended:$compose_ui_version"
-
+    //coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 
 }
