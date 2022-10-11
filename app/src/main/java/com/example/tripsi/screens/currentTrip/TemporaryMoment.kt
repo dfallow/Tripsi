@@ -6,9 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ChevronLeft
+import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,13 +61,13 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                                 modifier = Modifier
                                     .fillMaxSize()
                             ) {
-                                Button(
+                                TextButton(
                                     //modifier = Modifier,
                                     onClick = {
                                         momentNumber += 1
                                     }
                                 ) {
-
+                                    Icon(Icons.Rounded.ChevronRight, "arrow right", tint = Color(0xFFCBEF43))
                                 }
                             }
 
@@ -78,13 +79,12 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                                 modifier = Modifier
                                     .fillMaxSize()
                             ) {
-                                Button(
-                                    //modifier = Modifier,
+                                TextButton(
                                     onClick = {
                                         momentNumber -= 1
                                     }
                                 ) {
-
+                                    Icon(Icons.Rounded.ChevronLeft, "arrow right", tint = Color(0xFFCBEF43))
                                 }
                             }
 
