@@ -1,5 +1,6 @@
 package com.example.tripsi.utils
 
+import android.app.Application
 import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.layout.RowScope
@@ -17,13 +18,13 @@ import com.example.tripsi.functionality.TripDbViewModel
 import java.io.File
 
 @Composable
-fun BottomNavigation(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
+fun BottomNavigation(context: Context, location: Location, tripDbViewModel: TripDbViewModel, application: Application) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
         it.calculateBottomPadding()
-        NavigationGraph(navController = navController, context, location, tripDbViewModel)
+        NavigationGraph(navController = navController, context, location, tripDbViewModel, application)
 
     }
 }

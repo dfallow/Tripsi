@@ -1,15 +1,14 @@
 package com.example.tripsi
 
-import android.content.Intent
+import android.app.Application
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
-import android.nfc.NdefMessage
-import android.nfc.NdefRecord
+import android.net.Uri
 import android.nfc.NfcAdapter
 import android.nfc.NfcEvent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,21 +17,102 @@ import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.preference.PreferenceManager
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.ui.theme.TripsiTheme
 import com.example.tripsi.utils.BottomNavigation
 import com.example.tripsi.utils.Location
 import org.osmdroid.config.Configuration
+import java.io.File
+import java.net.URI
 
-class MainActivity : ComponentActivity(), NfcAdapter.CreateNdefMessageCallback {
+class MainActivity : ComponentActivity() {
     companion object {
         private lateinit var tripDbViewModel: TripDbViewModel
-        private var nfcAdapter: NfcAdapter? = null
+        lateinit var nfcAdapter: NfcAdapter
+        // Flag to indicate that Android Beam is available
+        private var androidBeamAvailable = false
     }
+
+    // List of URIs to provide to Android Beam
+    val fileUris = mutableListOf<Uri>()
+    /**
+     * Callback that Android Beam file transfer calls to get
+     * files to share
+     */
+    private inner class FileUriCallback : NfcAdapter.CreateBeamUrisCallback {
+        /**
+         * Create content URIs as needed to share with another device
+         */
+        override fun createBeamUris(event: NfcEvent): Array<Uri> {
+            return fileUris.toTypedArray()
+        }
+    }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        androidBeamAvailable = if(!packageManager.hasSystemFeature(PackageManager.FEATURE_NFC)) {
+            // NFC isn't available on the device
+            /*
+              * Disable NFC features here.
+              * For example, disable menu items or buttons that activate
+              * NFC-related features
+              */
+            false
+            // Android Beam file transfer isn't supported
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            // If Android Beam isn't available, don't continue.
+            androidBeamAvailable = false
+            /*
+             * Disable Android Beam file transfer features here.
+             */
+            false
+        } else {
+            nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+            true
+        }
+
+        // Android Beam file transfer is available, continue
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this).apply {
+
+            /*
+             * Instantiate a new FileUriCallback to handle requests for
+             * URIs
+             */
+            val fileUriCallback = FileUriCallback()
+            // Set the dynamic callback for URI requests.
+            nfcAdapter.setBeamPushUrisCallback(fileUriCallback, this@MainActivity)
+        }
+
+        /*
+         * Create a list of URIs, get a File,
+         * and set its permissions
+         */
+        val fileUris = mutableListOf<Uri>()
+        val transferFile = "my_contact_information.txt"
+        val dir = this.filesDir
+        Log.d("GIGI dir", dir.absolutePath)
+        val requestFile = File(dir, transferFile).apply {
+            setReadable(true, false)
+        }
+        val path = requestFile.absolutePath
+        Log.d("GIGI path", path)
+        val uri = Uri.parse("content://com.example.tripsi/my_images/$transferFile")
+        Log.d("GIGI uri", uri.toString())
+        fileUris += uri
+        /*// Get a URI for the File and add it to the list of URIs
+        Uri.fromFile(requestFile)?.also { fileUri ->
+            Log.d("GIGI uri", fileUri.toString())
+            fileUris += fileUri
+        } ?: Log.e("My Activity", "No File URI available for file.")*/
+
+
+        //   /data/data/com.example.tripsi/files/myContactInformation.txt
 
         //initialize database view model
         tripDbViewModel = TripDbViewModel(application)
@@ -61,19 +141,6 @@ class MainActivity : ComponentActivity(), NfcAdapter.CreateNdefMessageCallback {
         //
         val location = Location(this)
 
-
-        //NFC
-
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this)
-        if (nfcAdapter == null) {
-            Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show()
-        }
-
-        //register callback
-        nfcAdapter?.setNdefPushMessageCallback(this, this)
-
-
-
         setContent {
             TripsiTheme {
                 // A surface container using the 'background' color from the theme
@@ -84,45 +151,8 @@ class MainActivity : ComponentActivity(), NfcAdapter.CreateNdefMessageCallback {
 
                     //for testing purposes
                     //Text(trips.value.toString())
-
-                    BottomNavigation(context = this, location, tripDbViewModel)
+                    BottomNavigation(context = this, location, tripDbViewModel, application)
                 }
-            }
-        }
-    }
-
-    override fun createNdefMessage(p0: NfcEvent): NdefMessage {
-        val text = "Here are my contacts!\n\n"
-
-        return NdefMessage(
-            arrayOf(
-                NdefRecord.createMime(this.filesDir.toString(), text.toByteArray())
-            )
-        )
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // Check to see that the Activity started due to an Android Beam
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED == intent.action) {
-            processIntent(intent)
-        }
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        // onResume gets called after this to handle the intent
-        setIntent(intent)
-    }
-
-
-    //Parses the NDEF Message from the intent and prints to the TextView
-    private fun processIntent(intent: Intent) {
-        // only one message sent during the beam
-        intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)?.also { rawMsgs ->
-            (rawMsgs[0] as NdefMessage).apply {
-                // record 0 contains the MIME type, record 1 is the AAR, if present
-                Log.d("GIGI NFC", String(records[0].payload))
             }
         }
     }

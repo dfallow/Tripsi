@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -56,10 +57,23 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel) {
     }
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(onClick = { navController.navigate(Screen.ContactScreen.route) }) {
+                Text(
+                    "Add contact details",
+                    fontSize = 18.sp, color = Color(0xFF3C493F),
+                    modifier = Modifier.padding(end = 20.dp)
+                )
+            }
+        }
         LottieAnimation(
             composition = composition,
             progress = progress,
@@ -67,6 +81,7 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel) {
                 .clip(shape = RoundedCornerShape(16.dp))
                 .size(500.dp, 250.dp)
         )
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Top,

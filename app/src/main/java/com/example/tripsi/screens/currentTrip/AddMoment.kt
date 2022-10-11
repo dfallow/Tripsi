@@ -180,6 +180,7 @@ fun MomentPictures(context: Context) {
     val filename = UUID.randomUUID().toString()
     val imageFile = File(dir, "${filename}.jpg")
     val photoURI = FileProvider.getUriForFile(context, "com.example.tripsi.fileprovider", imageFile)
+    Log.d("GIGI uri in moment", photoURI.toString())
     val currentPhotoPath = imageFile.absolutePath
 
     //launches the camera

@@ -18,6 +18,12 @@ sealed class Screen(
         icon = Icons.Default.Home
     )
 
+    object ContactScreen : Screen(
+        route = "contact",
+        title = "Contact",
+        icon = null
+    )
+
     object PlanScreen : Screen(
         route = "plan",
         title = "Plan",
