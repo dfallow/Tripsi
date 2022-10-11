@@ -29,6 +29,7 @@ class CurrentTripViewModel : ViewModel() {
 
     // Data classes for temporary information for moments which update the UI without data stored in database
     data class Moment(
+        val id: String,
         val location: GeoPoint,
         val description: String?,
         val photos: MutableList<Bitmap?>?,
@@ -36,6 +37,8 @@ class CurrentTripViewModel : ViewModel() {
         val info: MomentInfo
     )
     data class MomentInfo(val date: String, val time: String, val location: String)
+
+    var firstTime by mutableStateOf(true)
 
     // Temporary status of trip, used to update UI
     var currentStatus by mutableStateOf(TripStatus.UPCOMING.status)
@@ -72,12 +75,13 @@ class CurrentTripViewModel : ViewModel() {
     }
 
     // value is just used to update the MutableLiveData object
-    private val tempMomentArray = ArrayList<GeoPoint>()
     private var tempMomentArrayNew = ArrayList<Moment>()
 
     fun addStartLocationNew(location: Location) {
+        val momentId = UUID.randomUUID().toString()
         tempMomentArrayNew.clear()
         tempMomentArrayNew += Moment(
+            momentId,
             GeoPoint(location.userLocation.latitude, location.userLocation.longitude),
             null,
             null,
@@ -89,6 +93,7 @@ class CurrentTripViewModel : ViewModel() {
 
     fun addLocationNew(location: Location, description: String?, photos: MutableList<Bitmap?>?) {
         tempMomentArrayNew += Moment(
+            viewModel.momentId.value,
             GeoPoint(location.userLocation.latitude, location.userLocation.longitude),
             description,
             photos,
@@ -99,7 +104,9 @@ class CurrentTripViewModel : ViewModel() {
     }
 
     fun addEndLocationNew(location: Location) {
+        val momentId = UUID.randomUUID().toString()
         tempMomentArrayNew += Moment(
+            momentId,
             GeoPoint(location.userLocation.latitude, location.userLocation.longitude),
             null,
             null,
@@ -110,6 +117,8 @@ class CurrentTripViewModel : ViewModel() {
     }
 
     // Moment variables
+    // momentId will get randomly generated after first use
+    val momentId = mutableStateOf("firstTemp")
     val fromDatabase = mutableStateOf(false)
     val temporaryMoment = mutableStateOf(false)
     val mapMoments = mutableListOf<Int>()
@@ -171,6 +180,7 @@ class CurrentTripViewModel : ViewModel() {
                             momentLocation!!.coordsLongitude,
                             momentLocation!!.date,
                             trip,
+                            position = MomentPosition.MIDDLE,
                             hasMedia = true //this indicates that the location has images associated with it
                         )
                     )

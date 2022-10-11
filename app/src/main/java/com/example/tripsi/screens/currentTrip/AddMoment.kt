@@ -80,7 +80,8 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
         location.userLocation.latitude,
         location.userLocation.longitude,
         dateFormat.format(now),
-        tripDbViewModel.tripData.trip!!.tripId
+        tripDbViewModel.tripData.trip!!.tripId,
+        MomentPosition.MIDDLE
     )
 
     Card(

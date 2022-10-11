@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.tripsi.screens.currentTrip.MomentPosition
 
 @Entity
 data class Trip(
@@ -79,6 +80,7 @@ data class Location(
     // TODO: change date data type
     val date: String,
     val trip: Int,
+    val position: MomentPosition,
     val isStart: Boolean = false,
     val isEnd: Boolean = false,
     val hasMedia: Boolean = false,

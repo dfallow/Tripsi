@@ -30,10 +30,11 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
         } else {
             for (location in locations) {
                 currentTripMomentsNew += CurrentTripViewModel.Moment(
+                    location.locationId,
                     GeoPoint(location.coordsLatitude, location.coordsLongitude),
                     description = "need to get",
                     photos = null,
-                    position = MomentPosition.MIDDLE.position,
+                    position = location.position.position,
                     CurrentTripViewModel.MomentInfo("", "", "")
                 )
             }

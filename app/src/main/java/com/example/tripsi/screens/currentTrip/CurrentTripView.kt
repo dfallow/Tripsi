@@ -20,8 +20,12 @@ import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.data.Location as LocationData
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
+import kotlinx.coroutines.delay
 import java.io.File
+import java.util.Timer
+import java.util.TimerTask
 import java.util.UUID
+import java.util.logging.Handler
 
 val viewModel = CurrentTripViewModel()
 
@@ -128,6 +132,7 @@ fun CurrentTripExtra(navController: NavController, context: Context, location: L
                     location.userLocation.longitude,
                     "Today",
                     tripDbViewModel.tripData.trip!!.tripId,
+                    position = MomentPosition.MIDDLE,
                     isStart = true,
                     isEnd = false
                 )
@@ -156,6 +161,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
                 location.userLocation.longitude,
                 "Today",
                 tripDbViewModel.tripData.trip!!.tripId,
+                position = MomentPosition.START,
                 isStart = true,
                 isEnd = false
             )
@@ -185,6 +191,7 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
                 location.userLocation.longitude,
                 "Today",
                 tripDbViewModel.tripData.trip!!.tripId,
+                position = MomentPosition.END,
                 isStart = false,
                 isEnd = true
             )
