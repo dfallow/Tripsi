@@ -6,18 +6,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TemporaryMoment() {
+fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
     Log.d("currentMoment", viewModel.currentMomentId)
     Box(
         Modifier
@@ -38,19 +41,71 @@ fun TemporaryMoment() {
                     .fillMaxHeight(0.55f),
                 shape = RoundedCornerShape(10)
             ) {
-                //Image(painter = painterResource(imageId), contentDescription = "something")
+
+                var momentNumber by remember { mutableStateOf(1) }
+                if (moment.photos != null) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Image(
+                            moment.photos[momentNumber]!!.asImageBitmap(),
+                            contentDescription = "",
+                            contentScale = ContentScale.FillBounds,
+                            modifier = Modifier.fillMaxSize()
+                        )
+
+                        // Buttons used to switch between images
+                        if (momentNumber >= 1 && momentNumber < moment.photos.size - 1) {
+                            Column(
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.End,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            ) {
+                                Button(
+                                    //modifier = Modifier,
+                                    onClick = {
+                                        momentNumber += 1
+                                    }
+                                ) {
+
+                                }
+                            }
+
+                        }
+                        if (momentNumber <= moment.photos.size && momentNumber > 1) {
+                            Column(
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.Start,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            ) {
+                                Button(
+                                    //modifier = Modifier,
+                                    onClick = {
+                                        momentNumber -= 1
+                                    }
+                                ) {
+
+                                }
+                            }
+
+                        }
+                    }
+                }
             }
             Column(
                 // Contains the moment information such as date, location, time
                 Modifier
                     .fillMaxHeight(0.55f)
                     .fillMaxWidth()
-                    .padding(horizontal = 5.dp),
+                    .padding(horizontal = 5.dp, vertical = 5.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text("Date", color = Color.Black)
-                Text("Time")
-                Text("Location")
+                Text(moment.info.date, color = Color.Black)
+                Text("Time", color = Color.Black)
+                Text(moment.info.time, color = Color.Black)
+                Text("Location", color = Color.Black)
+                Text(moment.info.location, color = Color.Black)
 
             }
         }
@@ -69,7 +124,7 @@ fun TemporaryMoment() {
                     .fillMaxWidth()
                     .padding(vertical = 2.dp, horizontal = 10.dp)
             ) {
-                Text("This is a temporary string, which will be replaced with the moment comment")
+                Text(moment.description ?: "")
 
                 ClickableText(text = AnnotatedString("Close"), onClick = {
                     viewModel.hideMoment()

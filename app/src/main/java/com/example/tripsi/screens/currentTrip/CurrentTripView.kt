@@ -80,22 +80,28 @@ fun CurrentTripView(
 
         val currentMoments = viewModel.currentTripMomentsNew.observeAsState().value
         var match = false
+
+
         if (currentMoments == null) {
             // This will only popup moments from the database i.e. when the map first loads
-            ShowMoment(true)
+            for (moment in tripDbViewModel.currentTripMomentsNew) {
+                if (viewModel.currentMomentId == moment.id) {
+                    ShowMoment(true, moment)
+                }
+            }
         } else {
             // When the user has just added a moment
             for (moment in currentMoments) {
                 if (viewModel.currentMomentId == moment.id) {
                     match = true
-                    ShowMoment(false)
+                    ShowMoment(false, moment)
 
                 }
             }
             if (!match) {
                 for (moment in tripDbViewModel.currentTripMomentsNew) {
                     if (viewModel.currentMomentId == moment.id) {
-                        ShowMoment(true)
+                        ShowMoment(true, moment)
                     }
                 }
             }
@@ -259,7 +265,7 @@ fun GoHomeButton(navController: NavController, location: Location) {
 
 // When the use clicks on a moment on the map
 @Composable
-fun ShowMoment(fromDatabase: Boolean) {
+fun ShowMoment(fromDatabase: Boolean, moment: CurrentTripViewModel.Moment) {
     Popup() {
         Surface(
             color = Color.Black.copy(alpha = 0.6f),
@@ -273,13 +279,12 @@ fun ShowMoment(fromDatabase: Boolean) {
 
             ) {
                 if (fromDatabase) {
-                    Log.d("momentType", "Database")
-                    DatabaseMoment()
+                    Log.d("momentType1", "$moment")
+                    //DatabaseMoment(moment)
                 } else {
-                    Log.d("momentType", "Temporary")
-                    TemporaryMoment()
+                    Log.d("momentType2", "$moment")
+                    TemporaryMoment(moment)
                 }
-                // PopupMoment(R.drawable.location_svgrepo_com)
             }
         }
     }
