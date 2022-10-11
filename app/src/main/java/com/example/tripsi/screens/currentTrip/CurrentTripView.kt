@@ -86,7 +86,7 @@ fun CurrentTripView(
             // This will only popup moments from the database i.e. when the map first loads
             for (moment in tripDbViewModel.currentTripMomentsNew) {
                 if (viewModel.currentMomentId == moment.id) {
-                    ShowMoment(true, moment)
+                    ShowMoment(tripDbViewModel,true, moment, context)
                 }
             }
         } else {
@@ -94,14 +94,14 @@ fun CurrentTripView(
             for (moment in currentMoments) {
                 if (viewModel.currentMomentId == moment.id) {
                     match = true
-                    ShowMoment(false, moment)
+                    ShowMoment(tripDbViewModel,false, moment, context)
 
                 }
             }
             if (!match) {
                 for (moment in tripDbViewModel.currentTripMomentsNew) {
                     if (viewModel.currentMomentId == moment.id) {
-                        ShowMoment(true, moment)
+                        ShowMoment(tripDbViewModel, true, moment, context)
                     }
                 }
             }
@@ -265,7 +265,12 @@ fun GoHomeButton(navController: NavController, location: Location) {
 
 // When the use clicks on a moment on the map
 @Composable
-fun ShowMoment(fromDatabase: Boolean, moment: CurrentTripViewModel.Moment) {
+fun ShowMoment(
+    tripDbViewModel: TripDbViewModel,
+    fromDatabase: Boolean,
+    moment: CurrentTripViewModel.Moment,
+    context: Context
+) {
     Popup() {
         Surface(
             color = Color.Black.copy(alpha = 0.6f),
@@ -280,7 +285,7 @@ fun ShowMoment(fromDatabase: Boolean, moment: CurrentTripViewModel.Moment) {
             ) {
                 if (fromDatabase) {
                     Log.d("momentType1", "$moment")
-                    //DatabaseMoment(moment)
+                    DatabaseMoment(tripDbViewModel, moment, context)
                 } else {
                     Log.d("momentType2", "$moment")
                     TemporaryMoment(moment)

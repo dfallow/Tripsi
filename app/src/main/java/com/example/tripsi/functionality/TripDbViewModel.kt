@@ -141,6 +141,9 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     fun getLocationWithMedia(tripId: Int): LiveData<List<LocationWithImagesAndNotes>> =
         db.locationDao().getLocationsWithMedia(tripId)
 
+    fun getMomentWithMedia(momentId: String): LiveData<LocationWithImagesAndNotes> =
+        db.locationDao().getAllLocationImagesAndNote(momentId)
+
     fun addLocation(location: Location) {
         viewModelScope.launch {
             db.locationDao().insert(location)
