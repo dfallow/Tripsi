@@ -4,7 +4,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import android.content.Context
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -32,6 +34,7 @@ import java.util.UUID
 
 val viewModel = CurrentTripViewModel()
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun CurrentTripView(
     location: Location,
@@ -43,6 +46,9 @@ fun CurrentTripView(
 
     // Start updating users location when they are looking at the map
     location.startUpdatingLocation()
+    if (!viewModel.checkPermission(context)) {
+        viewModel.requestPermission(context)
+    }
     val stopWatch = remember { StopWatch() }
     stopWatch.start()
 

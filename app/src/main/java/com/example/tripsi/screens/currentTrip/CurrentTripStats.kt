@@ -31,7 +31,6 @@ import java.security.AccessController.checkPermission
 
 val stepViewModel = CurrentTripViewModel()
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun StepCounterSensor() {
     val ctx = LocalContext.current
@@ -53,9 +52,6 @@ fun StepCounterSensor() {
                 stepViewModel.setSteps(event.values[0].toInt())
             }
         }
-    }
-    if (!viewModel.checkPermission(ctx)) {
-        viewModel.requestPermission(ctx)
     }
     // Registering listener for our sensor manager.
     sensorManager.registerListener(
