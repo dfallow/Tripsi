@@ -1,5 +1,8 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
@@ -9,27 +12,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import com.example.tripsi.data.Trip
+import androidx.lifecycle.viewModelScope
+import com.example.tripsi.data.Image
 import com.example.tripsi.data.TripStatus
+import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
+import java.util.*
 
-class CurrentTripViewModel: ViewModel() {
+class CurrentTripViewModel : ViewModel() {
 
     // Temporary status of trip, used to update UI
     var currentStatus by mutableStateOf(TripStatus.UPCOMING.status)
-    fun startActive() { currentStatus = TripStatus.ACTIVE.status }
-    fun endActive() { currentStatus = TripStatus.PAST.status }
+    fun startActive() {
+        currentStatus = TripStatus.ACTIVE.status
+    }
+
+    fun endActive() {
+        currentStatus = TripStatus.PAST.status
+    }
 
     var showMoment by mutableStateOf(false)
-    fun displayMoment()  { showMoment = true }
-    fun hideMoment() { showMoment = false }
+    fun displayMoment() {
+        showMoment = true
+    }
+
+    fun hideMoment() {
+        showMoment = false
+    }
 
     // Used to update UI when a moment is added
     // TODO find a better way
     var showText by mutableStateOf(false)
-    fun toggleText() { showText = !showText }
+    fun toggleText() {
+        showText = !showText
+    }
 
     // Array of GeoPoints for ViewModel
     val currentTripMoments: MutableLiveData<ArrayList<GeoPoint>> by lazy {
@@ -69,4 +89,62 @@ class CurrentTripViewModel: ViewModel() {
     val modifier = Modifier
         .width(130.dp)
     val shape = RoundedCornerShape(10.dp)
+
+
+    //Information needed for storing data to database
+    var momentLocation: com.example.tripsi.data.Location? = null //current location data
+    private var locationId = UUID.randomUUID().toString() //unique id for location that will be used to store the entry in db
+    var momentNote: MutableLiveData<String?> = MutableLiveData(null) //note/comment that the user enters
+    var momentImageFilenames: MutableList<String> = mutableListOf() //list of filenames of all images that were taken in a moment
+
+    suspend fun saveImageToDb(tripDbViewModel: TripDbViewModel, filename: String) {
+        //get current tripId
+        val trip = tripDbViewModel.tripData.trip!!.tripId
+
+        if (momentLocation != null)
+            withContext(Dispatchers.IO) {
+                try {
+                    //save image data to database
+                    tripDbViewModel.addImage(Image(0, filename, momentNote.value, trip, locationId))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+    }
+
+    fun saveLocationToDb(tripDbViewModel: TripDbViewModel, context: Context) {
+        //get current tripId
+        val trip = tripDbViewModel.tripData.trip!!.tripId
+
+        viewModelScope.launch(Dispatchers.IO) {
+            if (momentLocation != null) {
+                try {
+                    //save location data to database
+                    tripDbViewModel.addLocation(
+                        com.example.tripsi.data.Location(
+                            locationId,
+                            momentLocation!!.coordsLatitude,
+                            momentLocation!!.coordsLongitude,
+                            momentLocation!!.date,
+                            trip,
+                            hasMedia = true //this indicates that the location has images associated with it
+                        )
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            } else {
+                Toast.makeText(context, "Something went wrong. Please try again.", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    fun clearData() {
+        momentLocation = null
+        momentNote.value = null
+        momentImageFilenames.clear()
+        locationId = UUID.randomUUID().toString()
+    }
+
 }

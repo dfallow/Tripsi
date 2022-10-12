@@ -2,12 +2,11 @@ package com.example.tripsi.screens.currentTrip
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Geocoder
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.launch
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -24,34 +23,42 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.example.tripsi.utils.Location
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.List
+import androidx.core.content.FileProvider
 import androidx.navigation.NavController
+import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
+import com.example.tripsi.utils.rotateImageIfRequired
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 // TODO Important to not orientation changes clear screen
 
+
 @Composable
-fun AddMoment(navController: NavController, context: Context, location: Location) {
+fun AddMoment(
+    navController: NavController,
+    context: Context,
+    location: Location,
+    tripDbViewModel: TripDbViewModel
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
     ) {
-        MomentDetails(location = location, context = context)
+        MomentDetails(location, context, tripDbViewModel)
         MomentComment()
-        MomentPictures()
-        SaveOrDiscard(navController, context)
+        MomentPictures(context)
+        SaveOrDiscard(navController, tripDbViewModel, context)
     }
 }
 
 @Composable
-fun MomentDetails(location: Location, context: Context) {
+fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbViewModel) {
     // define format for date and time
     val dateFormat = SimpleDateFormat("dd.MM.yyyy")
     val timeFormat = SimpleDateFormat("HH:mm")
@@ -66,6 +73,15 @@ fun MomentDetails(location: Location, context: Context) {
         1
     )
     val cityName = address[0].locality
+
+    //save location information to viewModel
+    viewModel.momentLocation = com.example.tripsi.data.Location(
+        "",
+        location.userLocation.latitude,
+        location.userLocation.longitude,
+        dateFormat.format(now),
+        tripDbViewModel.tripData.trip!!.tripId
+    )
 
     Card(
         // Moment Information
@@ -130,6 +146,9 @@ fun MomentComment(
             .padding(10.dp)
             .border(BorderStroke(2.dp, Color.Black), shape = RoundedCornerShape(10.dp))
     )
+
+    //save comment to viewModel
+    viewModel.momentNote.value = comment
 }
 
 @Composable
@@ -151,16 +170,37 @@ fun myAppTextFieldColors(
 )
 
 @Composable
-fun MomentPictures() {
-
+fun MomentPictures(context: Context) {
     val photoThumbnails = remember { mutableListOf<Bitmap?>(null) }
-
     val result = remember { mutableStateOf<Bitmap?>(null) }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) {
-        result.value = it
-        Log.d("photo", "test")
-        photoThumbnails.add(it)
-        Log.d("photo", photoThumbnails.toString())
+
+    //directory in which photos will be stored
+    val dir = context.filesDir
+    //generate unique filename
+    val filename = UUID.randomUUID().toString()
+    val imageFile = File(dir, "${filename}.jpg")
+    val photoURI = FileProvider.getUriForFile(context, "com.example.tripsi.fileprovider", imageFile)
+    val currentPhotoPath = imageFile.absolutePath
+
+    //launches the camera
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) {
+        if (it) {
+            try {
+                val bmp = BitmapFactory.decodeFile(currentPhotoPath)
+                //Images taken in portrait mode on some phones are always displayed incorrectly
+                //This checks if the image needs to be rotated and then rotates it
+                val rotatedImg = rotateImageIfRequired(bmp, currentPhotoPath)
+                result.value = rotatedImg
+                //image is added to the list of images that are then displayed in a LazyRow
+                photoThumbnails.add(result.value)
+                //save the filename to list of filenames in viewmodel
+                //this is needed to later iterate through the list and save information of each image to database
+                viewModel.momentImageFilenames.add(filename)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+
+        }
     }
 
     Column(
@@ -193,15 +233,19 @@ fun MomentPictures() {
         }
 
         // TODO If I remove this the photos do not appear in the above lazyRow
-        Row() {
-            result.value?.let { }
+        Row {
+            result.value?.let {
+                //TODO
+            }
         }
 
+        val scope = rememberCoroutineScope()
         // TODO Replace button with some kind of camera clickable icon
         Button(
             onClick = {
-                Log.d("photo", "test")
-                launcher.launch()
+                scope.launch {
+                    launcher.launch(photoURI)
+                }
             }
         ) {
             Text("Take Photo")
@@ -211,7 +255,13 @@ fun MomentPictures() {
 }
 
 @Composable
-fun SaveOrDiscard(navController: NavController, context: Context) {
+fun SaveOrDiscard(
+    navController: NavController,
+    tripDbViewModel: TripDbViewModel,
+    context: Context
+) {
+
+    val scope = rememberCoroutineScope()
     // Contains the buttons for saving or discarding the moment
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
@@ -223,8 +273,19 @@ fun SaveOrDiscard(navController: NavController, context: Context) {
     ) {
         Button(
             onClick = {
-            /*TODO*/
-                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                //TODO only allow saving if there's at least ONE photo
+                //save location to database
+                viewModel.saveLocationToDb(tripDbViewModel, context)
+
+                //save images to database
+                scope.launch {
+                    val listOfFilenames = viewModel.momentImageFilenames
+                    listOfFilenames.forEach {
+                        viewModel.saveImageToDb(tripDbViewModel, it)
+                    }
+                }
+
+                navController.navigate(Screen.CurrentScreen.route)
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape
@@ -234,7 +295,7 @@ fun SaveOrDiscard(navController: NavController, context: Context) {
         Button(
             onClick = {
                 /*TODO finish functionality*/
-                      navController.navigate(Screen.CurrentScreen.route)
+                navController.navigate(Screen.CurrentScreen.route)
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape,

@@ -26,6 +26,8 @@ import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.data.Location as LocationData
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
+import java.io.File
+import java.util.UUID
 
 val viewModel = CurrentTripViewModel()
 
@@ -168,6 +170,9 @@ fun CurrentTripExtra(
     ) {
         Button(
             onClick = {
+                //clear all previous moment's data from viewModel
+                viewModel.clearData()
+                //then navigate to MomentScreen
                 navController.navigate(Screen.MomentScreen.route)
             },
             modifier = viewModel.modifier,
@@ -182,12 +187,10 @@ fun CurrentTripExtra(
                 Log.d("addMoment", "here")
                 viewModel.addLocation(location, false)
                 val middleLocation = LocationData(
-                    0,
+                    UUID.randomUUID().toString(),
                     location.userLocation.latitude,
                     location.userLocation.longitude,
                     "Today",
-                    null,
-                    null,
                     tripDbViewModel.tripData.trip!!.tripId,
                     isStart = true,
                     isEnd = false
@@ -212,12 +215,10 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
         onClick = {
             viewModel.addStartLocation(location)
             val startLocation = LocationData(
-                0,
+                UUID.randomUUID().toString(),
                 location.userLocation.latitude,
                 location.userLocation.longitude,
                 "Today",
-                null,
-                null,
                 tripDbViewModel.tripData.trip!!.tripId,
                 isStart = true,
                 isEnd = false
@@ -246,12 +247,10 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
         onClick = {
             viewModel.addLocation(location, true)
             val endLocation = LocationData(
-                0,
+                UUID.randomUUID().toString(),
                 location.userLocation.latitude,
                 location.userLocation.longitude,
                 "Today",
-                null,
-                null,
                 tripDbViewModel.tripData.trip!!.tripId,
                 isStart = false,
                 isEnd = true
