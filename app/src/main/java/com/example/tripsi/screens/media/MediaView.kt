@@ -53,7 +53,11 @@ fun MediaView(
     //get trip's starting coordinates
     val startCoordinates = tripDbViewModel.getTripStartCoords(tripId).observeAsState().value
     //convert startCoordinates to city name
-    val startLocation = viewModel.getStartLocation(startCoordinates, context)
+    val startLocation = viewModel.getCity(startCoordinates, context)
+    //get trip's end coordinates
+    val endCoordinates = tripDbViewModel.getTripEndCoords(tripId).observeAsState().value
+    //convert startCoordinates to city name
+    val endLocation = viewModel.getCity(endCoordinates, context)
 
     Column(
         modifier = Modifier
@@ -62,7 +66,7 @@ fun MediaView(
     ) {
         tripData?.let {
             DisplayTitle(it.trip?.tripName ?: "")
-            DisplayRoute(start = startLocation, end = it.trip?.destination ?: "")
+            DisplayRoute(start = startLocation ?: "Home", end = endLocation ?: "Destination")
             DisplayStats(
                 distance = it.stats?.distance ?: 0,
                 steps = it.stats?.steps ?: 0,

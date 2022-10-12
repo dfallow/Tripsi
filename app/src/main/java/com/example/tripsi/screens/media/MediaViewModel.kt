@@ -64,18 +64,16 @@ class MediaViewModel : ViewModel() {
         imageBitmaps.postValue(images)
     }
 
-    //this function converts trip start coordinates into a city name
-    fun getStartLocation(startCoordinates: LocationWithImagesAndNotes?, context: Context): String {
-        val startLocation: String
+    //this function converts trip start or end coordinates into a city name
+    fun getCity(coordinates: LocationWithImagesAndNotes?, context: Context): String? {
         val geoCoder = Geocoder(context, Locale.getDefault())
-        val address = startCoordinates?.location?.let {
+        val address = coordinates?.location?.let {
             geoCoder.getFromLocation(
                 it.coordsLatitude,
                 it.coordsLongitude,
                 1
             )
         }
-        startLocation = address?.get(0)?.locality ?: "Home"
-        return startLocation
+        return address?.get(0)?.locality
     }
 }
