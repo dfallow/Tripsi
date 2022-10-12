@@ -1,5 +1,15 @@
 package com.example.tripsi.screens.home
 
+import android.content.Context
+import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,11 +36,14 @@ import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.Screen
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 @Composable
-
-fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, weatherViewModel: WeatherViewModel) {
+fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, context: Context, weatherViewModel: WeatherViewModel) {
     val homeViewModel = HomeViewModel()
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.globe))
@@ -83,8 +96,9 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, wea
 
             Button(
                 onClick = {
-                    navController.navigate(Screen.TravelsScreen.route)
+                    navController.navigate(Screen.PlanScreen.route)
                 },
+                enabled = trip == null,
                 shape = RoundedCornerShape(
                     topStartPercent = 25,
                     bottomStartPercent = 25
@@ -96,7 +110,7 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, wea
                     bottom = 15.dp
                 )
             ) {
-                Text(text = "Trip history")
+                Text(text = "Plan a trip")
             }
         }
         Row(
@@ -104,43 +118,49 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, wea
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.Start
         ) {
-            if (trip != null) {
-                Button(
-                    onClick = {
-                        navController.navigate(Screen.PlanScreen.route)
-                    },
-                    enabled = false,
-                    shape = RoundedCornerShape(
-                        topEndPercent = 25,
-                        bottomEndPercent = 25
-                    ),
-                    contentPadding = PaddingValues(
-                        start = 30.dp,
-                        top = 15.dp,
-                        end = 30.dp,
-                        bottom = 15.dp
-                    )
-                ) {
-                    Text(text = "Plan a trip")
-                }
-            } else {
-                Button(
-                    onClick = {
-                        navController.navigate(Screen.PlanScreen.route)
-                    },
-                    shape = RoundedCornerShape(
-                        topEndPercent = 25,
-                        bottomEndPercent = 25
-                    ),
-                    contentPadding = PaddingValues(
-                        start = 30.dp,
-                        top = 15.dp,
-                        end = 30.dp,
-                        bottom = 15.dp
-                    )
-                ) {
-                    Text(text = "Plan a trip")
-                }
+
+            Button(
+                onClick = {
+                    navController.navigate(Screen.TravelsScreen.route)
+                          },
+                shape = RoundedCornerShape(
+                    topEndPercent = 25,
+                    bottomEndPercent = 25
+                ),
+                contentPadding = PaddingValues(
+                    start = 30.dp,
+                    top = 15.dp,
+                    end = 30.dp,
+                    bottom = 15.dp
+                )
+            ) {
+                Text(text = "Trip History")
+            }
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.End
+        ) {
+
+            Button(
+                onClick = {
+                    homeViewModel.startQuickTrip(tripDbViewModel, context)
+                    //navController.navigate(Screen.CurrentScreen.route)
+                },
+                enabled = trip == null,
+                shape = RoundedCornerShape(
+                    topStartPercent = 25,
+                    bottomStartPercent = 25
+                ),
+                contentPadding = PaddingValues(
+                    start = 30.dp,
+                    top = 15.dp,
+                    end = 30.dp,
+                    bottom = 15.dp
+                )
+            ) {
+                Text(text = "Quick Trip")
             }
         }
 
