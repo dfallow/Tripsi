@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
 
+    <uses-feature android:name ="android.hardware.camera" />
     <uses-feature
         android:name="android.hardware.location.gps" />
     <uses-feature
@@ -17,6 +18,7 @@
         android:required="true" />
 
     <application
+        android:name=".Tripsi"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -29,7 +31,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Tripsi">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,10 +42,20 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.tripsi.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <service
             android:name="MainActivity"
             android:foregroundServiceType="location">
         </service>
+
     </application>
 
 </manifest>

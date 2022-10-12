@@ -1,11 +1,11 @@
 package com.example.tripsi.screens.media
 
 
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import android.content.Context
 import android.widget.Toast
+import androidx.collection.ArrayMap
+import androidx.collection.arrayMapOf
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -14,32 +14,51 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.utils.LoadingSpinner
+
+val viewModel = MediaViewModel()
 
 @Composable
-fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavController, context: Context) {
-    val tripData = tripDbViewModel.getTripData(tripId).observeAsState()
+fun MediaView(
+    tripDbViewModel: TripDbViewModel,
+    tripId: Int,
+    navController: NavController,
+    context: Context
+) {
+    //get all data from database associated with a trip
+    val tripData = tripDbViewModel.getTripData(tripId).observeAsState().value
+    //get trip's starting coordinates
+    val startCoordinates = tripDbViewModel.getTripStartCoords(tripId).observeAsState().value
+    //convert startCoordinates to city name
+    val startLocation = viewModel.getStartLocation(startCoordinates, context)
 
     Column(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        tripData.value?.let {
+        tripData?.let {
             DisplayTitle(it.trip?.tripName ?: "")
-            DisplayRoute(it.trip?.destination ?: "")
+            DisplayRoute(start = startLocation, end = it.trip?.destination ?: "")
             DisplayStats(
                 distance = it.stats?.distance ?: 0.0,
                 duration = it.stats?.duration ?: 0.0,
@@ -50,7 +69,7 @@ fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavC
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxHeight()
             ) {
-                DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel)
+                DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier
@@ -59,9 +78,9 @@ fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavC
                 ) {
                     Button(
                         onClick = {
-                                    /*TODO*/
-                                    Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
-                                  },
+                            /*TODO*/
+                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                        },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0xFFCBEF43),
                             contentColor = Color(0xFF2D0320)
@@ -71,9 +90,9 @@ fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavC
                     }
                     Button(
                         onClick = {
-                                    /*TODO*/
-                                    Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
-                                  },
+                            /*TODO*/
+                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                        },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0xFFCBEF43),
                             contentColor = Color(0xFF2D0320)
@@ -87,6 +106,7 @@ fun MediaView(tripDbViewModel: TripDbViewModel, tripId: Int, navController: NavC
     }
 }
 
+//displays trip name that the user entered when planning the trip
 @Composable
 fun DisplayTitle(tripName: String) {
     Column(
@@ -105,8 +125,11 @@ fun DisplayTitle(tripName: String) {
     }
 }
 
+//displays start and end points of the trip
+//currently destination = destination that the user entered when planning the trip
+//TODO change destination to end coordinates
 @Composable
-fun DisplayRoute(destination: String) {
+fun DisplayRoute(start: String, end: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth(0.6f)
@@ -136,7 +159,7 @@ fun DisplayRoute(destination: String) {
                 Modifier.size(20.dp),
                 tint = Color(0xFF3C493F)
             )
-            Text(destination, Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
+            Text(end, Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
         }
     }
 }
@@ -145,8 +168,7 @@ fun DisplayRoute(destination: String) {
 fun DisplayStats(distance: Double, duration: Double, speed: Double) {
     Row(
         Modifier
-            .fillMaxWidth()
-            .padding(bottom = 20.dp), horizontalArrangement = Arrangement.SpaceEvenly
+            .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         StatsItem(label = "Distance", statsValue = distance.toString(), unit = "kilometers")
         StatsItem(label = "Time", statsValue = duration.toString(), unit = "hours")
@@ -154,7 +176,7 @@ fun DisplayStats(distance: Double, duration: Double, speed: Double) {
     }
 }
 
-//TODO: replace with component from map view
+//TODO: replace with component from map view?
 @Composable
 fun StatsItem(label: String, statsValue: String, unit: String) {
     Column(
@@ -208,68 +230,87 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
     }
 }
 
+//displays all trips images and notes in a LazyRow
 @Composable
-fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel) {
-    //this retrieves all coordinates saved for the trip
-    val tripMedia = tripDbViewModel.getTripLocationData(tripId).observeAsState(listOf())
+fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context: Context) {
+    //get all trip's location that have images
+    val tripLocationsWithMedia = tripDbViewModel.getLocationWithMedia(tripId).observeAsState()
+
+    //this list stores all image filenames and notes associated to them
+    val filenamesAndNotes: MutableList<ArrayMap<String, String?>> = mutableListOf()
+
+    //for each location that has media, extract filename and comment/note and save to filenamesAndNotes list
+    tripLocationsWithMedia.value?.forEach { locationWithMedia ->
+        val images = locationWithMedia.locationImages
+        images?.forEach { image ->
+            if (image.filename != null) {
+                filenamesAndNotes.add(arrayMapOf(Pair(image.filename, image.comment)))
+            }
+        }
+    }
+
+    //this is used to display loading spinner when set to true
+    val loading = remember { mutableStateOf(false) }
+
+    //go through all the filenames and retrieve images that match those filenames from storage
+    LaunchedEffect(filenamesAndNotes) {
+        loading.value = true
+        viewModel.loadPhotosFromStorage(context, filenamesAndNotes)
+        loading.value = false
+    }
+
+    //these are the Bitmaps that were retrieved from storage and rotated
+    val imageBitmaps = viewModel.imageBitmaps.observeAsState()
+
+
+    //TODO: display something when there are no trip images saved (lottie/text/etc)
+
+    LoadingSpinner(isDisplayed = loading.value)
 
     LazyRow(Modifier.padding(horizontal = 10.dp)) {
-        itemsIndexed(tripMedia.value) { _, item ->
-            //if imageId/noteId is associated with the coordinates, retrieve all Image and Note data by their ids
-            val img = item.image?.let { tripDbViewModel.getImageById(it).observeAsState() }
-            val txt = item.note?.let { tripDbViewModel.getNoteById(it).observeAsState() }
-
-            //if there is at least one image, display the card
-            if (img != null) {
+        imageBitmaps.value?.let {
+            itemsIndexed(it.toList()) { _, image ->
                 Column(
                     modifier = Modifier
-                        .padding(15.dp)
+                        .padding(horizontal = 15.dp)
                         .size(270.dp, 370.dp)
                         .clip(RoundedCornerShape(15.dp))
                         .background(Color(0xFFD1CCDC)),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(modifier = Modifier.padding(20.dp)) {
-                        TripPhotoItem(img.value?.filename.toString())
-                        Spacer(
-                            modifier = Modifier
-                                .size(10.dp)
-                                .padding(20.dp)
-                        )
-                        if (txt != null) {
-                            TripNoteItem(txt.value?.noteText.toString())
+                    if (image != null) {
+                        Column(modifier = Modifier.padding(20.dp)) {
+                            if (loading.value) {
+                                LoadingSpinner(isDisplayed = loading.value)
+                            } else {
+                                TripPhotoItem(image)
+                                Spacer(
+                                    modifier = Modifier
+                                        .size(10.dp)
+                                        .padding(20.dp)
+                                )
+                                image.note?.let { note -> TripNoteItem(note) }
+                            }
                         }
                     }
-                }
-                // if there's only a note but no image, display just the note
-            } else if (txt != null) {
-                Column(
-                    Modifier
-                        .padding(15.dp)
-                        .size(270.dp, 370.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    TripNoteItem(txt.value?.noteText.toString())
-
                 }
             }
         }
     }
 }
 
-//TODO: display actual image
 @Composable
-fun TripPhotoItem(fileName: String) {
-    Text(
-        fileName,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
+fun TripPhotoItem(image: InternalStoragePhoto) {
+    Image(
+        image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
             .size(250.dp)
             .clip(RoundedCornerShape(15.dp))
-            .background(Color.Gray)
+            .background(Color.Gray),
+        contentScale = ContentScale.FillWidth
+
     )
 }
+
 
 @Composable
 fun TripNoteItem(note: String) {

@@ -1,5 +1,6 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PopupMoment(imageId: Int) {
+    Log.d("currentMoment", viewModel.currentMomentId)
     Box(
         Modifier
             .fillMaxWidth()

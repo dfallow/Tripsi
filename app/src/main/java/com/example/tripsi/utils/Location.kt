@@ -25,7 +25,7 @@ class Location(context: Context): LocationListener {
     fun startUpdatingLocation() {
         val startLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)!!
         userLocation = GeoPoint(startLocation.latitude, startLocation.longitude)
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100 * 1000, 100f, this)
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100 * 1000, 500f, this)
         Log.d("Location", startLocation.toString())
     }
 
