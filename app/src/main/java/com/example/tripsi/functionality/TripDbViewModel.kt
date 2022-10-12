@@ -18,6 +18,7 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     var tripId = 0
 
     lateinit var tripData: TripData
+    lateinit var pastTripData: TripData
 
     var currentTripMoments = ArrayList<GeoPoint>()
 

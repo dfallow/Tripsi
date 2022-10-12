@@ -34,6 +34,7 @@ import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
+import com.example.tripsi.utils.Screen
 
 val viewModel = MediaViewModel()
 
@@ -78,8 +79,7 @@ fun MediaView(
                 ) {
                     Button(
                         onClick = {
-                            /*TODO*/
-                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                            navController.navigate(Screen.PastTripScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0xFFCBEF43),
@@ -87,18 +87,6 @@ fun MediaView(
                         )
                     ) {
                         Text("show on map")
-                    }
-                    Button(
-                        onClick = {
-                            /*TODO*/
-                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFFCBEF43),
-                            contentColor = Color(0xFF2D0320)
-                        )
-                    ) {
-                        Text("create a video")
                     }
                 }
             }
