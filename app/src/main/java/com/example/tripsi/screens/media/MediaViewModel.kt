@@ -8,11 +8,14 @@ import android.util.Log
 import androidx.collection.ArrayMap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.data.LocationWithImagesAndNotes
+import com.example.tripsi.data.Trip
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.rotateImageIfRequired
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
@@ -94,5 +97,11 @@ class MediaViewModel : ViewModel() {
             distance = start.distanceTo(end).toInt()
         }
         return distance
+    }
+
+    fun deleteTrip(tripId: Int, tripDbViewModel: TripDbViewModel) {
+        viewModelScope.launch {
+            tripDbViewModel.deleteTripById(tripId)
+        }
     }
 }

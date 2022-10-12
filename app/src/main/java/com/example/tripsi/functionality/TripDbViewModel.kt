@@ -81,6 +81,12 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun deleteTripById(tripId: Int) {
+        viewModelScope.launch {
+            db.tripDao().deleteTripById(tripId)
+        }
+    }
+
     fun updateTripStatus(status: Int, tripId: Int) {
         viewModelScope.launch {
             db.tripDao().updateTripStatus(status, tripId)

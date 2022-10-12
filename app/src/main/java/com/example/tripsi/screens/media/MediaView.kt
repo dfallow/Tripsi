@@ -37,6 +37,7 @@ import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
+import com.example.tripsi.utils.Screen
 
 val viewModel = MediaViewModel()
 
@@ -103,15 +104,15 @@ fun MediaView(
                     }
                     Button(
                         onClick = {
-                            /*TODO*/
-                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                            viewModel.deleteTrip(tripId, tripDbViewModel)
+                            navController.navigate(Screen.TravelsScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFFCBEF43),
-                            contentColor = Color(0xFF2D0320)
+                            backgroundColor = Color(0xFF2D0320),
+                            contentColor = Color(0xFFFFFFFF)
                         )
                     ) {
-                        Text("create a video")
+                        Text("Delete trip")
                     }
                 }
             }

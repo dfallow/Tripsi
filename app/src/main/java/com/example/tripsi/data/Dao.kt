@@ -18,6 +18,10 @@ interface BaseDao<T> {
 @Dao
 interface TripDao : BaseDao<Trip> {
 
+    //delete with Id
+    @Query("DELETE FROM trip WHERE trip.tripId = :tripId")
+    suspend fun deleteTripById(tripId: Int)
+
     //get all trips
     @Query("SELECT * FROM trip")
     fun getAll(): LiveData<List<Trip>>
