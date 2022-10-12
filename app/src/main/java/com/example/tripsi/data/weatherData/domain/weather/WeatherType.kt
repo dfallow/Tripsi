@@ -13,11 +13,11 @@ sealed class WeatherType(
     )
     object MainlyClear : WeatherType(
         weatherDesc = "Mainly clear",
-        iconRes = R.drawable.ic_cloudy
+        iconRes = R.drawable.ic_sunny
     )
     object PartlyCloudy : WeatherType(
         weatherDesc = "Partly cloudy",
-        iconRes = R.drawable.ic_cloudy
+        iconRes = R.drawable.ic_sunnycloudy
     )
     object Overcast : WeatherType(
         weatherDesc = "Overcast",
