@@ -65,14 +65,17 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
     val now = Date()
 
     // update location to display city name
-    location.startUpdatingLocation()
+    //location.startUpdatingLocation()
     val geoCoder = Geocoder(context, Locale.getDefault())
     val address = geoCoder.getFromLocation(
-        location.userLocation.latitude,
-        location.userLocation.longitude,
+        viewModel.currentLocation.latitude,
+        viewModel.currentLocation.longitude,
         1
     )
     val cityName = address[0].locality
+
+    // Temporary for UI updating
+    viewModel.momentInfo = CurrentTripViewModel.MomentInfo(dateFormat.format(now), timeFormat.format(now), cityName)
 
     //save location information to viewModel
     viewModel.momentLocation = com.example.tripsi.data.Location(
@@ -80,12 +83,13 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
         location.userLocation.latitude,
         location.userLocation.longitude,
         dateFormat.format(now),
-        tripDbViewModel.tripData.trip!!.tripId
+        tripDbViewModel.tripData.trip!!.tripId,
+        MomentPosition.MIDDLE
     )
 
     Card(
         // Moment Information
-        backgroundColor = MaterialTheme.colors.onBackground,
+        backgroundColor = colors.onBackground,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.15f)
@@ -199,8 +203,8 @@ fun MomentPictures(context: Context) {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-
         }
+        viewModel.temporaryPhotos = photoThumbnails
     }
 
     Column(
@@ -277,6 +281,15 @@ fun SaveOrDiscard(
                 //save location to database
                 viewModel.saveLocationToDb(tripDbViewModel, context)
 
+                Log.d("momentInfo", "${viewModel.momentInfo}")
+                viewModel.addLocationNew(
+                    viewModel.momentLocation!!,
+                    viewModel.momentNote.value,
+                    viewModel.temporaryPhotos,
+                    viewModel.momentInfo
+                )
+                viewModel.momentId.value = UUID.randomUUID().toString()
+
                 //save images to database
                 scope.launch {
                     val listOfFilenames = viewModel.momentImageFilenames
@@ -285,7 +298,7 @@ fun SaveOrDiscard(
                     }
                 }
 
-                navController.navigate(Screen.CurrentScreen.route)
+                navController.navigateUp()
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape
