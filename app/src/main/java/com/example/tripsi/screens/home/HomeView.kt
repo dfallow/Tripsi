@@ -172,7 +172,11 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
         Button(onClick = {
 
             tripDbViewModel.tripData = tripData
+            // TODO
+            tripDbViewModel.getCurrentTripMomentsNew(tripData.location!!)
             tripDbViewModel.getTripMoments(tripData.location!!)
+
+
             navController.navigate(Screen.CurrentScreen.route)
         },
             shape = RoundedCornerShape(
