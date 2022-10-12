@@ -2,19 +2,20 @@ package com.example.tripsi.screens.media
 
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
@@ -24,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
@@ -58,6 +57,13 @@ fun MediaView(
     val endCoordinates = tripDbViewModel.getTripEndCoords(tripId).observeAsState().value
     //convert startCoordinates to city name
     val endLocation = viewModel.getCity(endCoordinates, context)
+    //get distance
+    val distance = viewModel.getDistance(
+        startCoordinates?.location?.coordsLatitude,
+        startCoordinates?.location?.coordsLongitude,
+        endCoordinates?.location?.coordsLatitude,
+        endCoordinates?.location?.coordsLongitude,
+    )
 
     Column(
         modifier = Modifier
@@ -68,7 +74,7 @@ fun MediaView(
             DisplayTitle(it.trip?.tripName ?: "")
             DisplayRoute(start = startLocation ?: "Home", end = endLocation ?: "Destination")
             DisplayStats(
-                distance = it.stats?.distance ?: 0,
+                distance = distance ?: it.stats?.distance ?: 0,
                 steps = it.stats?.steps ?: 0,
             )
             Column(
@@ -301,45 +307,56 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
 fun TripPhotoItem(image: InternalStoragePhoto) {
     var isLargePhotoVisible by remember { mutableStateOf(false) }
 
-        if(isLargePhotoVisible) {
-            Popup(alignment = Alignment.Center,
-                properties = PopupProperties( dismissOnBackPress = false )) {
-                Box (contentAlignment = Alignment.TopEnd, modifier = Modifier.background(Color(0xFFD1CCDC)).fillMaxSize().clickable {
-                    isLargePhotoVisible = false
-                }){
-                    Image(
-                        image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
-                            .fillMaxSize()
-                            .clickable { isLargePhotoVisible = false },
-                        contentScale = ContentScale.FillWidth
-                    )
-                    Icon(
-                        Icons.Rounded.Close,
-                        "close",
-                        Modifier.size(70.dp).padding(10.dp),
-                        tint = Color(0xFF3C493F)
-                    )
-                }
-            }
-        } else {
-            Box (contentAlignment = Alignment.TopEnd){
+    if (isLargePhotoVisible) {
+        Popup(
+            alignment = Alignment.Center,
+            properties = PopupProperties(dismissOnBackPress = false)
+        ) {
+            Box(
+                contentAlignment = Alignment.TopEnd,
+                modifier = Modifier
+                    .background(Color(0xFFD1CCDC))
+                    .fillMaxSize()
+                    .clickable {
+                        isLargePhotoVisible = false
+                    }) {
                 Image(
                     image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
-                        .size(250.dp)
-                        .clip(RoundedCornerShape(15.dp))
-                        .background(Color.Gray)
-                        .clickable { isLargePhotoVisible = true },
+                        .fillMaxSize()
+                        .clickable { isLargePhotoVisible = false },
                     contentScale = ContentScale.FillWidth
                 )
                 Icon(
-                    Icons.Rounded.OpenInFull,
-                    "expand",
-                    Modifier.size(50.dp).padding(10.dp),
-                    tint = Color(0xFFCBEF43)
+                    Icons.Rounded.Close,
+                    "close",
+                    Modifier
+                        .size(70.dp)
+                        .padding(10.dp),
+                    tint = Color(0xFF3C493F)
                 )
             }
-
         }
+    } else {
+        Box(contentAlignment = Alignment.TopEnd) {
+            Image(
+                image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
+                    .size(250.dp)
+                    .clip(RoundedCornerShape(15.dp))
+                    .background(Color.Gray)
+                    .clickable { isLargePhotoVisible = true },
+                contentScale = ContentScale.FillWidth
+            )
+            Icon(
+                Icons.Rounded.OpenInFull,
+                "expand",
+                Modifier
+                    .size(50.dp)
+                    .padding(10.dp),
+                tint = Color(0xFFCBEF43)
+            )
+        }
+
+    }
 }
 
 @Composable

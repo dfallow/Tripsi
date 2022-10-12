@@ -3,11 +3,14 @@ package com.example.tripsi.screens.media
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.location.Geocoder
+import android.location.Location
+import android.util.Log
 import androidx.collection.ArrayMap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.data.LocationWithImagesAndNotes
+import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.rotateImageIfRequired
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -75,5 +78,21 @@ class MediaViewModel : ViewModel() {
             )
         }
         return address?.get(0)?.locality
+    }
+
+    fun getDistance(startLat: Double?, startLong: Double?, endLat: Double?, endLong: Double?): Int? {
+        var distance: Int? = null
+        if (startLat != null && startLong != null && endLat != null && endLong != null) {
+            val start = Location("start")
+            start.latitude = startLat
+            start.longitude = startLong
+
+            val end = Location("end")
+            end.latitude = endLat
+            end.longitude = endLong
+
+            distance = start.distanceTo(end).toInt()
+        }
+        return distance
     }
 }
