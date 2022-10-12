@@ -66,7 +66,7 @@ fun DatabaseMoment(
                 currentTripData?.let {
                     var momentNumber by remember { mutableStateOf(1) }
 
-                    DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
+                    //DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
                     DisplayMomentMedia(it.trip!!.tripId, tripDbViewModel, context)
                 }
 
@@ -168,16 +168,25 @@ fun DisplayMomentMedia(tripId: Int, tripDbViewModel: TripDbViewModel, context: C
 
     // TODO THIS IS THE LOCATION IT HAS THE INFO AND PHOTOS USE THIS
     val momentWithMedia = tripDbViewModel.getMomentWithMedia(viewModel.currentMomentId).observeAsState()
-    Log.d("databaseMedia", "${momentWithMedia.value?.location}")
+    Log.d("databaseMedia", "${momentWithMedia.value?.locationImages}")
 
     //this list stores all image filenames and notes associated to them
     val filenamesAndNotes: MutableList<ArrayMap<String, String?>> = mutableListOf()
 
-    //for each location that has media, extract filename and comment/note and save to filenamesAndNotes list
-    tripLocationsWithMedia.value?.forEach { locationWithMedia ->
+
+    /*tripLocationsWithMedia.value?.forEach { locationWithMedia ->
         val images = locationWithMedia.locationImages
         images?.forEach { image ->
             if (image.filename != null) {
+                filenamesAndNotes.add(arrayMapOf(Pair(image.filename, image.comment)))
+            }
+        }
+    }*/
+    //for each moment with media, extract filename and comment/note and save to filenamesAndNotes list
+    momentWithMedia.value?.let { momentMedia ->
+        val images = momentMedia.locationImages
+        images?.forEach { image ->
+            if (image.location == momentMedia.location?.locationId && image.filename != null) {
                 filenamesAndNotes.add(arrayMapOf(Pair(image.filename, image.comment)))
             }
         }
@@ -195,13 +204,64 @@ fun DisplayMomentMedia(tripId: Int, tripDbViewModel: TripDbViewModel, context: C
 
     //these are the Bitmaps that were retrieved from storage and rotated
     val imageBitmaps = com.example.tripsi.screens.media.viewModel.imageBitmaps.observeAsState()
-
+    var momentNumber by remember { mutableStateOf(0) }
     LoadingSpinner(isDisplayed = loading.value)
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        imageBitmaps.value?.let {
-            Log.d("databaseImages", "$it")
+    imageBitmaps.value?.let {
+        if (it.isNotEmpty()) {
+            Box(modifier = Modifier.fillMaxSize()) {
+
+                Log.d("it.size", "${it.size}")
+                if (loading.value) {
+                    LoadingSpinner(isDisplayed = loading.value)
+                } else {
+                    Image(
+                        it[momentNumber]!!.bmp.asImageBitmap(),
+                        contentDescription = "",
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    // Buttons used to switch between images
+                    if (momentNumber >= 0 && momentNumber < it.size - 1) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.End,
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            TextButton(
+                                //modifier = Modifier,
+                                onClick = {
+                                    momentNumber += 1
+                                }
+                            ) {
+                                Icon(Icons.Rounded.ChevronRight, "arrow right", tint = Color(0xFFCBEF43))
+                            }
+                        }
+
+                    }
+                    if (momentNumber <= it.size && momentNumber > 0) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.Start,
+                            modifier = Modifier
+                                .fillMaxSize()
+                        ) {
+                            TextButton(
+                                onClick = {
+                                    momentNumber -= 1
+                                }
+                            ) {
+                                Icon(Icons.Rounded.ChevronLeft, "arrow right", tint = Color(0xFFCBEF43))
+                            }
+                        }
+
+                    }
+                }
+
+            }
         }
+
     }
 
 }
