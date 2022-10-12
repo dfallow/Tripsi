@@ -54,9 +54,17 @@ fun StepCounterSensor() {
         stepSensor,
         SensorManager.SENSOR_DELAY_NORMAL
     )
-    //viewModel.reset()
+    // Launch counting steps and distance
     StepCounter(stepVM = stepViewModel)
-    //DistanceCounter(stepVM = stepViewModel)
+}
+
+@Composable
+fun StepCounter(
+    stepVM: CurrentTripViewModel
+) {
+    val steps by stepVM.currentSteps.observeAsState(0)
+    ShowSteps(currentSteps = steps)
+    ShowDistance(currentSteps = steps)
 }
 
 @Composable
@@ -65,61 +73,23 @@ fun ShowSteps(
 ) {
     TripInfoOverlay(type = "Steps", measurement = "$currentSteps")
 }
+
 @Composable
 fun ShowDistance(
     currentSteps: Int
 ) {
-//    var roundedDistance = String.format("%.2f", currentDistance)
-//    val bd = BigDecimal(currentDistance)
-//    val roundoff = bd.setScale(2, RoundingMode.DOWN)
+    var distanceM: Int
+    var distanceKm: Double
 
-    var distance = viewModel.setDistance(currentSteps)
+    // When it is stepped less then 100m it will show user distance in m and after in km
+    if (currentSteps > 150) {
+        distanceKm = (viewModel.setDistance(currentSteps).toDouble() / 1000)
+        val bd = BigDecimal(distanceKm)
+        val roundedDistance = bd.setScale(2, RoundingMode.DOWN)
+        TripInfoOverlay(type = "Distance", measurement = "$roundedDistance km")
 
-    TripInfoOverlay(type = "Distance", measurement = "$distance m")
-}
-
-@Composable
-fun StepCounter(stepVM: CurrentTripViewModel) {
-    val steps by stepVM.currentSteps.observeAsState(0)
-    ShowSteps(currentSteps = steps)
-    ShowDistance(currentSteps = steps)
-
-}
-
-@Composable
-fun ShowTime(formattedTime: String) {
-    Text(text = formattedTime)
-}
-
-@Composable
-fun StopWatchDisplay(
-    onStartClick: () -> Unit,
-    onPauseClick: () -> Unit,
-    onResetClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(Modifier.height(16.dp))
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Button(onStartClick) {
-                Text("Start")
-            }
-            Spacer(Modifier.width(16.dp))
-            Button(onPauseClick) {
-                Text("Pause")
-            }
-            Spacer(Modifier.width(16.dp))
-            Button(onResetClick) {
-                Text("Reset")
-            }
-        }
+    } else {
+        distanceM = viewModel.setDistance(currentSteps)
+        TripInfoOverlay(type = "Distance", measurement = "$distanceM m")
     }
 }

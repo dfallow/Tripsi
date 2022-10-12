@@ -12,7 +12,7 @@ import java.util.*
 
 class StopWatch {
 
-    var formattedTime by mutableStateOf("00:00:00")
+    var formattedTime by mutableStateOf("00:00")
 
     private var coroutineScope = CoroutineScope(Dispatchers.Main)
     private var isStarted = false
@@ -35,16 +35,12 @@ class StopWatch {
         }
     }
 
-    fun pause() {
-        isStarted = false
-    }
-
-    fun reset() {
+    fun resetWatch() {
         coroutineScope.cancel()
         coroutineScope = CoroutineScope(Dispatchers.Main)
         timeMillis = 0L
         lastTimestamp = 0L
-        formattedTime = "00:00:00"
+        formattedTime = "00:00"
         isStarted = false
     }
 
@@ -54,7 +50,7 @@ class StopWatch {
             ZoneId.systemDefault()
         )
         val formatter = DateTimeFormatter.ofPattern(
-            "HH:mm:ss",
+            "HH:mm",
             Locale.getDefault()
         )
         return localDateTime.format(formatter)

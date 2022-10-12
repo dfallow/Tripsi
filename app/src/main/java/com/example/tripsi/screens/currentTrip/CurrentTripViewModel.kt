@@ -11,15 +11,18 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.osmdroid.util.GeoPoint
-import java.text.DecimalFormat
 
-class CurrentTripViewModel: ViewModel() {
+class CurrentTripViewModel : ViewModel() {
 
     var showMoment by mutableStateOf(false)
 
-    fun displayMoment()  { showMoment = true }
+    fun displayMoment() {
+        showMoment = true
+    }
 
-    fun hideMoment() { showMoment = false }
+    fun hideMoment() {
+        showMoment = false
+    }
 
     // Currently storing generic properties for buttons
     // TODO create own file for these properties
@@ -45,22 +48,21 @@ class CurrentTripViewModel: ViewModel() {
         var steps = stepAmount
         if (stepsBottomLine.value == null) {
             stepsBottomLine.value = stepAmount
-            steps ++
+            steps++
         }
         currentSteps.value = steps - (stepsBottomLine.value ?: 0)
     }
 
-    /*fun reset() {
-        currentSteps.value?.let { stepsBottomLine.value = (stepsBottomLine.value ?: 0).plus(it) }
+    fun resetSteps() {
+        currentSteps.value?.let {
+            stepsBottomLine.value = (stepsBottomLine.value ?: 0).plus(it) }
         setSteps(stepsBottomLine.value ?: 0)
-    }*/
+    }
 
     // Calculating distance based on steps
     // 74cm is average step distance
-    fun setDistance(stepAmount: Int) : Int {
-        Log.d("msg", "step amount $stepAmount ")
-
-        distance.value = (stepAmount * 74) / 100
+    fun setDistance(stepAmount: Int): Int {
+        distance.value = (stepAmount * 70) / 100
         Log.d("msg", "distance in set ${distance.value}")
         return distance.value!!
     }

@@ -25,6 +25,8 @@ val viewModel = CurrentTripViewModel()
 fun CurrentTripView(location: Location, context: Context, navController: NavController) {
 
     location.startUpdatingLocation()
+    val stopWatch = remember { StopWatch() }
+    stopWatch.start()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -42,8 +44,6 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                val stopWatch = remember { StopWatch() }
-                stopWatch.start()
 
                 StepCounterSensor()
                 TripInfoOverlay(type = "Time", measurement = stopWatch.formattedTime)
@@ -81,6 +81,8 @@ fun CurrentTripView(location: Location, context: Context, navController: NavCont
             onClick = { /*TODO
                           This function should be when the user starts a trip
                         */
+                stopWatch.resetWatch()
+                viewModel.resetSteps()
                 Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
                       },
             modifier = viewModel.modifier,
