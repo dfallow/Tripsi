@@ -6,7 +6,10 @@ import androidx.navigation.NavController
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,9 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.core.graphics.alpha
 import com.example.tripsi.R
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.screens.weather.WeatherCard
+import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.data.Location as LocationData
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
@@ -30,7 +36,8 @@ fun CurrentTripView(
     location: Location,
     context: Context,
     navController: NavController,
-    tripDbViewModel: TripDbViewModel
+    tripDbViewModel: TripDbViewModel,
+    weatherViewModel: WeatherViewModel
 ) {
 
     // Start updating users location when they are looking at the map
@@ -41,7 +48,12 @@ fun CurrentTripView(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        CurrentTripMap(context = context, location = location, tripDbViewModel = tripDbViewModel)
+        CurrentTripMap(
+            context = context,
+            location = location,
+            tripDbViewModel = tripDbViewModel,
+            weatherViewModel
+        )
 
         when (viewModel.currentStatus) {
             // Upcoming
@@ -52,14 +64,20 @@ fun CurrentTripView(
             }
             // ACTIVE
             2 -> {
-                CurrentTripExtra(navController = navController, context = context, location = location, tripDbViewModel = tripDbViewModel)
+                CurrentTripExtra(
+                    navController = navController,
+                    context = context,
+                    location = location,
+                    tripDbViewModel = tripDbViewModel
+                )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 EndTrip(context = context, location = location, tripDbViewModel = tripDbViewModel)
 
                 // This helps update UI when user adds a moment
-                if (viewModel.showText) { }
+                if (viewModel.showText) {
+                }
             }
             // PAST
             3 -> {
@@ -77,10 +95,17 @@ fun CurrentTripView(
 }
 
 @Composable
-fun CurrentTripMap(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight(0.7F)) {
+fun CurrentTripMap(
+    context: Context,
+    location: Location,
+    tripDbViewModel: TripDbViewModel,
+    weatherViewModel: WeatherViewModel
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.7F)
+    ) {
         ShowCurrentTripMap(location, context, tripDbViewModel)
 
         Column(
@@ -91,6 +116,36 @@ fun CurrentTripMap(context: Context, location: Location, tripDbViewModel: TripDb
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.Bottom
         ) {
+
+            //Weather Card
+            Row(
+                modifier = Modifier.fillMaxWidth()
+
+            ) {
+                Column(
+                ) {
+                    WeatherCard(
+                        state = weatherViewModel.state,
+                        backgroundColor = Color(0xFF3C493F)
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
+                if (weatherViewModel.state.isLoading) {
+                    CircularProgressIndicator(
+                    )
+                }
+                weatherViewModel.state.error?.let { error ->
+                    Text(
+                        text = error,
+                        color = Color.Red,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+
+            Spacer(
+                modifier = Modifier.weight(1f),
+            )
             TripInfoOverlay(type = "Distance", measurement = "79km")
             TripInfoOverlay(type = "Speed", measurement = "40km/h")
             TripInfoOverlay(type = "Time", measurement = "2-3hours")
@@ -101,11 +156,18 @@ fun CurrentTripMap(context: Context, location: Location, tripDbViewModel: TripDb
 
 // For Save Moment and Connect a Friend Buttons
 @Composable
-fun CurrentTripExtra(navController: NavController, context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 16.dp),
-        horizontalArrangement = Arrangement.SpaceAround) {
+fun CurrentTripExtra(
+    navController: NavController,
+    context: Context,
+    location: Location,
+    tripDbViewModel: TripDbViewModel
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp),
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
         Button(
             onClick = {
                 //clear all previous moment's data from viewModel
@@ -163,7 +225,10 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
             )
             tripDbViewModel.addLocation(startLocation)
             viewModel.startActive()
-            tripDbViewModel.updateTripStatus(TripStatus.ACTIVE.status, tripDbViewModel.tripData.trip!!.tripId)
+            tripDbViewModel.updateTripStatus(
+                TripStatus.ACTIVE.status,
+                tripDbViewModel.tripData.trip!!.tripId
+            )
             Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
         },
         modifier = viewModel.modifier,
@@ -192,7 +257,10 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
             )
             tripDbViewModel.addLocation(endLocation)
             viewModel.endActive()
-            tripDbViewModel.updateTripStatus(TripStatus.PAST.status, tripDbViewModel.tripData.trip!!.tripId)
+            tripDbViewModel.updateTripStatus(
+                TripStatus.PAST.status,
+                tripDbViewModel.tripData.trip!!.tripId
+            )
             Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
         },
         modifier = viewModel.modifier,
@@ -213,7 +281,7 @@ fun GoHomeButton(navController: NavController, location: Location) {
 
             // navigates to home screen, doesn't allow user to navigate back to CurrentTrip
             navController.navigateUp()
-        } ,
+        },
         modifier = viewModel.modifier,
         shape = viewModel.shape,
         colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
