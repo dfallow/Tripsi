@@ -169,8 +169,8 @@ fun DisplayStats(distance: Int, steps: Int) {
         Modifier
             .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        StatsItem(label = "Distance", statsValue = distance.toString(), unit = "kilometers")
-        StatsItem(label = "Steps", statsValue = steps.toString(), unit = "hours")
+        StatsItem(label = "Distance", statsValue = distance.toString(), unit = "meters")
+        StatsItem(label = "Steps", statsValue = steps.toString(), unit = "steps")
     }
 }
 
@@ -193,18 +193,10 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
                         tint = Color(0xFFCBEF43)
                     )
                 }
-                "Time" -> {
+                "Steps" -> {
                     Icon(
-                        Icons.Rounded.Schedule,
-                        "time",
-                        Modifier.size(18.dp),
-                        tint = Color(0xFFCBEF43)
-                    )
-                }
-                "Speed" -> {
-                    Icon(
-                        Icons.Rounded.Speed,
-                        "speed",
+                        Icons.Rounded.DirectionsWalk,
+                        "walking",
                         Modifier.size(18.dp),
                         tint = Color(0xFFCBEF43)
                     )

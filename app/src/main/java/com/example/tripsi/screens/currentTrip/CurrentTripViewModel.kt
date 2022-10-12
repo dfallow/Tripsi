@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -235,7 +236,7 @@ class CurrentTripViewModel : ViewModel() {
     }
 
     // Variables and fun for counting steps
-    val currentSteps = MutableLiveData(0)
+    var currentSteps = MutableLiveData(0)
     private val stepsBottomLine = MutableLiveData<Int>(null)
     var distance = MutableLiveData(0)
 
@@ -257,11 +258,12 @@ class CurrentTripViewModel : ViewModel() {
         setSteps(stepsBottomLine.value ?: 0)
     }
 
+    var stepsForDb : MutableLiveData<Int> = MutableLiveData(0)
     // Calculating distance based on steps
     // 74cm is average step distance
     fun setDistance(stepAmount: Int): Int {
         distance.value = (stepAmount * 70) / 100
-        Log.d("msg", "distance in set ${distance.value}")
+        stepsForDb.postValue(stepAmount)
         return distance.value!!
     }
 
@@ -270,7 +272,9 @@ class CurrentTripViewModel : ViewModel() {
         val trip = tripDbViewModel.tripData.trip!!.tripId
 
         try {
-            tripDbViewModel.addTripStats(Statistics(0, trip, distance.value ?: 0, currentSteps.value ?: 0))
+            viewModelScope.launch(Dispatchers.IO) {
+                tripDbViewModel.addTripStats(Statistics(0, trip, distance.value ?: 0, stepsForDb.value ?: 0))
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

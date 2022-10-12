@@ -22,6 +22,11 @@ interface TripDao : BaseDao<Trip> {
     @Query("SELECT * FROM trip")
     fun getAll(): LiveData<List<Trip>>
 
+    //get tripWithStats
+    @Transaction
+    @Query("SELECT * FROM trip WHERE trip.tripId = :tripId")
+    fun getTripStats(tripId: Int): LiveData<TripWithStats>
+
     //get trips based on status
     @Query("SELECT * FROM trip WHERE trip.status = :status")
     fun getTripsByStatus(status: Int): LiveData<List<Trip>>

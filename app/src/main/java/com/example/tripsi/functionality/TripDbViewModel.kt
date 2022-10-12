@@ -92,6 +92,8 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getTripStats(tripId: Int): LiveData<Statistics> = db.statisticsDao().getTripStats(tripId)
 
+    fun getTripWithStats(tripId: Int): LiveData<TripWithStats> = db.tripDao().getTripStats(tripId)
+
     fun addTripStats(stats: Statistics) {
         viewModelScope.launch {
             db.statisticsDao().insert(stats)

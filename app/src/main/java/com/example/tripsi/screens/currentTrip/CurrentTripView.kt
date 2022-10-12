@@ -204,7 +204,7 @@ fun CurrentTripMap(
                 modifier = Modifier.weight(1f),
             )
             StepCounterSensor()
-            TripInfoOverlay(type = "Time", measurement = stopWatch.formattedTime)
+            //TripInfoOverlay(type = "Time", measurement = stopWatch.formattedTime)
             //TripInfoOverlay(type = "Distance", measurement = "79km")
             //TripInfoOverlay(type = "Speed", measurement = "40km/h")
             //TripInfoOverlay(type = "Time", measurement = "2-3hours")
