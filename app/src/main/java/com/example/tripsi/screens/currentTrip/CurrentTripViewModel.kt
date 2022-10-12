@@ -1,9 +1,14 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.Manifest
+import android.app.Activity
 import android.util.Log
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
@@ -11,6 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -242,6 +249,23 @@ class CurrentTripViewModel : ViewModel() {
         distance.value = (stepAmount * 70) / 100
         Log.d("msg", "distance in set ${distance.value}")
         return distance.value!!
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun checkPermission(context: Context) =
+        ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACTIVITY_RECOGNITION
+        ) == PackageManager.PERMISSION_GRANTED
+
+    fun requestPermission(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ActivityCompat.requestPermissions(
+                context as Activity,
+                arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
+                0
+            )
+        }
     }
 
 

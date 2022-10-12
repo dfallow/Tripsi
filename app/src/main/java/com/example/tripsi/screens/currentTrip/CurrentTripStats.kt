@@ -1,11 +1,15 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -18,12 +22,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import org.osmdroid.util.Distance
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.security.AccessController.checkPermission
 
 val stepViewModel = CurrentTripViewModel()
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun StepCounterSensor() {
     val ctx = LocalContext.current
@@ -45,6 +53,9 @@ fun StepCounterSensor() {
                 stepViewModel.setSteps(event.values[0].toInt())
             }
         }
+    }
+    if (!viewModel.checkPermission(ctx)) {
+        viewModel.requestPermission(ctx)
     }
     // Registering listener for our sensor manager.
     sensorManager.registerListener(
