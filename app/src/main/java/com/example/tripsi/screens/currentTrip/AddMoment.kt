@@ -89,7 +89,7 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
 
     Card(
         // Moment Information
-        backgroundColor = MaterialTheme.colors.onBackground,
+        backgroundColor = colors.onBackground,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.15f)

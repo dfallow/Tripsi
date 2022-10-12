@@ -69,14 +69,6 @@ class CurrentTripViewModel : ViewModel() {
     }
     var allTripMomentsNew = ArrayList<Moment>()
 
-    fun joinAllMoments(temporary: ArrayList<Moment>, database: ArrayList<Moment>): ArrayList<Moment> {
-        for (moment in temporary) {
-            database += moment
-        }
-
-        return database
-    }
-
     fun createPolylinePoints(): List<GeoPoint> {
         val tempPolylineArray = ArrayList<GeoPoint>()
         for (moment in currentTripMomentsNew.value!!) {

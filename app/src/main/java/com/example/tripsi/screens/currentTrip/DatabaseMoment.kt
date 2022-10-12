@@ -1,6 +1,7 @@
 package com.example.tripsi.screens.currentTrip
 
 import android.content.Context
+import android.location.Geocoder
 import android.util.Log
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
@@ -27,15 +28,21 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
+import java.util.*
 
 @Composable
 fun DatabaseMoment(
     tripDbViewModel: TripDbViewModel,
-    moment: CurrentTripViewModel.Moment,
     context: Context
 ) {
 
     val currentTripData = tripDbViewModel.getTripData(tripDbViewModel.tripData.trip!!.tripId).observeAsState().value
+
+
+    var cityName by remember {
+        mutableStateOf("")
+    }
+
 
     Box(
         Modifier
@@ -43,62 +50,67 @@ fun DatabaseMoment(
             .fillMaxHeight(0.5f)
             .background(Color.White)
     ) {
-        Row(
-            Modifier
-                .padding(10.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Card(
-                // Shows the image, currently set up with one mock image
-                Modifier
-                    .fillMaxWidth(0.65f)
-                    .fillMaxHeight(0.55f),
-                shape = RoundedCornerShape(10)
-            ) {
+        currentTripData?.let {
 
-                currentTripData?.let {
+            if (it.location?.isNotEmpty() == true) {
+                val geoCoder = Geocoder(context, Locale.getDefault())
+                val address = geoCoder.getFromLocation(
+                    it.location!![0].coordsLatitude,
+                    it.location!![0].coordsLongitude,
+                    1
+                )
+                cityName = address[0].locality
+            }
+            Row(
+                Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Card(
+                    // Shows the image, currently set up with one mock image
+                    Modifier
+                        .fillMaxWidth(0.65f)
+                        .fillMaxHeight(0.55f),
+                    shape = RoundedCornerShape(10)
+                ) {
                     DisplayMomentMedia(tripDbViewModel, context)
                 }
-
+                Column(
+                    // Contains the moment information such as date, location, time
+                    Modifier
+                        .fillMaxHeight(0.55f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 5.dp, vertical = 5.dp),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text("Date", color = Color.Black)
+                    Text(it.location!![0].date, color = Color.Black)
+                    Text("Location", color = Color.Black)
+                    Text(cityName, color = Color.Black)
+                }
             }
             Column(
-                // Contains the moment information such as date, location, time
-                Modifier
-                    .fillMaxHeight(0.55f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 5.dp, vertical = 5.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text("Date", color = Color.Black)
-                Text(moment.info.date, color = Color.Black)
-                Text("Time", color = Color.Black)
-                Text(moment.info.time, color = Color.Black)
-                Text("Location", color = Color.Black)
-                Text(moment.info.location, color = Color.Black)
-
-            }
-        }
-        Column(
-            // This contains the moment comment and hide moment clickable text
-            verticalArrangement = Arrangement.Bottom,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
+                // This contains the moment comment and hide moment clickable text
+                verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier
-                    .fillMaxHeight(0.45f)
                     .fillMaxWidth()
-                    .padding(vertical = 2.dp, horizontal = 10.dp)
+                    .fillMaxHeight()
             ) {
-                Text(moment.description ?: "")
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxHeight(0.45f)
+                        .fillMaxWidth()
+                        .padding(vertical = 2.dp, horizontal = 10.dp)
+                ) {
+                    Text(it.image?.get(0)?.comment ?: "")
 
-                ClickableText(text = AnnotatedString("Close"), onClick = {
-                    viewModel.hideMoment()
-                })
+                    ClickableText(text = AnnotatedString("Close"), onClick = {
+                        viewModel.hideMoment()
+                    })
+                }
             }
         }
     }
