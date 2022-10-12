@@ -10,6 +10,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +27,7 @@ import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.data.Location as LocationData
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
+import com.example.tripsi.utils.StopWatch
 import java.util.UUID
 
 val viewModel = CurrentTripViewModel()
@@ -41,11 +43,24 @@ fun CurrentTripView(
 
     // Start updating users location when they are looking at the map
     location.startUpdatingLocation()
+    val stopWatch = remember { StopWatch() }
+    stopWatch.start()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Bottom
+            ) {
 
+                StepCounterSensor()
+                TripInfoOverlay(type = "Time", measurement = stopWatch.formattedTime)
+                
         CurrentTripMap(
             context = context,
             location = location,
@@ -117,7 +132,21 @@ fun CurrentTripView(
             }
         }
 
-
+        Spacer(modifier = Modifier.height(32.dp))
+        Button(
+            onClick = { /*TODO
+                          This function should be when the user starts a trip
+                        */
+                stopWatch.resetWatch()
+                viewModel.resetSteps()
+                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                      },
+            modifier = viewModel.modifier,
+            shape = viewModel.shape,
+            colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+            ) {
+            Text("End Trip", textAlign = TextAlign.Center)
+        }
     }
 
 }
