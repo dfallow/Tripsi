@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.currentTrip.AddMoment
 import com.example.tripsi.screens.currentTrip.CurrentTripView
@@ -14,17 +13,20 @@ import com.example.tripsi.screens.home.HomeView
 import com.example.tripsi.screens.media.MediaView
 import com.example.tripsi.screens.planTrip.PlanTripView
 import com.example.tripsi.screens.travelHistory.TravelHistoryView
+import com.example.tripsi.screens.weather.WeatherViewModel
 import java.io.File
 
 @Composable
-fun NavigationGraph(navController: NavHostController, context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
+fun NavigationGraph(navController: NavHostController, context: Context, location: Location, tripDbViewModel: TripDbViewModel, weatherViewModel: WeatherViewModel) {
 
     NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
         composable(route = Screen.HomeScreen.route) {
             HomeView(
                 navController = navController,
                 tripDbViewModel = tripDbViewModel,
-                context = context)
+                context = context,
+                weatherViewModel
+                )
         }
         composable(route = Screen.TravelsScreen.route) {
             TravelHistoryView(navController = navController, tripDbViewModel = tripDbViewModel)
@@ -37,7 +39,8 @@ fun NavigationGraph(navController: NavHostController, context: Context, location
                 navController = navController,
                 context = context,
                 location = location,
-                tripDbViewModel = tripDbViewModel
+                tripDbViewModel = tripDbViewModel,
+                weatherViewModel = weatherViewModel
             )
         }
         composable(route = Screen.MomentScreen.route) {

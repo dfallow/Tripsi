@@ -1,5 +1,6 @@
 package com.example.tripsi.screens.travelHistory
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -52,6 +53,7 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
             contentPadding = PaddingValues(vertical = 10.dp)
         ) {
             itemsIndexed(pastTrips.value) { _, trip ->
+                Log.d("pastTrip", "${trip.trip}")
                 trip.trip?.let {
                     TravelHistoryItem(
                         trip = it,
