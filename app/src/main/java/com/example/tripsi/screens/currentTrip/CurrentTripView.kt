@@ -1,9 +1,11 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.app.Activity
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -26,6 +28,7 @@ import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.data.Location as LocationData
 import com.example.tripsi.utils.Location
+import com.example.tripsi.utils.LockScreenOrientation
 import com.example.tripsi.utils.Screen
 import com.example.tripsi.utils.StopWatch
 import java.util.UUID
@@ -40,6 +43,8 @@ fun CurrentTripView(
     tripDbViewModel: TripDbViewModel,
     weatherViewModel: WeatherViewModel
 ) {
+    // Lock rotation for this view
+    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED)
 
     // Start updating users location when they are looking at the map
     location.startUpdatingLocation()

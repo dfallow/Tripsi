@@ -2,6 +2,7 @@ package com.example.tripsi.screens.media
 
 
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.widget.Toast
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
@@ -34,6 +35,7 @@ import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
+import com.example.tripsi.utils.LockScreenOrientation
 
 val viewModel = MediaViewModel()
 
@@ -44,6 +46,9 @@ fun MediaView(
     navController: NavController,
     context: Context
 ) {
+    // Lock rotation for this view
+    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED)
+
     //get all data from database associated with a trip
     val tripData = tripDbViewModel.getTripData(tripId).observeAsState().value
     //get trip's starting coordinates
