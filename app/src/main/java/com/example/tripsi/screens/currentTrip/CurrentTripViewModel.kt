@@ -1,5 +1,6 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.util.Log
 import android.content.Context
 import android.graphics.Bitmap
 import android.widget.Toast
@@ -212,5 +213,36 @@ class CurrentTripViewModel : ViewModel() {
         momentImageFilenames.clear()
         locationId = UUID.randomUUID().toString()
     }
+
+    // Variables and fun for counting steps
+    val currentSteps = MutableLiveData(0)
+    private val stepsBottomLine = MutableLiveData<Int>(null)
+    var distance = MutableLiveData(0)
+
+
+    // Setting step counting
+    fun setSteps(stepAmount: Int) {
+        var steps = stepAmount
+        if (stepsBottomLine.value == null) {
+            stepsBottomLine.value = stepAmount
+            steps++
+        }
+        currentSteps.value = steps - (stepsBottomLine.value ?: 0)
+    }
+
+    fun resetSteps() {
+        currentSteps.value?.let {
+            stepsBottomLine.value = (stepsBottomLine.value ?: 0).plus(it) }
+        setSteps(stepsBottomLine.value ?: 0)
+    }
+
+    // Calculating distance based on steps
+    // 74cm is average step distance
+    fun setDistance(stepAmount: Int): Int {
+        distance.value = (stepAmount * 70) / 100
+        Log.d("msg", "distance in set ${distance.value}")
+        return distance.value!!
+    }
+
 
 }
