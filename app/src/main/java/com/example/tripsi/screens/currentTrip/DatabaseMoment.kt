@@ -23,11 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.example.tripsi.functionality.TripDbViewModel
-import com.example.tripsi.screens.media.DisplayTripMediaList
 import com.example.tripsi.utils.LoadingSpinner
 
 @Composable
@@ -38,10 +36,6 @@ fun DatabaseMoment(
 ) {
 
     val currentTripData = tripDbViewModel.getTripData(tripDbViewModel.tripData.trip!!.tripId).observeAsState().value
-
-    Log.d("currentMoment", "${tripDbViewModel.tripData}")
-
-
 
     Box(
         Modifier
@@ -64,60 +58,9 @@ fun DatabaseMoment(
             ) {
 
                 currentTripData?.let {
-                    var momentNumber by remember { mutableStateOf(1) }
-
-                    //DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
-                    DisplayMomentMedia(it.trip!!.tripId, tripDbViewModel, context)
+                    DisplayMomentMedia(tripDbViewModel, context)
                 }
 
-                var momentNumber by remember { mutableStateOf(1) }
-                /*if (moment.photos != null) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Image(
-                            moment.photos[momentNumber]!!.asImageBitmap(),
-                            contentDescription = "",
-                            contentScale = ContentScale.FillBounds,
-                            modifier = Modifier.fillMaxSize()
-                        )
-
-                        // Buttons used to switch between images
-                        if (momentNumber >= 1 && momentNumber < moment.photos.size - 1) {
-                            Column(
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.End,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                            ) {
-                                TextButton(
-                                    //modifier = Modifier,
-                                    onClick = {
-                                        momentNumber += 1
-                                    }
-                                ) {
-                                    Icon(Icons.Rounded.ChevronRight, "arrow right", tint = Color(0xFFCBEF43))
-                                }
-                            }
-
-                        }
-                        if (momentNumber <= moment.photos.size && momentNumber > 1) {
-                            Column(
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.Start,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                            ) {
-                                TextButton(
-                                    onClick = {
-                                        momentNumber -= 1
-                                    }
-                                ) {
-                                    Icon(Icons.Rounded.ChevronLeft, "arrow right", tint = Color(0xFFCBEF43))
-                                }
-                            }
-
-                        }
-                    }
-                }*/
             }
             Column(
                 // Contains the moment information such as date, location, time
@@ -162,26 +105,14 @@ fun DatabaseMoment(
 }
 
 @Composable
-fun DisplayMomentMedia(tripId: Int, tripDbViewModel: TripDbViewModel, context: Context) {
-    //get all trip's location that have images
-    val tripLocationsWithMedia = tripDbViewModel.getLocationWithMedia(tripId).observeAsState()
+fun DisplayMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
 
-    // TODO THIS IS THE LOCATION IT HAS THE INFO AND PHOTOS USE THIS
     val momentWithMedia = tripDbViewModel.getMomentWithMedia(viewModel.currentMomentId).observeAsState()
     Log.d("databaseMedia", "${momentWithMedia.value?.locationImages}")
 
     //this list stores all image filenames and notes associated to them
     val filenamesAndNotes: MutableList<ArrayMap<String, String?>> = mutableListOf()
 
-
-    /*tripLocationsWithMedia.value?.forEach { locationWithMedia ->
-        val images = locationWithMedia.locationImages
-        images?.forEach { image ->
-            if (image.filename != null) {
-                filenamesAndNotes.add(arrayMapOf(Pair(image.filename, image.comment)))
-            }
-        }
-    }*/
     //for each moment with media, extract filename and comment/note and save to filenamesAndNotes list
     momentWithMedia.value?.let { momentMedia ->
         val images = momentMedia.locationImages
