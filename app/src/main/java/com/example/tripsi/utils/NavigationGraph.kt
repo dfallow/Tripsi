@@ -21,7 +21,10 @@ fun NavigationGraph(navController: NavHostController, context: Context, location
 
     NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
         composable(route = Screen.HomeScreen.route) {
-            HomeView(navController = navController, tripDbViewModel = tripDbViewModel)
+            HomeView(
+                navController = navController,
+                tripDbViewModel = tripDbViewModel,
+                context = context)
         }
         composable(route = Screen.TravelsScreen.route) {
             TravelHistoryView(navController = navController, tripDbViewModel = tripDbViewModel)
