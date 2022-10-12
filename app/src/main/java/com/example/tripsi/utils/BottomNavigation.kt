@@ -14,16 +14,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.screens.weather.WeatherViewModel
 import java.io.File
 
 @Composable
-fun BottomNavigation(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
+fun BottomNavigation(context: Context, location: Location, tripDbViewModel: TripDbViewModel, viewModel: WeatherViewModel) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
         it.calculateBottomPadding()
-        NavigationGraph(navController = navController, context, location, tripDbViewModel)
+        NavigationGraph(navController = navController, context, location, tripDbViewModel, viewModel)
 
     }
 }
