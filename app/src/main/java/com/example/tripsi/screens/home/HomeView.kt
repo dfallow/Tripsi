@@ -1,35 +1,36 @@
 package com.example.tripsi.screens.home
 
-import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.example.tripsi.R
 import com.example.tripsi.data.Trip
 import com.example.tripsi.data.TripData
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.screens.weather.WeatherCard
+import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.Screen
+
 
 @Composable
 
-fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel) {
+fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, weatherViewModel: WeatherViewModel) {
     val homeViewModel = HomeViewModel()
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.globe))
@@ -63,7 +64,10 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
 
-        ) {
+        )
+
+    {
+
         LottieAnimation(
             composition = composition,
             progress = progress,
