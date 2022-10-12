@@ -34,7 +34,6 @@ import java.util.UUID
 
 val viewModel = CurrentTripViewModel()
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun CurrentTripView(
     location: Location,
@@ -46,9 +45,6 @@ fun CurrentTripView(
 
     // Start updating users location when they are looking at the map
     location.startUpdatingLocation()
-    if (!viewModel.checkPermission(context)) {
-        viewModel.requestPermission(context)
-    }
     val stopWatch = remember { StopWatch() }
     stopWatch.start()
 

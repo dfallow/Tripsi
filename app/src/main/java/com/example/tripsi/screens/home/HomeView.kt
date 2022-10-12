@@ -1,7 +1,9 @@
 package com.example.tripsi.screens.home
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +29,8 @@ import com.example.tripsi.data.Trip
 import com.example.tripsi.data.TripData
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.screens.currentTrip.CurrentTripViewModel
+import com.example.tripsi.screens.currentTrip.viewModel
 import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.Screen
@@ -36,9 +40,15 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, context: Context, weatherViewModel: WeatherViewModel) {
     val homeViewModel = HomeViewModel()
+    val stepViewModel = CurrentTripViewModel()
+
+    if (!stepViewModel.checkPermission(context)) {
+        stepViewModel.requestPermission(context)
+    }
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.globe))
     val progress by animateLottieCompositionAsState(
