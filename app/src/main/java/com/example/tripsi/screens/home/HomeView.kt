@@ -18,6 +18,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +38,12 @@ import java.util.*
 
 
 @Composable
-fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, context: Context, weatherViewModel: WeatherViewModel) {
+fun HomeView(
+    navController: NavController,
+    tripDbViewModel: TripDbViewModel,
+    context: Context,
+    weatherViewModel: WeatherViewModel
+) {
     val homeViewModel = HomeViewModel()
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.globe))
@@ -104,7 +110,7 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
                     bottom = 15.dp
                 )
             ) {
-                Text(text = "Plan a trip")
+                Text(text = stringResource(R.string.trip_plan_Btn))
             }
         }
         Row(
@@ -116,7 +122,7 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
             Button(
                 onClick = {
                     navController.navigate(Screen.TravelsScreen.route)
-                          },
+                },
                 shape = RoundedCornerShape(
                     topEndPercent = 25,
                     bottomEndPercent = 25
@@ -128,7 +134,7 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
                     bottom = 15.dp
                 )
             ) {
-                Text(text = "Trip History")
+                Text(text = stringResource(R.string.trip_history_Btn))
             }
         }
         Row(
@@ -154,53 +160,69 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
                     bottom = 15.dp
                 )
             ) {
-                Text(text = "Quick Trip")
+                Text(text = stringResource(R.string.trip_quick_Btn))
             }
         }
 
         //check for upcoming trips
         if (tripData != null) {
-            UpcomingOrActiveTrip(navController = navController, tripDbViewModel = tripDbViewModel, tripData = tripData)
+            UpcomingOrActiveTrip(
+                navController = navController,
+                tripDbViewModel = tripDbViewModel,
+                tripData = tripData
+            )
         }
     }
 }
 
 @Composable
-fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbViewModel, tripData: TripData) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 20.dp)
-        .clip(
-            shape = RoundedCornerShape(
-                topEndPercent = 10,
-                topStartPercent = 10
+fun UpcomingOrActiveTrip(
+    navController: NavController,
+    tripDbViewModel: TripDbViewModel,
+    tripData: TripData
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 20.dp)
+            .clip(
+                shape = RoundedCornerShape(
+                    topEndPercent = 10,
+                    topStartPercent = 10
+                )
             )
-        )
-        .background(color = Color(0xFF3C493F)),
+            .background(color = Color(0xFF3C493F)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
 
-        ){
-        Text("Your trip to ${tripData.trip?.destination} is coming up.", color = Color.White,fontSize = 20.sp)
-        Text("Ready to start?", color = Color.White, fontSize = 20.sp)
-        Button(onClick = {
+        ) {
+        Text(
+            "${stringResource(R.string.home_popUp_comingUp_1)} ${tripData.trip?.destination} ${
+                stringResource(
+                    R.string.home_popUp_comingUp_2
+                )
+            }", color = Color.White, fontSize = 20.sp
+        )
+        Text(stringResource(R.string.ready_toStart), color = Color.White, fontSize = 20.sp)
+        Button(
+            onClick = {
 
-            tripDbViewModel.tripData = tripData
-            // TODO
-            tripDbViewModel.getCurrentTripMomentsNew(tripData.location!!)
-            tripDbViewModel.getTripMoments(tripData.location!!)
+                tripDbViewModel.tripData = tripData
+                // TODO
+                tripDbViewModel.getCurrentTripMomentsNew(tripData.location!!)
+                tripDbViewModel.getTripMoments(tripData.location!!)
 
 
-            navController.navigate(Screen.CurrentScreen.route)
-        },
+                navController.navigate(Screen.CurrentScreen.route)
+            },
             shape = RoundedCornerShape(
                 25
             )
         ) {
             if (tripData.trip?.status == TripStatus.ACTIVE.status) {
-                Text("Continue Trip")
+                Text(stringResource(R.string.trip_continue_Btn))
             } else {
-                Text(text = "Start Trip")
+                Text(text = stringResource(R.string.trip_start_Btn))
             }
 
         }
