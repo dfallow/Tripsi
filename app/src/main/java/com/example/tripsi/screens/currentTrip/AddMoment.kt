@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Geocoder
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
@@ -75,7 +76,8 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
     val cityName = address[0].locality
 
     // Temporary for UI updating
-    viewModel.momentInfo = CurrentTripViewModel.MomentInfo(dateFormat.format(now), timeFormat.format(now), cityName)
+    viewModel.momentInfo =
+        CurrentTripViewModel.MomentInfo(dateFormat.format(now), timeFormat.format(now), cityName)
 
     //save location information to viewModel
     viewModel.momentLocation = com.example.tripsi.data.Location(
@@ -277,28 +279,33 @@ fun SaveOrDiscard(
     ) {
         Button(
             onClick = {
-                //TODO only allow saving if there's at least ONE photo
-                //save location to database
-                viewModel.saveLocationToDb(tripDbViewModel, context)
+                //check if there is at least one photo
+                if (viewModel.momentImageFilenames.isNotEmpty()) {
 
-                Log.d("momentInfo", "${viewModel.momentInfo}")
-                viewModel.addLocationNew(
-                    viewModel.momentLocation!!,
-                    viewModel.momentNote.value,
-                    viewModel.temporaryPhotos,
-                    viewModel.momentInfo
-                )
-                viewModel.momentId.value = UUID.randomUUID().toString()
+                    //save location to database
+                    viewModel.saveLocationToDb(tripDbViewModel, context)
 
-                //save images to database
-                scope.launch {
-                    val listOfFilenames = viewModel.momentImageFilenames
-                    listOfFilenames.forEach {
-                        viewModel.saveImageToDb(tripDbViewModel, it)
+                    Log.d("momentInfo", "${viewModel.momentInfo}")
+                    viewModel.addLocationNew(
+                        viewModel.momentLocation!!,
+                        viewModel.momentNote.value,
+                        viewModel.temporaryPhotos,
+                        viewModel.momentInfo
+                    )
+                    viewModel.momentId.value = UUID.randomUUID().toString()
+
+                    //save images to database
+                    scope.launch {
+                        val listOfFilenames = viewModel.momentImageFilenames
+                        listOfFilenames.forEach {
+                            viewModel.saveImageToDb(tripDbViewModel, it)
+                        }
                     }
-                }
 
-                navController.navigateUp()
+                    navController.navigateUp()
+                } else {
+                    Toast.makeText(context, "You must add at least one photo to save the moment.", Toast.LENGTH_LONG).show()
+                }
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape
