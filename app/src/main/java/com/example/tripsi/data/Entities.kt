@@ -32,9 +32,8 @@ data class Statistics(
     @PrimaryKey(autoGenerate = true)
     val statsId: Int,
     val trip: Int,
-    val distance: Double = 0.0,
-    val duration: Double = 0.0,
-    val speed: Double = 0.0
+    val distance: Int = 0,
+    val steps: Int = 0
 )
 
 @Entity(

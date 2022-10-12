@@ -116,7 +116,7 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
             Button(
                 onClick = {
                     navController.navigate(Screen.TravelsScreen.route)
-                          },
+                },
                 shape = RoundedCornerShape(
                     topEndPercent = 25,
                     bottomEndPercent = 25

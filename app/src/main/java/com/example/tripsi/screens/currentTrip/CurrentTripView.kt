@@ -303,6 +303,7 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
             viewModel.endActive()
             tripDbViewModel.updateTripStatus(TripStatus.PAST.status, tripDbViewModel.tripData.trip!!.tripId)
             viewModel.momentId.value = UUID.randomUUID().toString()
+            viewModel.saveStatisticsToDb(tripDbViewModel)
         },
         modifier = viewModel.modifier,
         shape = viewModel.shape,

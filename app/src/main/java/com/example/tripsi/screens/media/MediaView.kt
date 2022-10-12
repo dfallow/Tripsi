@@ -60,9 +60,8 @@ fun MediaView(
             DisplayTitle(it.trip?.tripName ?: "")
             DisplayRoute(start = startLocation, end = it.trip?.destination ?: "")
             DisplayStats(
-                distance = it.stats?.distance ?: 0.0,
-                duration = it.stats?.duration ?: 0.0,
-                speed = it.stats?.speed ?: 0.0
+                distance = it.stats?.distance ?: 0,
+                steps = it.stats?.steps ?: 0,
             )
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
@@ -165,14 +164,13 @@ fun DisplayRoute(start: String, end: String) {
 }
 
 @Composable
-fun DisplayStats(distance: Double, duration: Double, speed: Double) {
+fun DisplayStats(distance: Int, steps: Int) {
     Row(
         Modifier
             .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         StatsItem(label = "Distance", statsValue = distance.toString(), unit = "kilometers")
-        StatsItem(label = "Time", statsValue = duration.toString(), unit = "hours")
-        StatsItem(label = "Speed", statsValue = speed.toString(), unit = "km/h")
+        StatsItem(label = "Steps", statsValue = steps.toString(), unit = "hours")
     }
 }
 
