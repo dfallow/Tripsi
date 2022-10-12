@@ -157,7 +157,7 @@ fun DisplayRoute(start: String, end: String) {
                 Modifier.size(20.dp),
                 tint = Color(0xFF3C493F)
             )
-            Text("Helsinki", Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
+            Text(start, Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
         }
         Icon(
             Icons.Rounded.ChevronRight,
