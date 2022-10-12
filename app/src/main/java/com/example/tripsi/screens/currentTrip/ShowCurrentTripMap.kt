@@ -126,13 +126,15 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         // add lines that connect moments
         currentTripMap.overlays.add(polyline)
 
+        // add user location marker
+        currentTripMap.overlays.add(userLocation)
+
         // adding moments to map
         for (moment in momentLocations) {
             currentTripMap.overlays.add(moment)
         }
 
-        // add user location marker
-        currentTripMap.overlays.add(userLocation)
+
 
         // TODO not sure if this is needed
         //currentTripMap.invalidate()
