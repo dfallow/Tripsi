@@ -132,9 +132,8 @@ fun CurrentTripView(
 
             Spacer(modifier = Modifier.height(32.dp))
             Button(
-                onClick = { /*TODO
-                          This function should be when the user starts a trip
-                        */
+                onClick = {
+                        //TODO: reset steps
                     stopWatch.resetWatch()
                     viewModel.resetSteps()
                     Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()

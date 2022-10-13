@@ -259,6 +259,7 @@ class CurrentTripViewModel : ViewModel() {
     }
 
     var stepsForDb : MutableLiveData<Int> = MutableLiveData(0)
+
     // Calculating distance based on steps
     // 74cm is average step distance
     fun setDistance(stepAmount: Int): Int {

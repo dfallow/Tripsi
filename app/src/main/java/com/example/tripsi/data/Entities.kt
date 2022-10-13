@@ -15,7 +15,6 @@ data class Trip(
     val destination: String,
     val travelMethod: Int,
     val status: Int,
-    // TODO:change date data type
     val plannedStartDate: String
 )
 
@@ -76,7 +75,6 @@ data class Location(
     val locationId: String,
     val coordsLatitude: Double,
     val coordsLongitude: Double,
-    // TODO: change date data type
     val date: String,
     val trip: Int,
     val position: MomentPosition,

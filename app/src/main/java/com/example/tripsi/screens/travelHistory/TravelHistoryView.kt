@@ -34,9 +34,6 @@ import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Screen
 
-//TODO: cleanup the code from all the formatting, modifiers, etc
-
-
 //retrieve all trips that already happened (status = PAST) and display them in a list
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

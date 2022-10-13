@@ -47,7 +47,6 @@ fun MediaView(
     navController: NavController,
     context: Context
 ) {
-    val scope = rememberCoroutineScope()
     var delete by remember { mutableStateOf(false) }
 
 
@@ -89,6 +88,7 @@ fun MediaView(
                                 Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG)
                                     .show()
                             },
+                            enabled = !delete,
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = Color(0xFFCBEF43),
                                 contentColor = Color(0xFF2D0320)
@@ -102,6 +102,7 @@ fun MediaView(
                                 //viewModel.deleteTrip(tripId, tripDbViewModel)
                                 //navController.navigate(Screen.TravelsScreen.route)
                             },
+                            enabled = !delete,
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = Color(0xFF2D0320),
                                 contentColor = Color(0xFFFFFFFF)
@@ -112,18 +113,24 @@ fun MediaView(
                     }
                     if (delete) {
                         Popup(
-                            alignment = Alignment.Center,
-                            properties = PopupProperties(dismissOnBackPress = false)
+                            alignment = Alignment.CenterEnd,
+                            properties = PopupProperties(
+                                dismissOnBackPress = false,
+                                dismissOnClickOutside = false
+                            ),
                         ) {
                             Box(
-                                contentAlignment = Alignment.TopEnd,
+                                contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .background(Color(0xFF2D0320))
-                                    .fillMaxWidth(0.9f)
+                                    .background(Color(0xFFFFFFFF))
+                                    .fillMaxWidth()
                                     .padding(20.dp)
                             ) {
                                 Column() {
-                                    Text("Are you sure you want to delete this trip?", color = Color(0xFFFFFFFF))
+                                    Text(
+                                        "Are you sure you want to delete this trip?",
+                                        color = Color(0xFF000000)
+                                    )
                                     Row() {
                                         Button(onClick = {
                                             viewModel.deleteTrip(tripId, tripDbViewModel)
@@ -135,7 +142,8 @@ fun MediaView(
                                                 .show()
                                             delete = false
                                             navController.navigateUp()
-                                        }) {
+                                        }
+                                        ) {
                                             Text("Yes, delete the trip")
                                         }
                                         Spacer(Modifier.size(20.dp))
@@ -397,7 +405,10 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
                 "expand",
                 Modifier
                     .size(50.dp)
-                    .padding(10.dp),
+                    .padding(10.dp)
+                    .clickable {
+
+                    },
                 tint = Color(0xFFCBEF43)
             )
         }
