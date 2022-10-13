@@ -200,7 +200,6 @@ fun CurrentTripMap(
             )
             StepCounterSensor()
           
-            TripInfoOverlay(type = "Time", measurement = stopWatch.formattedTime)
         }
 
     }
@@ -232,16 +231,6 @@ fun CurrentTripExtra(
             shape = viewModel.shape
         ) {
             Text("Save the Moment", textAlign = TextAlign.Center)
-        }
-
-        Button(
-            onClick = {
-                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
-            },
-            modifier = viewModel.modifier,
-            shape = viewModel.shape
-        ) {
-            Text("Connect a Friend", textAlign = TextAlign.Center)
         }
     }
 }

@@ -34,9 +34,6 @@ import com.example.tripsi.utils.Screen
 @Composable
 fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavController) {
 
-    val viewModel = TravelHistoryViewModel()
-
-
     val pastTrips =
         tripDbViewModel.getAllTripsDataByStatus(TripStatus.PAST.status).observeAsState(listOf())
 
@@ -126,15 +123,6 @@ fun TravelHistoryItem(
                             fontSize = 16.sp,
                             color = MaterialTheme.colors.onSurface
                         )
-                    }
-                    Row {
-                        Icon(
-                            Icons.Rounded.Group,
-                            "friends icon",
-                            tint = MaterialTheme.colors.onSurface
-                        )
-                        Spacer(Modifier.size(5.dp))
-                        Text("0", fontSize = 16.sp, color = MaterialTheme.colors.onSurface)
                     }
                 }
             }
