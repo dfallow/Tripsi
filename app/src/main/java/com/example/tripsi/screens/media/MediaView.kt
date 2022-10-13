@@ -37,6 +37,7 @@ import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
+import kotlinx.coroutines.launch
 
 val viewModel = MediaViewModel()
 
@@ -48,14 +49,14 @@ fun MediaView(
     context: Context
 ) {
     var delete by remember { mutableStateOf(false) }
-
+    var scope = rememberCoroutineScope()
 
     //get all data from database associated with a trip
     val tripData = tripDbViewModel.getTripData(tripId).observeAsState()
+
     LaunchedEffect(tripData.value) {
         tripData.value?.let { viewModel.getStartEndCoords(it, context) }
     }
-
 
     Column(
         modifier = Modifier
@@ -99,8 +100,6 @@ fun MediaView(
                         Button(
                             onClick = {
                                 delete = true
-                                //viewModel.deleteTrip(tripId, tripDbViewModel)
-                                //navController.navigate(Screen.TravelsScreen.route)
                             },
                             enabled = !delete,
                             colors = ButtonDefaults.buttonColors(
@@ -133,15 +132,17 @@ fun MediaView(
                                     )
                                     Row() {
                                         Button(onClick = {
-                                            viewModel.deleteTrip(tripId, tripDbViewModel)
-                                            Toast.makeText(
-                                                context,
-                                                "Trip was deleted.",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                                .show()
-                                            delete = false
-                                            navController.navigateUp()
+                                            scope.launch {
+                                                viewModel.deleteTrip(tripId, tripDbViewModel, context)
+                                                Toast.makeText(
+                                                    context,
+                                                    "Trip was deleted.",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                    .show()
+                                                delete = false
+                                                navController.navigateUp()
+                                            }
                                         }
                                         ) {
                                             Text("Yes, delete the trip")
@@ -405,10 +406,7 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
                 "expand",
                 Modifier
                     .size(50.dp)
-                    .padding(10.dp)
-                    .clickable {
-
-                    },
+                    .padding(10.dp),
                 tint = Color(0xFFCBEF43)
             )
         }

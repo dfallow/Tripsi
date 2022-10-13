@@ -1,11 +1,13 @@
 package com.example.tripsi.screens.media
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import androidx.collection.ArrayMap
+import androidx.collection.arrayMapOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,15 +15,18 @@ import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.data.TripData
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.currentTrip.MomentPosition
+import com.example.tripsi.screens.currentTrip.imagesAndFilenames
 import com.example.tripsi.utils.rotateImageIfRequired
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.util.*
 
 class MediaViewModel : ViewModel() {
 
     val imageBitmaps: MutableLiveData<MutableList<InternalStoragePhoto?>> = MutableLiveData()
+    private val imagesAndFilenames: MutableList<ArrayMap<Bitmap, String>> = mutableListOf()
 
     suspend fun loadPhotosFromStorage(
         context: Context,
@@ -52,6 +57,7 @@ class MediaViewModel : ViewModel() {
                     if (image != null) {
                         //check if the image needs to be rotated to display in correct orientation
                         val rotatedImg = rotateImageIfRequired(image!!.bmp, image!!.path)
+                        imagesAndFilenames.add(arrayMapOf(Pair(rotatedImg, filename)))
 
                         //every rotated image is added to the images list, until the code runs through all filenames
                         images.add(
@@ -119,9 +125,32 @@ class MediaViewModel : ViewModel() {
         }
     }
 
-    fun deleteTrip(tripId: Int, tripDbViewModel: TripDbViewModel) {
-        viewModelScope.launch {
+    suspend fun deleteTrip(tripId: Int, tripDbViewModel: TripDbViewModel, context: Context) {
+
+        val files = context.filesDir.listFiles()
+        val toRemove : MutableList<ArrayMap<Bitmap, String>> = mutableListOf()
+
+        withContext(Dispatchers.IO) {
+            imagesAndFilenames.forEach { pair ->
+                pair.forEach { (image, filename) ->
+                    val file = files?.first {
+                        it.name.equals("$filename.jpg")
+                    }
+                    try {
+                        file?.delete()
+                        toRemove.add(arrayMapOf(Pair(image, filename)))
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
             tripDbViewModel.deleteTripById(tripId)
+            imagesAndFilenames.removeAll(toRemove)
+
         }
+
+    }
+
+    fun deleteOneImage() {
     }
 }
