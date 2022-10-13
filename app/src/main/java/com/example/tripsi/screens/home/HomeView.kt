@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
@@ -42,10 +44,14 @@ import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.LockScreenOrientation
 import com.example.tripsi.utils.Screen
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.math.absoluteValue
 
 
 @Composable
@@ -178,8 +184,10 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbViewModel, tripData: TripData) {
+    var changeIcon by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -255,6 +263,7 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
                             .size(64.dp)
                             .clip(CircleShape)
                             .border(3.dp, MaterialTheme.colors.primary, CircleShape)
+                            .clickable { changeIcon = true }
                     )
                 }
 
@@ -263,4 +272,50 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
             Spacer(modifier = Modifier.height(0.dp))
 
         }
+
+    if (changeIcon) {
+        Popup() {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(0.5f)
+                    .background(Color.Black)
+            ) {
+                HorizontalPager(count = 5) { icon ->
+                    Card(
+                        Modifier
+                            .graphicsLayer {
+                                // Calculate the absolute offset for the current page from the
+                                // scroll position. We use the absolute value which allows us to mirror
+                                // any effects for both directions
+                                val pageOffset = calculateCurrentOffsetForPage(icon).absoluteValue
+
+                                // We animate the scaleX + scaleY, between 85% and 100%
+                                lerp(
+                                    start = 0.85f,
+                                    stop = 1f,
+                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                ).also { scale ->
+                                    scaleX = scale
+                                    scaleY = scale
+                                }
+
+                                // We animate the alpha, between 50% and 100%
+                                alpha = lerp(
+                                    start = 0.5f,
+                                    stop = 1f,
+                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                )
+                            }
+                    ) {
+
+                    }
+
+                }
+            }
+        }
+    }
+
 }
