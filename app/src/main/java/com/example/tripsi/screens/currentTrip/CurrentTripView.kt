@@ -127,9 +127,8 @@ fun CurrentTripView(
 
             Spacer(modifier = Modifier.height(32.dp))
             Button(
-                onClick = { /*TODO
-                          This function should be when the user starts a trip
-                        */
+                onClick = {
+                        //TODO: reset steps
                     stopWatch.resetWatch()
                     viewModel.resetSteps()
                     Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
@@ -200,6 +199,7 @@ fun CurrentTripMap(
                 modifier = Modifier.weight(1f),
             )
             StepCounterSensor()
+          
             TripInfoOverlay(type = "Time", measurement = stopWatch.formattedTime)
         }
 
@@ -252,7 +252,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
     Button(
         onClick = {
             viewModel.addStartLocationNew(location)
-            val startLocation = LocationData(
+            tripDbViewModel.addLocation(com.example.tripsi.data.Location(
                 viewModel.momentId.value,
                 location.userLocation.latitude,
                 location.userLocation.longitude,
@@ -261,8 +261,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
                 position = MomentPosition.START,
                 isStart = true,
                 isEnd = false
-            )
-            tripDbViewModel.addLocation(startLocation)
+            ))
             viewModel.startActive()
             tripDbViewModel.updateTripStatus(TripStatus.ACTIVE.status, tripDbViewModel.tripData.trip!!.tripId)
             viewModel.momentId.value = UUID.randomUUID().toString()
@@ -298,6 +297,7 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
             viewModel.endActive()
             tripDbViewModel.updateTripStatus(TripStatus.PAST.status, tripDbViewModel.tripData.trip!!.tripId)
             viewModel.momentId.value = UUID.randomUUID().toString()
+            viewModel.saveStatisticsToDb(tripDbViewModel)
         },
         modifier = viewModel.modifier,
         shape = viewModel.shape,

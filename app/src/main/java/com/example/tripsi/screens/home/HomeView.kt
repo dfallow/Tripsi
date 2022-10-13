@@ -1,7 +1,18 @@
 package com.example.tripsi.screens.home
 
 import android.content.Context
+import android.content.pm.ActivityInfo
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.ui.Alignment
+import androidx.navigation.NavController
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -10,19 +21,31 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.material.Surface
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.navigation.NavController
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import com.airbnb.lottie.compose.*
 import com.example.tripsi.R
 import com.example.tripsi.data.Trip
 import com.example.tripsi.data.TripData
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.screens.media.viewModel
+import com.example.tripsi.screens.currentTrip.DatabaseMoment
+import com.example.tripsi.screens.currentTrip.TemporaryMoment
+import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.Screen
 
@@ -31,6 +54,8 @@ import com.example.tripsi.utils.Screen
 fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, context: Context, weatherViewModel: WeatherViewModel) {
 
     val homeViewModel = HomeViewModel()
+    var quicktrip by remember { mutableStateOf(false) }
+    var quicktripName by remember { mutableStateOf("") }
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.globe))
     val progress by animateLottieCompositionAsState(
@@ -118,7 +143,7 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
                 ),
                 onClick = {
                     navController.navigate(Screen.TravelsScreen.route)
-                          },
+                },
                 shape = RoundedCornerShape(
                     topEndPercent = 25,
                     bottomEndPercent = 25
@@ -147,7 +172,8 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
                     disabledContentColor = MaterialTheme.colors.onSurface
                 ),
                 onClick = {
-                    homeViewModel.startQuickTrip(tripDbViewModel, context)
+                    quicktrip = true
+                    //homeViewModel.startQuickTrip(tripDbViewModel, context)
                     //navController.navigate(Screen.CurrentScreen.route)
                 },
                 enabled = trip == null,
@@ -166,6 +192,50 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
             {
                 Text(text = "Quick Trip")
             }
+        }
+
+
+        if (quicktrip) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Box(
+                    contentAlignment = Alignment.TopEnd,
+                    modifier = Modifier
+                        //.background(Color(0xFF2D0320))
+                        .fillMaxWidth(0.9f)
+                        .padding(20.dp)
+                ) {
+                    Column(Modifier.border(2.dp, color = Color(0x000000))) {
+                        Text("Please enter a title for your trip")
+                        OutlinedTextField(
+                            value = quicktripName,
+                            onValueChange = { quicktripName = it},
+                            maxLines = 1
+                        )
+                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+                            Button(onClick = {
+                                quicktrip = false
+                                if (quicktripName != "") {
+                                    homeViewModel.startQuickTrip(tripDbViewModel, context, quicktripName)
+                                } else {
+                                    homeViewModel.startQuickTrip(tripDbViewModel, context, null)
+                                }
+                            }) {
+                                Text("Save")
+                            }
+                            Spacer(Modifier.size(10.dp))
+                            Button(onClick = { quicktrip = false }) {
+                                Text("Cancel")
+                            }
+                        }
+
+                    }
+                }
+
+            }
+
         }
 
         //check for upcoming trips
@@ -191,13 +261,18 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
         verticalArrangement = Arrangement.Center,
 
         ){
-        Text("Your trip to ${tripData.trip?.destination} is coming up.",color = MaterialTheme.colors.onSurface,fontSize = 20.sp)
+        if (tripData.trip?.destination == "Unknown") {
+            Text("Your trip is coming up.", color = MaterialTheme.colors.onSurface,fontSize = 20.sp)
+        } else {
+            Text("Your trip to ${tripData.trip?.destination} is coming up.", color = MaterialTheme.colors.onSurface,fontSize = 20.sp)
+        }
         Text("Ready to start?", color = MaterialTheme.colors.onSurface, fontSize = 20.sp)
         Button(
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = MaterialTheme.colors.onPrimary),
             onClick = {
+
             tripDbViewModel.tripData = tripData
             // TODO
             tripDbViewModel.getCurrentTripMomentsNew(tripData.location!!)

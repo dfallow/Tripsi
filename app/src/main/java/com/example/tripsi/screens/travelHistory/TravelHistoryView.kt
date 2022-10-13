@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -28,12 +29,13 @@ import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Screen
 
-// TODO: cleanup the code from all the formatting, modifiers, etc
-
-
 //retrieve all trips that already happened (status = PAST) and display them in a list
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavController) {
+
+    val viewModel = TravelHistoryViewModel()
+
 
     val pastTrips =
         tripDbViewModel.getAllTripsDataByStatus(TripStatus.PAST.status).observeAsState(listOf())
@@ -52,25 +54,33 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold
         )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            contentPadding = PaddingValues(vertical = 10.dp)
-        ) {
-            itemsIndexed(pastTrips.value) { _, trip ->
-                Log.d("pastTrip", "${trip.trip}")
-                trip.trip?.let {
-                    TravelHistoryItem(
-                        trip = it,
-                        imageCount = trip.image?.size ?: 0,
-                        //noteCount = 0,
-                        tripDbViewModel = tripDbViewModel,
-                        navController = navController
-                    )
+        if (pastTrips.value.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(20.dp),
+                contentPadding = PaddingValues(vertical = 10.dp)
+            ) {
+                itemsIndexed(pastTrips.value) { _, item ->
+                    Log.d("pastTrip", "${item.trip}")
+                    item.trip?.let {
+                        TravelHistoryItem(
+                            trip = it,
+                            imageCount = item.image?.size ?: 0,
+                            tripDbViewModel = tripDbViewModel,
+                            navController = navController
+                        )
+                    }
                 }
             }
+        } else {
+            Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
+                Text("Nothing to show.")
+                Text("You should start planning some trips!")
+            }
+
         }
+
     }
 }
 
@@ -83,10 +93,12 @@ fun TravelHistoryItem(
 ) {
     Row(
         modifier = Modifier
-            .height(90.dp)
+            //.height(90.dp)
             .background(MaterialTheme.colors.primaryVariant)
+            .fillMaxHeight()
             .padding(horizontal = 10.dp)
             .fillMaxWidth()
+            .height(90.dp)
             .clickable {
                 tripDbViewModel.tripId = trip.tripId
                 navController.navigate(Screen.MediaScreen.route)
@@ -124,7 +136,6 @@ fun TravelHistoryItem(
                         Text("0", fontSize = 16.sp, color = MaterialTheme.colors.onSurface)
                     }
                 }
-
             }
             IconButton(onClick = {
                 tripDbViewModel.tripId = trip.tripId

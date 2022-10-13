@@ -15,20 +15,19 @@ class HomeViewModel() : ViewModel() {
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy")
     private val now = Date()
 
-    fun startQuickTrip(tripDbViewModel: TripDbViewModel, context: Context): Boolean {
+    fun startQuickTrip(tripDbViewModel: TripDbViewModel, context: Context, name: String?): Boolean {
         var success:Boolean
         try {
             tripDbViewModel.addTrip(
                 Trip(
                     0,
-                    "Quick Trip",
+                    name ?: "Quick trip",
                     "Unknown",
                     1,
                     TripStatus.UPCOMING.status,
                     dateFormat.format(now)
                 )
             )
-            Toast.makeText(context, "Trip planned successfully!", Toast.LENGTH_LONG).show()
             success = true
         } catch (e: Exception) {
             e.printStackTrace()

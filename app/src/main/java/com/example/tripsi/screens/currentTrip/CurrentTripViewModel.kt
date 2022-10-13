@@ -1,12 +1,13 @@
 package com.example.tripsi.screens.currentTrip
 
-import android.util.Log
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -15,6 +16,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.Image
+import com.example.tripsi.data.Statistics
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
@@ -23,7 +25,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.osmdroid.util.GeoPoint
 import java.util.*
-import kotlin.collections.ArrayList
 
 class CurrentTripViewModel : ViewModel() {
 
@@ -36,21 +37,36 @@ class CurrentTripViewModel : ViewModel() {
         val position: Int,
         val info: MomentInfo
     )
+
     data class MomentInfo(val date: String, val time: String, val location: String)
 
     // Temporary status of trip, used to update UI
     var currentStatus by mutableStateOf(TripStatus.UPCOMING.status)
-    fun startActive() { currentStatus = TripStatus.ACTIVE.status }
-    fun endActive() { currentStatus = TripStatus.PAST.status }
+    fun startActive() {
+        currentStatus = TripStatus.ACTIVE.status
+    }
+
+    fun endActive() {
+        currentStatus = TripStatus.PAST.status
+    }
 
     // Displays popupMoment when user clicks on icon
     var showMoment by mutableStateOf(false)
-    fun displayMoment() { showMoment = true }
-    fun hideMoment() { showMoment = false }
+    fun displayMoment() {
+        showMoment = true
+    }
+
+    fun hideMoment() {
+        showMoment = false
+    }
 
     // Used to update UI when a moment is added
     // TODO find a better way
     var showText by mutableStateOf(false)
+    fun toggleText() {
+        showText = !showText
+    }
+
 
     // Array of GeoPoints for ViewModel
     val currentTripMomentsNew: MutableLiveData<ArrayList<Moment>> by lazy {
@@ -69,7 +85,7 @@ class CurrentTripViewModel : ViewModel() {
             null,
             null,
             MomentPosition.START.position,
-            MomentInfo("","","")
+            MomentInfo("", "", "")
         )
         currentTripMomentsNew.value = tempMomentArrayNew
     }
@@ -99,7 +115,7 @@ class CurrentTripViewModel : ViewModel() {
             null,
             null,
             MomentPosition.END.position,
-            MomentInfo("","","")
+            MomentInfo("", "", "")
         )
         currentTripMomentsNew.value = tempMomentArrayNew
     }
@@ -135,9 +151,12 @@ class CurrentTripViewModel : ViewModel() {
 
     //Information needed for storing data to database
     var momentLocation: com.example.tripsi.data.Location? = null //current location data
-    private var locationId = UUID.randomUUID().toString() //unique id for location that will be used to store the entry in db
-    var momentNote: MutableLiveData<String?> = MutableLiveData(null) //note/comment that the user enters
-    var momentImageFilenames: MutableList<String> = mutableListOf() //list of filenames of all images that were taken in a moment
+    private var locationId = UUID.randomUUID()
+        .toString() //unique id for location that will be used to store the entry in db
+    var momentNote: MutableLiveData<String?> =
+        MutableLiveData(null) //note/comment that the user enters
+    var momentImageFilenames: MutableList<String> =
+        mutableListOf() //list of filenames of all images that were taken in a moment
 
     suspend fun saveImageToDb(tripDbViewModel: TripDbViewModel, filename: String) {
         //get current tripId
@@ -178,7 +197,11 @@ class CurrentTripViewModel : ViewModel() {
                     e.printStackTrace()
                 }
             } else {
-                Toast.makeText(context, "Something went wrong. Please try again.", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    context,
+                    "Something went wrong. Please try again.",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -191,7 +214,7 @@ class CurrentTripViewModel : ViewModel() {
     }
 
     // Variables and fun for counting steps
-    val currentSteps = MutableLiveData(0)
+    var currentSteps = MutableLiveData(0)
     private val stepsBottomLine = MutableLiveData<Int>(null)
     private var distance = MutableLiveData(0)
 
@@ -208,17 +231,32 @@ class CurrentTripViewModel : ViewModel() {
 
     fun resetSteps() {
         currentSteps.value?.let {
-            stepsBottomLine.value = (stepsBottomLine.value ?: 0).plus(it) }
+            stepsBottomLine.value = (stepsBottomLine.value ?: 0).plus(it)
+        }
         setSteps(stepsBottomLine.value ?: 0)
     }
+
+    var stepsForDb : MutableLiveData<Int> = MutableLiveData(0)
 
     // Calculating distance based on steps
     // 74cm is average step distance
     fun setDistance(stepAmount: Int): Int {
         distance.value = (stepAmount * 70) / 100
-        Log.d("msg", "distance in set ${distance.value}")
+        stepsForDb.postValue(stepAmount)
         return distance.value!!
     }
 
+    fun saveStatisticsToDb(tripDbViewModel: TripDbViewModel) {
+        //get current tripId
+        val trip = tripDbViewModel.tripData.trip!!.tripId
+
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                tripDbViewModel.addTripStats(Statistics(0, trip, distance.value ?: 0, stepsForDb.value ?: 0))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
 }

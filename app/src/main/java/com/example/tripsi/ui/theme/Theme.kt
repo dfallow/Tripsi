@@ -78,4 +78,9 @@ fun TripsiTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
         shapes = Shapes,
         content = content
     )
+
+    val view = LocalView.current
+    val window = (view.context as Activity).window
+    window.statusBarColor = colors.onBackground.toArgb()
+    window.navigationBarColor = colors.onBackground.toArgb()
 }

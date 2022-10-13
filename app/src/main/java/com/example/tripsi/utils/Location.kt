@@ -48,8 +48,8 @@ class Location(context: Context): LocationListener {
 
 
         userLocation = GeoPoint(startLocation.latitude, startLocation.longitude)
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, this)
-        Log.d("Location", startLocation.toString())
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100 * 1000, 500f, this)
+
     }
 
     fun stopUpdatingLocation(){

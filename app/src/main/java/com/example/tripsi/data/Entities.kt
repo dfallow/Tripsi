@@ -15,7 +15,6 @@ data class Trip(
     val destination: String,
     val travelMethod: Int,
     val status: Int,
-    // TODO:change date data type
     val plannedStartDate: String
 )
 
@@ -32,9 +31,8 @@ data class Statistics(
     @PrimaryKey(autoGenerate = true)
     val statsId: Int,
     val trip: Int,
-    val distance: Double = 0.0,
-    val duration: Double = 0.0,
-    val speed: Double = 0.0
+    val distance: Int,
+    val steps: Int
 )
 
 @Entity(
@@ -77,7 +75,6 @@ data class Location(
     val locationId: String,
     val coordsLatitude: Double,
     val coordsLongitude: Double,
-    // TODO: change date data type
     val date: String,
     val trip: Int,
     val position: MomentPosition,

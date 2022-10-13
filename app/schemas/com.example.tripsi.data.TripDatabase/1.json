@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "57e18668d3127b7aa2eb8b38dfbc46e0",
+    "identityHash": "516ce91dbd55399750a98e6e1ef4f9d1",
     "entities": [
       {
         "tableName": "Trip",
@@ -56,7 +56,7 @@
       },
       {
         "tableName": "Statistics",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statsId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `trip` INTEGER NOT NULL, `distance` REAL NOT NULL, `duration` REAL NOT NULL, `speed` REAL NOT NULL, FOREIGN KEY(`trip`) REFERENCES `Trip`(`tripId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`statsId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `trip` INTEGER NOT NULL, `distance` INTEGER NOT NULL, `steps` INTEGER NOT NULL, FOREIGN KEY(`trip`) REFERENCES `Trip`(`tripId`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "statsId",
@@ -73,19 +73,13 @@
           {
             "fieldPath": "distance",
             "columnName": "distance",
-            "affinity": "REAL",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "duration",
-            "columnName": "duration",
-            "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "speed",
-            "columnName": "speed",
-            "affinity": "REAL",
+            "fieldPath": "steps",
+            "columnName": "steps",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -300,7 +294,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '57e18668d3127b7aa2eb8b38dfbc46e0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '516ce91dbd55399750a98e6e1ef4f9d1')"
     ]
   }
 }
