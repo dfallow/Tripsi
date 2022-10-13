@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,20 +16,18 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.time.format.DateTimeFormatter
-import kotlin.math.roundToInt
 import com.example.tripsi.R
+import kotlin.math.roundToInt
 
 
 @Composable
 fun WeatherCard(
     state: WeatherState,
-    backgroundColor: Color,
     modifier: Modifier = Modifier
 ) {
     state.weatherInfo?.currentWeatherData?.let { data ->
         Card(
-            backgroundColor = backgroundColor,
+            backgroundColor = MaterialTheme.colors.primaryVariant,
             shape = RoundedCornerShape(10.dp),
             modifier = modifier.padding()
         ) {
@@ -53,13 +52,13 @@ fun WeatherCard(
                 Text(
                     text = "${data.temperatureCelsius}°C",
                     fontSize = 16.sp,
-                    color = Color.White
+                    color = MaterialTheme.colors.onSurface
                 )
                 Spacer(modifier = Modifier.padding(10.dp))
                 Text(
                     text = data.weatherType.weatherDesc,
                     fontSize = 16.sp,
-                    color = Color.White
+                    color = MaterialTheme.colors.onSurface
                 )
             }
                  Spacer(modifier = Modifier.padding(5.dp))
@@ -72,21 +71,21 @@ fun WeatherCard(
                         unit = "hpa",
                         icon = ImageVector.vectorResource(id = R.drawable.ic_pressure),
                         iconTint = Color.White,
-                        textStyle = TextStyle(color = Color.White)
+                        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
                     )
                     WeatherDataDisplay(
                         value = data.humidity.roundToInt(),
                         unit = "%",
                         icon = ImageVector.vectorResource(id = R.drawable.ic_drop),
                         iconTint = Color.White,
-                        textStyle = TextStyle(color = Color.White)
+                        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
                     )
                     WeatherDataDisplay(
                         value = data.windSpeed.roundToInt(),
                         unit = "km/h",
                         icon = ImageVector.vectorResource(id = R.drawable.ic_wind),
                         iconTint = Color.White,
-                        textStyle = TextStyle(color = Color.White)
+                        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
                     )
                 }
             }

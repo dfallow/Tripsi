@@ -126,10 +126,10 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
                 modifier = Modifier
                     .fillMaxHeight()
             ) {
-                Text(dateFormat.format(now), color = colors.onSecondary)
-                Text(timeFormat.format(now), color = colors.onSecondary)
+                Text(dateFormat.format(now), color = colors.secondary)
+                Text(timeFormat.format(now), color = colors.secondary)
                 Text(
-                    cityName, color = colors.onSecondary
+                    cityName, color = colors.secondary
                 )
             }
         }
@@ -313,6 +313,7 @@ fun SaveOrDiscard(
             .padding(10.dp)
     ) {
         Button(
+
             onClick = {
                 //check if there is at least one photo
                 if (viewModel.momentImageFilenames.isNotEmpty()) {
@@ -347,7 +348,11 @@ fun SaveOrDiscard(
                 }
             },
             modifier = viewModel.modifier,
-            shape = viewModel.shape
+            shape = viewModel.shape,
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = colors.primary,
+                contentColor = colors.onPrimary
+            ),
         ) {
             Text("Save")
         }
@@ -357,7 +362,10 @@ fun SaveOrDiscard(
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape,
-            colors = ButtonDefaults.buttonColors(colors.secondary)
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = colors.primary,
+                contentColor = colors.onPrimary
+            ),
         ) {
             Text("Discard")
         }

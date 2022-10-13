@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -30,7 +29,7 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
         Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.5f)
-            .background(Color.White)
+            .background(MaterialTheme.colors.background)
     ) {
         Row(
             Modifier
@@ -70,7 +69,11 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                                         momentNumber += 1
                                     }
                                 ) {
-                                    Icon(Icons.Rounded.ChevronRight, "arrow right", tint = Color(0xFFCBEF43))
+                                    Icon(
+                                        Icons.Rounded.ChevronRight,
+                                        "arrow right",
+                                        tint = MaterialTheme.colors.primary
+                                    )
                                 }
                             }
 
@@ -87,7 +90,10 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                                         momentNumber -= 1
                                     }
                                 ) {
-                                    Icon(Icons.Rounded.ChevronLeft, "arrow right", tint = Color(0xFFCBEF43))
+                                    Icon(
+                                        Icons.Rounded.ChevronLeft, "arrow right",
+                                        tint = MaterialTheme.colors.primary
+                                    )
                                 }
                             }
 
@@ -103,6 +109,14 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                     .padding(horizontal = 5.dp, vertical = 5.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
+
+                Text("Date", color = MaterialTheme.colors.onSurface)
+                Text(moment.info.date, color = MaterialTheme.colors.onSurface)
+                Text("Time", color = MaterialTheme.colors.onSurface)
+                Text(moment.info.time, color = MaterialTheme.colors.onSurface)
+                Text("Location", color = MaterialTheme.colors.onSurface)
+                Text(moment.info.location, color = MaterialTheme.colors.onSurface)
+
                 Text(
                     "Date:",
                     style = TextStyle(
@@ -150,10 +164,10 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
             ) {
                 Text(
                     moment.description ?: "",
-                        style = TextStyle(
-                            fontSize = 18.sp
-                        )
+                    style = TextStyle(
+                        fontSize = 18.sp
                     )
+                )
 
                 ClickableText(text = AnnotatedString("Close"), onClick = {
                     viewModel.hideMoment()

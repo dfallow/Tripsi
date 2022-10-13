@@ -11,11 +11,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -87,8 +85,7 @@ fun MediaView(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxHeight()
                 ) {
-
-// TODO merge conflicts were here
+                
                     DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
                     Row(
                         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -102,8 +99,8 @@ fun MediaView(
                             },
                             enabled = !delete,
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = Color(0xFFCBEF43),
-                                contentColor = Color(0xFF2D0320)
+                                backgroundColor = MaterialTheme.colors.primary,
+                                contentColor = MaterialTheme.colors.onPrimary
                             )
                         ) {
                             Text("show on map")
@@ -114,8 +111,8 @@ fun MediaView(
                             },
                             enabled = !delete,
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = Color(0xFF2D0320),
-                                contentColor = Color(0xFFFFFFFF)
+                                backgroundColor = MaterialTheme.colors.primary,
+                                contentColor = MaterialTheme.colors.onPrimary,
                             )
                         ) {
                             Text("Delete trip")
@@ -132,14 +129,14 @@ fun MediaView(
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .background(Color(0xFFFFFFFF))
+                                    .background(MaterialTheme.colors.onSurface)
                                     .fillMaxWidth()
                                     .padding(20.dp)
                             ) {
                                 Column {
                                     Text(
                                         "Are you sure you want to delete this trip?",
-                                        color = Color(0xFF000000)
+                                        color = MaterialTheme.colors.primaryVariant
                                     )
                                     Row {
                                         Button(onClick = {
@@ -169,6 +166,19 @@ fun MediaView(
                         }
 
                     }
+                    Button(
+                        onClick = {
+                            /*TODO*/
+                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.primary,
+                            contentColor = MaterialTheme.colors.onPrimary
+                        )
+                    ) {
+                        Text("create a video")
+                    }
+
                 }
             }
 
@@ -191,7 +201,7 @@ fun DisplayTitle(tripName: String) {
             fontSize = 25.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF3C493F)
+            color = MaterialTheme.colors.onPrimary
         )
     }
 }
@@ -214,7 +224,12 @@ fun DisplayRoute() {
                 Icons.Rounded.Home,
                 "home location",
                 Modifier.size(20.dp),
-                tint = Color(0xFF3C493F)
+                tint = MaterialTheme.colors.onPrimary
+            )
+            Text(
+                "Helsinki",
+                Modifier.padding(horizontal = 5.dp),
+                color = MaterialTheme.colors.onPrimary
             )
             Text(
                 startLocation.value ?: "Home",
@@ -226,7 +241,7 @@ fun DisplayRoute() {
             Icons.Rounded.ChevronRight,
             "arrow",
             Modifier.size(20.dp),
-            tint = Color(0xFF3C493F)
+            tint = MaterialTheme.colors.onPrimary
         )
         //Text("to", color =  Color(0xFFCBEF43))
         Row {
@@ -234,12 +249,12 @@ fun DisplayRoute() {
                 Icons.Rounded.LocationOn,
                 "destination",
                 Modifier.size(20.dp),
-                tint = Color(0xFF3C493F)
+                tint = MaterialTheme.colors.onPrimary
             )
             Text(
                 endLocation.value ?: "Destination",
                 Modifier.padding(horizontal = 5.dp),
-                color = Color(0xFF3C493F)
+                color = MaterialTheme.colors.onPrimary
             )
         }
     }
@@ -263,7 +278,7 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
         modifier = Modifier
             .size(97.dp, 80.dp)
             .clip(RoundedCornerShape(15.dp))
-            .background(Color(0xFF3C493F))
+            .background(MaterialTheme.colors.primary)
     ) {
         Row(modifier = Modifier.padding(5.dp, 5.dp, 0.dp, 0.dp)) {
             when (label) {
@@ -272,7 +287,7 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
                         Icons.Rounded.NearMe,
                         "distance",
                         Modifier.size(18.dp),
-                        tint = Color(0xFFCBEF43)
+                        tint = MaterialTheme.colors.onPrimary
                     )
                 }
                 "Steps" -> {
@@ -280,25 +295,30 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
                         Icons.Rounded.DirectionsWalk,
                         "walking",
                         Modifier.size(18.dp),
-                        tint = Color(0xFFCBEF43)
+                        tint = MaterialTheme.colors.onPrimary
+               
                     )
                 }
             }
             Text(
                 label,
-                color = Color(0xFFCBEF43),
+                color = MaterialTheme.colors.onPrimary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 5.dp)
             )
         }
         Text(
             statsValue,
-            color = Color(0xFFFFFFFF),
+            color = MaterialTheme.colors.onSurface,
             fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 7.dp)
         )
-        Text(unit, color = Color(0xFFFFFFFF), modifier = Modifier.padding(horizontal = 7.dp))
+        Text(
+            unit,
+            color = MaterialTheme.colors.onSurface,
+            modifier = Modifier.padding(horizontal = 7.dp)
+        )
     }
 }
 
@@ -337,6 +357,7 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
     //TODO: display something when there are no trip images saved (lottie/text/etc)
     LoadingSpinner(isDisplayed = loading.value)
 
+
     if (imageBitmaps.value?.isNotEmpty() == true) {
         LazyRow(Modifier.padding(horizontal = 10.dp)) {
             imageBitmaps.value?.let {
@@ -368,13 +389,21 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
                 }
             }
         }
-    } else {
+    }
+    else {
         Text("No photos saved for this trip.")
     }
 }
 
 @Composable
 fun TripPhotoItem(image: InternalStoragePhoto) {
+//    Image(
+//        image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
+//            .size(250.dp)
+//            .clip(RoundedCornerShape(15.dp))
+//            .background(MaterialTheme.colors.onSurface),
+//        contentScale = ContentScale.FillWidth
+
     var isLargePhotoVisible by remember { mutableStateOf(false) }
 
     if (isLargePhotoVisible) {

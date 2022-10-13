@@ -1,5 +1,6 @@
 package com.example.tripsi.ui.theme
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
@@ -9,26 +10,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 
+@SuppressLint("ConflictingOnColor")
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = darkGreen
+    primary = DLGreen,
+    onPrimary = LGreen,
+    secondary = DLGreen,
+    background = Black,
+    primaryVariant = DGreen,
+    onSurface = PWhite,
+    onBackground = DLGreen,
+    secondaryVariant = LGreen
+
 )
 
+@SuppressLint("ConflictingOnColor")
 private val LightColorPalette = lightColors(
-    // Generic Buttons
-    primary = genericBtnLight,
-    onPrimary = genericBtnTextLight,
+    primary = LGreen,
+    onPrimary = DGreen,
+    secondary = DPurple,
+    background = White,
+    primaryVariant = DGreen,
+    onSurface = PWhite,
+    onBackground = DLGreen,
+    secondaryVariant = LGreen
 
-    // Cancel Buttons
-    secondary = cancelBtnLight,
-    onSecondary = cancelBtnTextLight,
 
-    primaryVariant = Purple700,
-
-    //secondary = darkGreen
-
-    onBackground = navBar,
 
 
 
@@ -51,6 +57,10 @@ fun TripsiTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
         LightColorPalette
     }
 
+    val view = LocalView.current
+    val window = (view.context as Activity).window
+    window.statusBarColor = colors.primaryVariant.toArgb()
+    window.navigationBarColor = colors.primaryVariant.toArgb()
     MaterialTheme(
         colors = colors,
         typography = Typography,
@@ -58,8 +68,4 @@ fun TripsiTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
         content = content
     )
 
-    val view = LocalView.current
-    val window = (view.context as Activity).window
-    window.statusBarColor = colors.onBackground.toArgb()
-    window.navigationBarColor = colors.onBackground.toArgb()
 }

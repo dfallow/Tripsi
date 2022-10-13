@@ -1,38 +1,29 @@
 package com.example.tripsi.screens.currentTrip
 
-import android.app.Activity
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
+
 import android.content.Context
-import android.util.Log
-import android.content.pm.ActivityInfo
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
-import androidx.core.graphics.alpha
-import com.example.tripsi.R
+import androidx.navigation.NavController
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
-import com.example.tripsi.data.Location as LocationData
 import com.example.tripsi.utils.Location
-import com.example.tripsi.utils.LockScreenOrientation
 import com.example.tripsi.utils.Screen
 import com.example.tripsi.utils.StopWatch
-import java.util.UUID
+import java.util.*
+import com.example.tripsi.data.Location as LocationData
 
 val viewModel = CurrentTripViewModel()
 
@@ -144,7 +135,9 @@ fun CurrentTripView(
                 },
                 modifier = viewModel.modifier,
                 shape = viewModel.shape,
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary),
             ) {
                 Text("End Trip", textAlign = TextAlign.Center)
             }
@@ -185,8 +178,7 @@ fun CurrentTripMap(
                 Column(
                 ) {
                     WeatherCard(
-                        state = weatherViewModel.state,
-                        backgroundColor = Color(0xFF3C493F)
+                        state = weatherViewModel.state
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                 }
@@ -276,7 +268,9 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
         },
         modifier = viewModel.modifier,
         shape = viewModel.shape,
-        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary),
     ) {
         Text("Start Trip", textAlign = TextAlign.Center)
     }
@@ -307,7 +301,9 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
         },
         modifier = viewModel.modifier,
         shape = viewModel.shape,
-        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary),
     ) {
         Text("End Trip", textAlign = TextAlign.Center)
     }
@@ -326,7 +322,9 @@ fun GoHomeButton(navController: NavController, location: Location) {
         },
         modifier = viewModel.modifier,
         shape = viewModel.shape,
-        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary),
     )
     {
         Text("Go home")
@@ -343,7 +341,7 @@ fun ShowMoment(
 ) {
     Popup() {
         Surface(
-            color = Color.Black.copy(alpha = 0.6f),
+            color = MaterialTheme.colors.primaryVariant,
             modifier = Modifier.fillMaxSize()
         ) {
             Column(
