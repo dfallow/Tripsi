@@ -193,61 +193,6 @@ fun FinalLocationPicker(planTripViewModel: PlanTripViewModel) {
 }
 
 @Composable
-fun MapAddressPickerView(planTripViewModel: PlanTripViewModel) {
-    Surface {
-        val currentLocation = planTripViewModel.location.collectAsState()
-        var text by remember { planTripViewModel.addressText }
-        val context = LocalContext.current
-
-
-        Row {
-
-            currentLocation.value.let {
-                if (planTripViewModel.isMapEditable.value) {
-                    text = planTripViewModel.getAddressFromLocation(context)
-                }
-            }
-        }
-        Column {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp)) {
-                OutlinedTextField(
-                    value = text,
-                    onValueChange = {
-                        planTripViewModel.tripDestination = it
-                        text = it
-                        if (!planTripViewModel.isMapEditable.value)
-                            planTripViewModel.onTextChanged(context, text)
-                    },
-                    trailingIcon = {
-                        Icon(
-                            if (planTripViewModel.isMapEditable.value) {Icons.Default.Clear} else {Icons.Default.Search},
-                            contentDescription = "clear or search text",
-                            modifier = Modifier.clickable { text = ""
-                                planTripViewModel.isMapEditable.value =
-                                !planTripViewModel.isMapEditable.value })
-
-                    },
-                    label = { Text("What's your final destination", color = Color(0xFF2D0320)) },
-
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    enabled = !planTripViewModel.isMapEditable.value,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFFCBEF43),
-                        unfocusedBorderColor = Color(0xFF3C493F)
-                    )
-                )
-            }
-
-        }
-
-    }
-}
-
-
-@Composable
 fun DatePicker(planTripViewModel: PlanTripViewModel) {
 
     // Fetching the Local Context
