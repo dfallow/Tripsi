@@ -2,6 +2,7 @@ package com.example.tripsi.screens.pastTrip
 
 import android.content.Context
 import android.location.Geocoder
+import android.util.Log
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
 import androidx.compose.foundation.Image
@@ -25,7 +26,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import com.example.tripsi.data.LocationWithImagesAndNotes
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.screens.media.viewModel
 import com.example.tripsi.utils.LoadingSpinner
 import java.util.*
 
@@ -34,8 +37,8 @@ fun PastTripMoment(
     tripDbViewModel: TripDbViewModel,
     context: Context
 ) {
-    val pastTripData = tripDbViewModel.getTripData(tripDbViewModel.pastTripData.trip!!.tripId).observeAsState().value
-
+    val pastTripData = tripDbViewModel.pastTripData
+    //val pastTripData = tripDbViewModel.getTripData(tripDbViewModel.pastTripData.trip!!.tripId).observeAsState().value
     var cityName by remember {
         mutableStateOf("")
     }
@@ -46,7 +49,8 @@ fun PastTripMoment(
             .fillMaxHeight(0.5f)
             .background(Color.White)
     ) {
-        pastTripData?.let {
+
+        pastTripData.let {
 
             if (it.location?.isNotEmpty() == true) {
                 val geoCoder = Geocoder(context, Locale.getDefault())
@@ -115,13 +119,12 @@ fun PastTripMoment(
 @Composable
 fun DisplayPastMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
 
-    val momentWithMedia = tripDbViewModel.getMomentWithMedia(pastViewModel.currentMomentId).observeAsState()
-
+    val momentWithMedia = tripDbViewModel.getMomentWithMedia(pastViewModel.currentMomentId).observeAsState().value
     //this list stores all image filenames and notes associated to them
     val filenamesAndNotes: MutableList<ArrayMap<String, String?>> = mutableListOf()
 
     //for each moment with media, extract filename and comment/note and save to filenamesAndNotes list
-    momentWithMedia.value?.let { momentMedia ->
+    momentWithMedia?.let { momentMedia ->
         val images = momentMedia.locationImages
         images?.forEach { image ->
             if (image.location == momentMedia.location?.locationId && image.filename != null) {
@@ -130,18 +133,20 @@ fun DisplayPastMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
         }
     }
 
+
+
     //this is used to display loading spinner when set to true
-    val loading = remember { mutableStateOf(false) }
+    val loading = remember { mutableStateOf(true) }
 
     //go through all the filenames and retrieve images that match those filenames from storage
     LaunchedEffect(filenamesAndNotes) {
         loading.value = true
-        com.example.tripsi.screens.media.viewModel.loadPhotosFromStorage(context, filenamesAndNotes)
+        viewModel.loadPhotosFromStorage(context, filenamesAndNotes)
         loading.value = false
     }
 
     //these are the Bitmaps that were retrieved from storage and rotated
-    val imageBitmaps = com.example.tripsi.screens.media.viewModel.imageBitmaps.observeAsState()
+    val imageBitmaps = viewModel.imageBitmaps.observeAsState()
     var momentNumber by remember { mutableStateOf(0) }
     LoadingSpinner(isDisplayed = loading.value)
 

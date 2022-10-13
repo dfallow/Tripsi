@@ -115,7 +115,6 @@ fun DatabaseMoment(
 fun DisplayMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
 
     val momentWithMedia = tripDbViewModel.getMomentWithMedia(viewModel.currentMomentId).observeAsState()
-    Log.d("databaseMedia", "${momentWithMedia.value?.locationImages}")
 
     //this list stores all image filenames and notes associated to them
     val filenamesAndNotes: MutableList<ArrayMap<String, String?>> = mutableListOf()

@@ -1,7 +1,6 @@
 package com.example.tripsi.utils
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -35,7 +34,6 @@ fun BottomNavigation(
             tripDbViewModel,
             viewModel
         )
-
     }
 }
 
@@ -57,9 +55,6 @@ fun BottomBar(navController: NavHostController) {
             elevation = 8.dp
         ) {
             screens.forEach { screens ->
-                Log.d("navScreens", screens.route)
-                Log.d("navScreens", screens.icon.toString())
-                Log.d("navScreens", screens.title)
 
                 if (currentDestination == navController.findDestination(Screen.CurrentScreen.route)) {
                     AddItem(
@@ -78,13 +73,9 @@ fun BottomBar(navController: NavHostController) {
                         navController = navController
                     )
                 }
-
             }
-
-
         }
     }
-
 }
 
 @Composable
@@ -113,5 +104,4 @@ fun RowScope.AddItem(
             }
         }
     )
-
 }
