@@ -6,23 +6,18 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.example.tripsi.R
 import com.example.tripsi.functionality.TripDbViewModel
-import com.example.tripsi.screens.weather.WeatherCard
-import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.Location
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -187,7 +182,7 @@ fun TripInfoOverlay(type: String, measurement: String) {
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Text(type, color = MaterialTheme.colors.primary)
-        Text(measurement, color = MaterialTheme.colors.onSecondary)
+        Text(type, color = MaterialTheme.colors.onSurface)
+        Text(measurement, color = MaterialTheme.colors.onSurface)
     }
 }
