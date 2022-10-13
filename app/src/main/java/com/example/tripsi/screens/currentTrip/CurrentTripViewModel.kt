@@ -128,7 +128,7 @@ class CurrentTripViewModel : ViewModel() {
 
     // Moment variables
     // momentId will get randomly generated after first use
-    val momentId = mutableStateOf("firstTemp")
+    val momentId = mutableStateOf(UUID.randomUUID().toString())
     val fromDatabase = mutableStateOf(false)
     val temporaryMoment = mutableStateOf(false)
     var temporaryPhotos = mutableListOf<Bitmap?>()

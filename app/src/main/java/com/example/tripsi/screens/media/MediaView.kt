@@ -52,6 +52,13 @@ fun MediaView(
     //convert startCoordinates to city name
     val startLocation = viewModel.getStartLocation(startCoordinates, context)
 
+    // Store tripData in viewModel for PastTripMap
+    if (tripData != null) {
+        tripDbViewModel.pastTripData = tripData
+    }
+
+    tripData?.location?.let { tripDbViewModel.getCurrentTripMomentsNew(it) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth(),
