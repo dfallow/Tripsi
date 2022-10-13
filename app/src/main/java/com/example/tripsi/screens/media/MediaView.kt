@@ -35,6 +35,7 @@ import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
+import com.example.tripsi.utils.Screen
 import com.example.tripsi.utils.LockScreenOrientation
 
 val viewModel = MediaViewModel()
@@ -53,6 +54,13 @@ fun MediaView(
     val startCoordinates = tripDbViewModel.getTripStartCoords(tripId).observeAsState().value
     //convert startCoordinates to city name
     val startLocation = viewModel.getStartLocation(startCoordinates, context)
+
+    // Store tripData in viewModel for PastTripMap
+    if (tripData != null) {
+        tripDbViewModel.pastTripData = tripData
+    }
+
+    tripData?.location?.let { tripDbViewModel.getCurrentTripMomentsNew(it) }
 
     Column(
         modifier = Modifier
@@ -81,8 +89,7 @@ fun MediaView(
                 ) {
                     Button(
                         onClick = {
-                            /*TODO*/
-                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                            navController.navigate(Screen.PastTripScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0xFFCBEF43),
@@ -90,18 +97,6 @@ fun MediaView(
                         )
                     ) {
                         Text("show on map")
-                    }
-                    Button(
-                        onClick = {
-                            /*TODO*/
-                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFFCBEF43),
-                            contentColor = Color(0xFF2D0320)
-                        )
-                    ) {
-                        Text("create a video")
                     }
                 }
             }

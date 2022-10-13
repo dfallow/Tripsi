@@ -5,6 +5,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import android.content.Context
+import android.util.Log
 import android.content.pm.ActivityInfo
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
@@ -208,9 +209,6 @@ fun CurrentTripMap(
             )
             StepCounterSensor()
             TripInfoOverlay(type = "Time", measurement = stopWatch.formattedTime)
-            //TripInfoOverlay(type = "Distance", measurement = "79km")
-            //TripInfoOverlay(type = "Speed", measurement = "40km/h")
-            //TripInfoOverlay(type = "Time", measurement = "2-3hours")
         }
 
     }
@@ -355,6 +353,7 @@ fun ShowMoment(
                     .fillMaxHeight()
 
             ) {
+
                 if (fromDatabase) {
                     DatabaseMoment(tripDbViewModel, context)
                 } else {
@@ -362,6 +361,5 @@ fun ShowMoment(
                 }
             }
         }
-
     }
 }
