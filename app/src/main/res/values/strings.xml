@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Tripsi</string>
 
-    <!--    Home view   -->
+        <!--    Home view   -->
     <string name="trip_history_Btn">Trip history</string>
     <string name="trip_plan_Btn">Plan a trip</string>
     <string name="trip_quick_Btn">Quick trip</string>
@@ -10,6 +10,9 @@
     <string name="home_popUp_comingUp_1">Your trip to</string>
     <string name="home_popUp_comingUp_2">is coming up.</string>
     <string name="ready_toStart">Ready to start?</string>
+    <string name="toastTripPlanned">Trip planned successfully!</string>
+    <string name="somthWrong">Something went wrong. Please try again.</string>
+
         <!--    Plan trip view   -->
     <string name="title_create">Create a plan for your upcoming trip</string>
     <string name="title_whatIs">What is your final destination?</string>
@@ -21,7 +24,7 @@
     <string name="calendar">Calendar</string>
     <string name="tripDate">Trip date</string>
 
-    <!--    Trip type   -->
+        <!--    Trip type   -->
     <string name="selectedTypeTrip">Selected Type of trip</string>
     <string name="none">NONE</string>
     <string name="car">car</string>
@@ -30,13 +33,13 @@
     <string name="walk">walk</string>
     <string name="plane">plane</string>
 
-
     <string name="search_text">search text</string>
     <string name="clear_text">clear text</string>
     <string name="nameYourTrip_title">Name of your trip</string>
     <string name="save_Btn">Save</string>
     <string name="discard_Btn">Discard</string>
     <string name="clearOrSearch">Clear or search text</string>
+
         <!--    Current trip view   -->
     <string name="steps">Steps</string>
     <string name="distance">Distance</string>
@@ -44,11 +47,21 @@
     <string name="saveMoment_Btn">Save the moment</string>
     <string name="connectFr_Btn">Connect a friend</string>
     <string name="End_Btn">End trip</string>
+    <string name="go_home">Go home</string>
+    <string name="nothing_toast">Nothing yet...</string>
+    <string name="showMap">Show on map</string>
+    <string name="createVideo">Create a video</string>
 
+        <!--   Add moment   -->
+    <string name="dateM">Date</string>
+    <string name="timeM">Time</string>
+    <string name="locationM">Location</string>
+    <string name="describeM">Describe the moment...</string>
+    <string name="takePhoto_Btn">Take photo</string>
+    <string name="close">Close</string>
+    <string name="temporaryString">This is a temporary string, which will be replaced with the moment comment</string>
 
-
-
-
-
+    <!--   Travel history view   -->
+    <string name="tripHistory">Your trip history</string>
 
 </resources>

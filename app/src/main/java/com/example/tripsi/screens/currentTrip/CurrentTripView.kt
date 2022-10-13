@@ -15,6 +15,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
@@ -45,6 +46,8 @@ fun CurrentTripView(
     location.startUpdatingLocation()
     val stopWatch = remember { StopWatch() }
     stopWatch.start()
+
+    var textToastNothing = stringResource(R.string.nothing_toast)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -137,13 +140,13 @@ fun CurrentTripView(
                         */
                     stopWatch.resetWatch()
                     viewModel.resetSteps()
-                    Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, textToastNothing, Toast.LENGTH_LONG).show()
                 },
                 modifier = viewModel.modifier,
                 shape = viewModel.shape,
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
             ) {
-                Text("End Trip", textAlign = TextAlign.Center)
+                Text(stringResource(R.string.End_Btn), textAlign = TextAlign.Center)
             }
         }
     }
@@ -204,7 +207,7 @@ fun CurrentTripMap(
                 modifier = Modifier.weight(1f),
             )
             StepCounterSensor()
-            TripInfoOverlay(type = "Time", measurement = stopWatch.formattedTime)
+            TripInfoOverlay(type = stringResource(R.string.time), measurement = stopWatch.formattedTime)
             //TripInfoOverlay(type = "Distance", measurement = "79km")
             //TripInfoOverlay(type = "Speed", measurement = "40km/h")
             //TripInfoOverlay(type = "Time", measurement = "2-3hours")
@@ -221,6 +224,8 @@ fun CurrentTripExtra(
     location: Location,
     tripDbViewModel: TripDbViewModel
 ) {
+    var textToastNothing = stringResource(R.string.nothing_toast)
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -238,17 +243,17 @@ fun CurrentTripExtra(
             modifier = viewModel.modifier,
             shape = viewModel.shape
         ) {
-            Text("Save the Moment", textAlign = TextAlign.Center)
+            Text(stringResource(R.string.saveMoment_Btn), textAlign = TextAlign.Center)
         }
 
         Button(
             onClick = {
-                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "$textToastNothing", Toast.LENGTH_LONG).show()
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape
         ) {
-            Text("Connect a Friend", textAlign = TextAlign.Center)
+            Text("${stringResource(R.string.connectFr_Btn)}", textAlign = TextAlign.Center)
         }
     }
 }
@@ -278,7 +283,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
         shape = viewModel.shape,
         colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
     ) {
-        Text("Start Trip", textAlign = TextAlign.Center)
+        Text("${stringResource(R.string.trip_start_Btn)}", textAlign = TextAlign.Center)
     }
 }
 
@@ -308,7 +313,7 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
         shape = viewModel.shape,
         colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
     ) {
-        Text("End Trip", textAlign = TextAlign.Center)
+        Text("${stringResource(R.string.End_Btn)}", textAlign = TextAlign.Center)
     }
 }
 
@@ -328,7 +333,7 @@ fun GoHomeButton(navController: NavController, location: Location) {
         colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
     )
     {
-        Text("Go home")
+        Text(stringResource(R.string.go_home))
     }
 }
 

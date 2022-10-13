@@ -22,9 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
+import com.example.tripsi.R
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.Screen
@@ -109,9 +111,9 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
                     .fillMaxHeight()
                     .fillMaxWidth(0.5f)
             ) {
-                Text("Date", color = colors.primary)
-                Text("Time", color = colors.primary)
-                Text("Location", color = colors.primary)
+                Text(stringResource(R.string.dateM), color = colors.primary)
+                Text(stringResource(R.string.time), color = colors.primary)
+                Text(stringResource(R.string.dateM), color = colors.primary)
             }
 
             Column(
@@ -142,7 +144,7 @@ fun MomentComment(
         onValueChange = { comment = it },
         shape = RoundedCornerShape(10.dp),
         //textStyle = TextStyle(color = Color.Blue),
-        label = { Text("Describe the moment...") },
+        label = { Text(stringResource(R.string.describeM)) },
         colors = colors,
         modifier = Modifier
             .fillMaxWidth()
@@ -252,7 +254,7 @@ fun MomentPictures(context: Context) {
                 }
             }
         ) {
-            Text("Take Photo")
+            Text(stringResource(R.string.takePhoto_Btn))
         }
 
     }
@@ -303,7 +305,7 @@ fun SaveOrDiscard(
             modifier = viewModel.modifier,
             shape = viewModel.shape
         ) {
-            Text("Save")
+            Text(stringResource(R.string.save_Btn))
         }
         Button(
             onClick = {
@@ -314,7 +316,7 @@ fun SaveOrDiscard(
             shape = viewModel.shape,
             colors = ButtonDefaults.buttonColors(colors.secondary)
         ) {
-            Text("Discard")
+            Text(stringResource(R.string.discard_Btn))
         }
     }
 }

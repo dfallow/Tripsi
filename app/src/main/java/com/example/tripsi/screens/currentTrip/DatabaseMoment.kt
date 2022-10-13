@@ -24,8 +24,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import com.example.tripsi.R
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
 import java.util.*
@@ -84,9 +86,9 @@ fun DatabaseMoment(
                         .padding(horizontal = 5.dp, vertical = 5.dp),
                     verticalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text("Date", color = Color.Black)
+                    Text(stringResource(R.string.dateM), color = Color.Black)
                     Text(it.location!![0].date, color = Color.Black)
-                    Text("Location", color = Color.Black)
+                    Text(stringResource(R.string.locationM), color = Color.Black)
                     Text(cityName, color = Color.Black)
                 }
             }
@@ -107,7 +109,7 @@ fun DatabaseMoment(
                 ) {
                     Text(it.image?.get(0)?.comment ?: "")
 
-                    ClickableText(text = AnnotatedString("Close"), onClick = {
+                    ClickableText(text = AnnotatedString(stringResource(R.string.close)), onClick = {
                         viewModel.hideMoment()
                     })
                 }

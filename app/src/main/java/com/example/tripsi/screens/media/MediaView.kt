@@ -25,12 +25,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.tripsi.R
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
@@ -50,6 +52,8 @@ fun MediaView(
     val startCoordinates = tripDbViewModel.getTripStartCoords(tripId).observeAsState().value
     //convert startCoordinates to city name
     val startLocation = viewModel.getStartLocation(startCoordinates, context)
+
+    val toastTextNothing = stringResource(R.string.nothing_toast)
 
     Column(
         modifier = Modifier
@@ -79,26 +83,26 @@ fun MediaView(
                     Button(
                         onClick = {
                             /*TODO*/
-                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, toastTextNothing, Toast.LENGTH_LONG).show()
                         },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0xFFCBEF43),
                             contentColor = Color(0xFF2D0320)
                         )
                     ) {
-                        Text("show on map")
+                        Text(stringResource(R.string.showMap))
                     }
                     Button(
                         onClick = {
                             /*TODO*/
-                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, toastTextNothing, Toast.LENGTH_LONG).show()
                         },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0xFFCBEF43),
                             contentColor = Color(0xFF2D0320)
                         )
                     ) {
-                        Text("create a video")
+                        Text(stringResource(R.string.createVideo))
                     }
                 }
             }

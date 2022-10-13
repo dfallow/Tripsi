@@ -17,8 +17,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import com.example.tripsi.R
 
 @Composable
 fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
@@ -126,7 +128,7 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
             ) {
                 Text(moment.description ?: "")
 
-                ClickableText(text = AnnotatedString("Close"), onClick = {
+                ClickableText(text = AnnotatedString(stringResource(R.string.close)), onClick = {
                     viewModel.hideMoment()
                 })
             }
