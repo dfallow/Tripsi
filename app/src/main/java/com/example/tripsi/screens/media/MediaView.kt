@@ -1,8 +1,6 @@
 package com.example.tripsi.screens.media
 
-
 import android.content.Context
-import android.content.pm.ActivityInfo
 import android.widget.Toast
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
@@ -38,9 +36,8 @@ import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
-import kotlinx.coroutines.launch
 import com.example.tripsi.utils.Screen
-import com.example.tripsi.utils.LockScreenOrientation
+import kotlinx.coroutines.launch
 
 val viewModel = MediaViewModel()
 
@@ -62,11 +59,15 @@ fun MediaView(
     }
 
     // Store tripData in viewModel for PastTripMap
-    if (tripData != null) {
-        tripDbViewModel.pastTripData = tripData
+    if (tripData.value != null) {
+        tripDbViewModel.pastTripData = tripData.value!!
     }
 
-    tripData?.location?.let { tripDbViewModel.getCurrentTripMomentsNew(it) }
+
+    LaunchedEffect(tripData.value) {
+        tripData.value?.let { viewModel.getStartEndCoords(it, context) }
+    }
+    //tripData?.location?.let { tripDbViewModel.getCurrentTripMomentsNew(it) }
 
     Column(
         modifier = Modifier
@@ -94,21 +95,10 @@ fun MediaView(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 30.dp)
-                    //Button(
-                    //    onClick = {
-                    //        navController.navigate(Screen.PastTripScreen.route)
-                    //    },
-                    //    colors = ButtonDefaults.buttonColors(
-                    //        backgroundColor = Color(0xFFCBEF43),
-                    //        contentColor = Color(0xFF2D0320)
-                    //    )
-                    
-                   // ) {
+                    ) {
                         Button(
                             onClick = {
-                                /*TODO*/
-                                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG)
-                                    .show()
+                                navController.navigate(Screen.PastTripScreen.route)
                             },
                             enabled = !delete,
                             colors = ButtonDefaults.buttonColors(
@@ -146,12 +136,12 @@ fun MediaView(
                                     .fillMaxWidth()
                                     .padding(20.dp)
                             ) {
-                                Column() {
+                                Column {
                                     Text(
                                         "Are you sure you want to delete this trip?",
                                         color = Color(0xFF000000)
                                     )
-                                    Row() {
+                                    Row {
                                         Button(onClick = {
                                             scope.launch {
                                                 viewModel.deleteTrip(tripId, tripDbViewModel, context)
