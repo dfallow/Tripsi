@@ -1,5 +1,6 @@
 package com.example.tripsi.screens.travelHistory
 
+import android.content.pm.ActivityInfo
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,13 +27,16 @@ import androidx.navigation.NavController
 import com.example.tripsi.data.Trip
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.utils.LockScreenOrientation
 import com.example.tripsi.utils.Screen
 
 //retrieve all trips that already happened (status = PAST) and display them in a list
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavController) {
+
     val viewModel = TravelHistoryViewModel()
+
 
     val pastTrips =
         tripDbViewModel.getAllTripsDataByStatus(TripStatus.PAST.status).observeAsState(listOf())

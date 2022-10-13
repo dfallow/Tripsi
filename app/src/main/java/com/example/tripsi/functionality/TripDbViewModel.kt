@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.*
 import com.example.tripsi.screens.currentTrip.CurrentTripViewModel
-import com.example.tripsi.screens.currentTrip.MomentPosition
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 
@@ -18,6 +17,7 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     var tripId = 0
 
     lateinit var tripData: TripData
+    lateinit var pastTripData: TripData
 
     var currentTripMoments = ArrayList<GeoPoint>()
 

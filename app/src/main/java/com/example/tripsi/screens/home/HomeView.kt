@@ -1,11 +1,14 @@
 package com.example.tripsi.screens.home
 
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.ui.Alignment
 import androidx.navigation.NavController
 import androidx.compose.foundation.background
@@ -13,6 +16,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -31,8 +35,11 @@ import com.example.tripsi.data.TripData
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.media.viewModel
+import com.example.tripsi.screens.currentTrip.DatabaseMoment
+import com.example.tripsi.screens.currentTrip.TemporaryMoment
 import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
+import com.example.tripsi.utils.LockScreenOrientation
 import com.example.tripsi.utils.Screen
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -42,6 +49,7 @@ import java.util.*
 
 @Composable
 fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, context: Context, weatherViewModel: WeatherViewModel) {
+
     val homeViewModel = HomeViewModel()
     var quicktrip by remember { mutableStateOf(false) }
     var quicktripName by remember { mutableStateOf("") }

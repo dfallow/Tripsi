@@ -11,6 +11,7 @@ import com.example.tripsi.screens.currentTrip.AddMoment
 import com.example.tripsi.screens.currentTrip.CurrentTripView
 import com.example.tripsi.screens.home.HomeView
 import com.example.tripsi.screens.media.MediaView
+import com.example.tripsi.screens.pastTrip.PastTripView
 import com.example.tripsi.screens.planTrip.PlanTripView
 import com.example.tripsi.screens.travelHistory.TravelHistoryView
 import com.example.tripsi.screens.weather.WeatherViewModel
@@ -48,6 +49,9 @@ fun NavigationGraph(navController: NavHostController, context: Context, location
         }
         composable(route = Screen.MediaScreen.route) {
             MediaView(navController = navController, tripDbViewModel = tripDbViewModel, tripId = tripDbViewModel.tripId, context = context)
+        }
+        composable(route = Screen.PastTripScreen.route) {
+            PastTripView(context = context, tripDbViewModel = tripDbViewModel)
         }
 
     }
