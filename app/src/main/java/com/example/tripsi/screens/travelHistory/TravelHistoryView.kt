@@ -8,10 +8,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ChevronRight
-import androidx.compose.material.icons.rounded.EditNote
 import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.runtime.Composable
@@ -42,6 +42,7 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
         Text(
             "Your trip history",
             Modifier.padding(vertical = 15.dp),
+            color = MaterialTheme.colors.onPrimary,
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold
@@ -89,21 +90,21 @@ fun TravelHistoryItem(
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
             Column() {
-                Text(trip.tripName, fontSize = 20.sp, color = Color(0xFFFFFFFF))
+                Text(trip.tripName, fontSize = 20.sp, color = MaterialTheme.colors.onSurface)
                 Spacer(Modifier.size(10.dp))
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth(0.3f)
                 ) {
                     Row() {
-                        Icon(Icons.Rounded.Image, "image icon", tint = Color(0xFFFFFFFF))
+                        Icon(Icons.Rounded.Image, "image icon", tint = MaterialTheme.colors.onSurface)
                         Spacer(Modifier.size(5.dp))
-                        Text(imageCount.toString(), fontSize = 16.sp, color = Color(0xFFFFFFFF))
+                        Text(imageCount.toString(), fontSize = 16.sp, color = MaterialTheme.colors.onSurface)
                     }
                     Row() {
-                        Icon(Icons.Rounded.Group, "friends icon", tint = Color(0xFFFFFFFF))
+                        Icon(Icons.Rounded.Group, "friends icon", tint = MaterialTheme.colors.onSurface)
                         Spacer(Modifier.size(5.dp))
-                        Text("0", fontSize = 16.sp, color = Color(0xFFFFFFFF))
+                        Text("0", fontSize = 16.sp, color = MaterialTheme.colors.onSurface)
                     }
                 }
 
@@ -112,7 +113,7 @@ fun TravelHistoryItem(
                 tripDbViewModel.tripId = trip.tripId
                 navController.navigate(route = Screen.MediaScreen.route)
             }) {
-                Icon(Icons.Rounded.ChevronRight, "arrow right", tint = Color(0xFFCBEF43))
+                Icon(Icons.Rounded.ChevronRight, "arrow right", tint = MaterialTheme.colors.secondaryVariant)
             }
         }
     }

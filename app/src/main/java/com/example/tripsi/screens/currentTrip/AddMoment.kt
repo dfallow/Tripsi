@@ -120,10 +120,10 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
                 modifier = Modifier
                     .fillMaxHeight()
             ) {
-                Text(dateFormat.format(now), color = colors.onSecondary)
-                Text(timeFormat.format(now), color = colors.onSecondary)
+                Text(dateFormat.format(now), color = colors.secondary)
+                Text(timeFormat.format(now), color = colors.secondary)
                 Text(
-                    cityName, color = colors.onSecondary
+                    cityName, color = colors.secondary
                 )
             }
         }
@@ -250,7 +250,10 @@ fun MomentPictures(context: Context) {
                 scope.launch {
                     launcher.launch(photoURI)
                 }
-            }
+            },
+            colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary)
         ) {
             Text("Take Photo")
         }
@@ -276,6 +279,7 @@ fun SaveOrDiscard(
             .padding(10.dp)
     ) {
         Button(
+
             onClick = {
                 //TODO only allow saving if there's at least ONE photo
                 //save location to database
@@ -301,7 +305,10 @@ fun SaveOrDiscard(
                 navController.navigateUp()
             },
             modifier = viewModel.modifier,
-            shape = viewModel.shape
+            shape = viewModel.shape,
+            colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary),
         ) {
             Text("Save")
         }
@@ -312,7 +319,9 @@ fun SaveOrDiscard(
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape,
-            colors = ButtonDefaults.buttonColors(colors.secondary)
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = MaterialTheme.colors.onPrimary),
         ) {
             Text("Discard")
         }
