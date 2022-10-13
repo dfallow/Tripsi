@@ -2,7 +2,6 @@ package com.example.tripsi.screens.media
 
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
@@ -34,16 +33,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
-import com.example.tripsi.data.Location
-import com.example.tripsi.data.LocationWithImagesAndNotes
 import com.example.tripsi.functionality.TripDbViewModel
-import com.example.tripsi.screens.currentTrip.CurrentTripViewModel
-import com.example.tripsi.screens.currentTrip.MomentPosition
 import com.example.tripsi.utils.LoadingSpinner
-import com.example.tripsi.utils.Screen
 
 val viewModel = MediaViewModel()
 
@@ -54,11 +47,16 @@ fun MediaView(
     navController: NavController,
     context: Context
 ) {
+    val scope = rememberCoroutineScope()
+    var delete by remember { mutableStateOf(false) }
+
+
     //get all data from database associated with a trip
     val tripData = tripDbViewModel.getTripData(tripId).observeAsState()
     LaunchedEffect(tripData.value) {
         tripData.value?.let { viewModel.getStartEndCoords(it, context) }
     }
+
 
     Column(
         modifier = Modifier
@@ -88,7 +86,8 @@ fun MediaView(
                         Button(
                             onClick = {
                                 /*TODO*/
-                                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG)
+                                    .show()
                             },
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = Color(0xFFCBEF43),
@@ -99,6 +98,7 @@ fun MediaView(
                         }
                         Button(
                             onClick = {
+                                delete = true
                                 //viewModel.deleteTrip(tripId, tripDbViewModel)
                                 //navController.navigate(Screen.TravelsScreen.route)
                             },
@@ -110,10 +110,51 @@ fun MediaView(
                             Text("Delete trip")
                         }
                     }
+                    if (delete) {
+                        Popup(
+                            alignment = Alignment.Center,
+                            properties = PopupProperties(dismissOnBackPress = false)
+                        ) {
+                            Box(
+                                contentAlignment = Alignment.TopEnd,
+                                modifier = Modifier
+                                    .background(Color(0xFF2D0320))
+                                    .fillMaxWidth(0.9f)
+                                    .padding(20.dp)
+                            ) {
+                                Column() {
+                                    Text("Are you sure you want to delete this trip?", color = Color(0xFFFFFFFF))
+                                    Row() {
+                                        Button(onClick = {
+                                            viewModel.deleteTrip(tripId, tripDbViewModel)
+                                            Toast.makeText(
+                                                context,
+                                                "Trip was deleted.",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                            delete = false
+                                            navController.navigateUp()
+                                        }) {
+                                            Text("Yes, delete the trip")
+                                        }
+                                        Spacer(Modifier.size(20.dp))
+                                        Button(onClick = { delete = false }) {
+                                            Text("No")
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
+                    }
                 }
             }
+
         }
     }
+
 }
 
 //displays trip name that the user entered when planning the trip
@@ -155,7 +196,11 @@ fun DisplayRoute() {
                 Modifier.size(20.dp),
                 tint = Color(0xFF3C493F)
             )
-            Text(startLocation.value ?: "Home", Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
+            Text(
+                startLocation.value ?: "Home",
+                Modifier.padding(horizontal = 5.dp),
+                color = Color(0xFF3C493F)
+            )
         }
         Icon(
             Icons.Rounded.ChevronRight,
@@ -171,7 +216,11 @@ fun DisplayRoute() {
                 Modifier.size(20.dp),
                 tint = Color(0xFF3C493F)
             )
-            Text(endLocation.value ?: "Destination", Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
+            Text(
+                endLocation.value ?: "Destination",
+                Modifier.padding(horizontal = 5.dp),
+                color = Color(0xFF3C493F)
+            )
         }
     }
 }
@@ -265,9 +314,7 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
     //these are the Bitmaps that were retrieved from storage and rotated
     val imageBitmaps = viewModel.imageBitmaps.observeAsState()
 
-
     //TODO: display something when there are no trip images saved (lottie/text/etc)
-
     LoadingSpinner(isDisplayed = loading.value)
 
     LazyRow(Modifier.padding(horizontal = 10.dp)) {
@@ -329,7 +376,7 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
                     Icons.Rounded.Close,
                     "close",
                     Modifier
-                        .size(70.dp)
+                        .size(50.dp)
                         .padding(10.dp),
                     tint = Color(0xFF3C493F)
                 )
