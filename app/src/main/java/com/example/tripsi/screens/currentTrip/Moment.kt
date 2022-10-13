@@ -23,7 +23,7 @@ fun PopupMoment(imageId: Int) {
         Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.5f)
-            .background(Color.White)
+            .background(MaterialTheme.colors.background)
     ) {
         Row(
             Modifier
@@ -48,7 +48,7 @@ fun PopupMoment(imageId: Int) {
                     .padding(horizontal = 5.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text("Date", color = Color.Black)
+                Text("Date", color = MaterialTheme.colors.onSurface)
                 Text("Time")
                 Text("Location")
 

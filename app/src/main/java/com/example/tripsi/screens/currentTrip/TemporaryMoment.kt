@@ -27,7 +27,7 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
         Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.5f)
-            .background(Color.White)
+            .background(MaterialTheme.colors.background)
     ) {
         Row(
             Modifier
@@ -67,7 +67,7 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                                         momentNumber += 1
                                     }
                                 ) {
-                                    Icon(Icons.Rounded.ChevronRight, "arrow right", tint = Color(0xFFCBEF43))
+                                    Icon(Icons.Rounded.ChevronRight, "arrow right", tint = MaterialTheme.colors.primary)
                                 }
                             }
 
@@ -84,7 +84,8 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                                         momentNumber -= 1
                                     }
                                 ) {
-                                    Icon(Icons.Rounded.ChevronLeft, "arrow right", tint = Color(0xFFCBEF43))
+                                    Icon(Icons.Rounded.ChevronLeft, "arrow right",
+                                        tint = MaterialTheme.colors.primary)
                                 }
                             }
 
@@ -100,12 +101,12 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                     .padding(horizontal = 5.dp, vertical = 5.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text("Date", color = Color.Black)
-                Text(moment.info.date, color = Color.Black)
-                Text("Time", color = Color.Black)
-                Text(moment.info.time, color = Color.Black)
-                Text("Location", color = Color.Black)
-                Text(moment.info.location, color = Color.Black)
+                Text("Date", color = MaterialTheme.colors.onSurface)
+                Text(moment.info.date, color =MaterialTheme.colors.onSurface)
+                Text("Time", color = MaterialTheme.colors.onSurface)
+                Text(moment.info.time, color = MaterialTheme.colors.onSurface)
+                Text("Location", color = MaterialTheme.colors.onSurface)
+                Text(moment.info.location, color = MaterialTheme.colors.onSurface)
 
             }
         }

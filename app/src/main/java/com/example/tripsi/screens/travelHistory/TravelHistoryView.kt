@@ -79,7 +79,7 @@ fun TravelHistoryItem(
     Row(
         modifier = Modifier
             .height(90.dp)
-            .background(Color(0xFF3C493F))
+            .background(MaterialTheme.colors.primaryVariant,)
             .padding(horizontal = 10.dp)
             .fillMaxWidth()
             .clickable {

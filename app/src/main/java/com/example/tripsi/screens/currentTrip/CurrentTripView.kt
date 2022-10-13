@@ -135,7 +135,9 @@ fun CurrentTripView(
                 },
                 modifier = viewModel.modifier,
                 shape = viewModel.shape,
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary),
             ) {
                 Text("End Trip", textAlign = TextAlign.Center)
             }
@@ -177,7 +179,7 @@ fun CurrentTripMap(
                 ) {
                     WeatherCard(
                         state = weatherViewModel.state,
-                        backgroundColor = Color(0xFF3C493F)
+                        backgroundColor = MaterialTheme.colors.primaryVariant
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                 }
@@ -270,7 +272,9 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
         },
         modifier = viewModel.modifier,
         shape = viewModel.shape,
-        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary),
     ) {
         Text("Start Trip", textAlign = TextAlign.Center)
     }
@@ -300,7 +304,9 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
         },
         modifier = viewModel.modifier,
         shape = viewModel.shape,
-        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary),
     ) {
         Text("End Trip", textAlign = TextAlign.Center)
     }
@@ -319,7 +325,9 @@ fun GoHomeButton(navController: NavController, location: Location) {
         },
         modifier = viewModel.modifier,
         shape = viewModel.shape,
-        colors = ButtonDefaults.buttonColors(MaterialTheme.colors.secondary)
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary),
     )
     {
         Text("Go home")
@@ -336,7 +344,7 @@ fun ShowMoment(
 ) {
     Popup() {
         Surface(
-            color = Color.Black.copy(alpha = 0.6f),
+            color = MaterialTheme.colors.primaryVariant,
             modifier = Modifier.fillMaxSize()
         ) {
             Column(

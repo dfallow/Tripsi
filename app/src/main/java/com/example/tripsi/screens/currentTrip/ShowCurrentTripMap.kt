@@ -168,7 +168,7 @@ fun TripInfoOverlay(type: String, measurement: String) {
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Text(type, color = MaterialTheme.colors.primary)
-        Text(measurement, color = MaterialTheme.colors.onSecondary)
+        Text(type, color = MaterialTheme.colors.onSurface)
+        Text(measurement, color = MaterialTheme.colors.onSurface)
     }
 }
