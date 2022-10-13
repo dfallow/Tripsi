@@ -1,56 +1,43 @@
 package com.example.tripsi.screens.home
 
 import android.content.Context
-import android.content.pm.ActivityInfo
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Alignment
-import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.lerp
 import androidx.compose.ui.window.Popup
+import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.example.tripsi.R
 import com.example.tripsi.data.Trip
 import com.example.tripsi.data.TripData
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
-import com.example.tripsi.screens.currentTrip.DatabaseMoment
-import com.example.tripsi.screens.currentTrip.TemporaryMoment
-import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
-import com.example.tripsi.utils.LockScreenOrientation
 import com.example.tripsi.utils.Screen
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 import kotlin.math.absoluteValue
 
 
@@ -275,47 +262,75 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
 
     if (changeIcon) {
         Popup() {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Box(
+                contentAlignment = Alignment.BottomCenter,
                 modifier = Modifier
                     .fillMaxSize()
-                    .alpha(0.5f)
-                    .background(Color.Black)
             ) {
-                HorizontalPager(count = 5) { icon ->
-                    Card(
-                        Modifier
-                            .graphicsLayer {
-                                // Calculate the absolute offset for the current page from the
-                                // scroll position. We use the absolute value which allows us to mirror
-                                // any effects for both directions
-                                val pageOffset = calculateCurrentOffsetForPage(icon).absoluteValue
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxHeight(0.45f)
+                        .fillMaxWidth()
+                        .background(Color.Black)
+                ) {
+                    Text(
+                        "Swipe to see your options\n Tap to confirm",
+                        color = Color.White,
+                        textAlign = TextAlign.Center
+                    )
+                    
+                    Spacer(modifier = Modifier.height(10.dp))
+                    
+                    HorizontalPager(count = 5) { icon ->
+                        Box() {
+                            Card(
+                                Modifier
+                                    .border(3.dp, Color.White, shape = RoundedCornerShape(10.dp))
+                                    .fillMaxSize(0.7f)
+                                    .graphicsLayer {
 
-                                // We animate the scaleX + scaleY, between 85% and 100%
-                                lerp(
-                                    start = 0.85f,
-                                    stop = 1f,
-                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                ).also { scale ->
-                                    scaleX = scale
-                                    scaleY = scale
+                                        val pageOffset =
+                                            calculateCurrentOffsetForPage(icon).absoluteValue
+
+                                        lerp(
+                                            start = 0.85f,
+                                            stop = 1f,
+                                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                        ).also { scale ->
+                                            scaleX = scale
+                                            scaleY = scale
+                                        }
+
+                                        alpha = lerp(
+                                            start = 0.5f,
+                                            stop = 1f,
+                                            fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                        )
+                                    }
+                            ) {
+                                    Image(
+                                        when (icon) {
+                                            0 -> painterResource(R.drawable.car_svgrepo_com)
+                                            1 -> painterResource(R.drawable.bike_svgrepo_com)
+                                            2 -> painterResource(R.drawable.hiker_walk_svgrepo_com)
+                                            3 -> painterResource(R.drawable.plane_svgrepo_com)
+                                            else -> painterResource(R.drawable.bus_svgrepo_com) },
+                                        contentDescription = "user map icons",
+                                        contentScale = ContentScale.Crop,
+                                        modifier = Modifier
+                                            .size(64.dp)
+                                            .clickable {
+                                                changeIcon = false
+                                                tripDbViewModel.updateTripTravelMethod(icon + 1, tripData.trip!!.tripId)
+                                            }
+                                    )
                                 }
-
-                                // We animate the alpha, between 50% and 100%
-                                alpha = lerp(
-                                    start = 0.5f,
-                                    stop = 1f,
-                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                )
-                            }
-                    ) {
-
+                        }
                     }
-
                 }
             }
         }
     }
-
 }
