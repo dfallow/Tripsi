@@ -1,7 +1,6 @@
 package com.example.tripsi.utils
 
 import android.content.Context
-import android.net.Uri
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -15,17 +14,26 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.weather.WeatherViewModel
-import java.io.File
 
 @Composable
-fun BottomNavigation(context: Context, location: Location, tripDbViewModel: TripDbViewModel, viewModel: WeatherViewModel) {
+fun BottomNavigation(
+    context: Context,
+    location: Location,
+    tripDbViewModel: TripDbViewModel,
+    viewModel: WeatherViewModel
+) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
         it.calculateBottomPadding()
-        NavigationGraph(navController = navController, context, location, tripDbViewModel, viewModel)
-
+        NavigationGraph(
+            navController = navController,
+            context,
+            location,
+            tripDbViewModel,
+            viewModel
+        )
     }
 }
 
@@ -39,20 +47,35 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    if (currentDestination != navController.findDestination(Screen.HomeScreen.route)) {
+    if (
+        currentDestination != navController.findDestination(Screen.HomeScreen.route) &&
+        currentDestination != navController.findDestination(Screen.PlanScreen.route)
+    ) {
         BottomNavigation(
             elevation = 8.dp
         ) {
             screens.forEach { screens ->
-                AddItem(
-                    screen = screens,
-                    currentDestination = currentDestination,
-                    navController = navController
-                )
+
+                if (currentDestination == navController.findDestination(Screen.CurrentScreen.route)) {
+                    AddItem(
+                        screen = screens,
+                        currentDestination = currentDestination,
+                        navController = navController
+                    )
+                }
+                if (
+                    (currentDestination != navController.findDestination(Screen.CurrentScreen.route)) &&
+                    (screens.route != Screen.CurrentScreen.route)
+                ) {
+                    AddItem(
+                        screen = screens,
+                        currentDestination = currentDestination,
+                        navController = navController
+                    )
+                }
             }
         }
     }
-
 }
 
 @Composable
@@ -81,5 +104,4 @@ fun RowScope.AddItem(
             }
         }
     )
-
 }

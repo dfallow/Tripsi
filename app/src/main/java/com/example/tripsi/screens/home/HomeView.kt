@@ -2,6 +2,7 @@ package com.example.tripsi.screens.home
 
 import android.content.Context
 import android.os.Build
+import android.content.pm.ActivityInfo
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
@@ -9,13 +10,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.getValue
+import androidx.compose.material.Surface
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
 import com.airbnb.lottie.compose.*
 import com.example.tripsi.R
 import com.example.tripsi.data.Trip
@@ -31,8 +33,11 @@ import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.currentTrip.CurrentTripViewModel
 import com.example.tripsi.screens.currentTrip.viewModel
+import com.example.tripsi.screens.currentTrip.DatabaseMoment
+import com.example.tripsi.screens.currentTrip.TemporaryMoment
 import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
+import com.example.tripsi.utils.LockScreenOrientation
 import com.example.tripsi.utils.Screen
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -43,6 +48,7 @@ import java.util.*
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, context: Context, weatherViewModel: WeatherViewModel) {
+
     val homeViewModel = HomeViewModel()
     val stepViewModel = CurrentTripViewModel()
 

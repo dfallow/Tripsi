@@ -1,10 +1,13 @@
 package com.example.tripsi.screens.currentTrip
 
+import android.app.Activity
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import android.content.Context
 import android.os.Build
+import android.util.Log
+import android.content.pm.ActivityInfo
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
@@ -28,6 +31,7 @@ import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.data.Location as LocationData
 import com.example.tripsi.utils.Location
+import com.example.tripsi.utils.LockScreenOrientation
 import com.example.tripsi.utils.Screen
 import com.example.tripsi.utils.StopWatch
 import java.util.UUID
@@ -207,9 +211,6 @@ fun CurrentTripMap(
             )
             StepCounterSensor()
             TripInfoOverlay(type = "Time", measurement = stopWatch.formattedTime)
-            //TripInfoOverlay(type = "Distance", measurement = "79km")
-            //TripInfoOverlay(type = "Speed", measurement = "40km/h")
-            //TripInfoOverlay(type = "Time", measurement = "2-3hours")
         }
 
     }
@@ -354,6 +355,7 @@ fun ShowMoment(
                     .fillMaxHeight()
 
             ) {
+
                 if (fromDatabase) {
                     DatabaseMoment(tripDbViewModel, context)
                 } else {
@@ -361,6 +363,5 @@ fun ShowMoment(
                 }
             }
         }
-
     }
 }
