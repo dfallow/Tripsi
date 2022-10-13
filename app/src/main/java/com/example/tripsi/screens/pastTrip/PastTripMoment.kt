@@ -9,10 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ChevronLeft
 import androidx.compose.material.icons.rounded.ChevronRight
@@ -47,7 +44,7 @@ fun PastTripMoment(
         Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.5f)
-            .background(Color.White)
+            .background(MaterialTheme.colors.onSurface)
     ) {
 
         pastTripData.let {
@@ -87,7 +84,7 @@ fun PastTripMoment(
                     Text(
                         "Date:",
                         style = TextStyle(
-                            color = Color.Black,
+                            color = MaterialTheme.colors.onPrimary,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -96,7 +93,7 @@ fun PastTripMoment(
                     Text(
                         "Location:",
                         style = TextStyle(
-                            color = Color.Black,
+                            color = MaterialTheme.colors.onPrimary,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -197,7 +194,7 @@ fun DisplayPastMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
                                 Icon(
                                     Icons.Rounded.ChevronRight,
                                     "arrow right",
-                                    tint = Color(0xFFCBEF43)
+                                    tint = MaterialTheme.colors.primary
                                 )
                             }
                         }
@@ -217,7 +214,7 @@ fun DisplayPastMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
                                 Icon(
                                     Icons.Rounded.ChevronLeft,
                                     "arrow right",
-                                    tint = Color(0xFFCBEF43)
+                                    tint = MaterialTheme.colors.primary
                                 )
                             }
                         }

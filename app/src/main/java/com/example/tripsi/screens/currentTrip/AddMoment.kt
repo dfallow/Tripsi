@@ -75,7 +75,8 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
     val cityName = address[0].locality
 
     // Temporary for UI updating
-    viewModel.momentInfo = CurrentTripViewModel.MomentInfo(dateFormat.format(now), timeFormat.format(now), cityName)
+    viewModel.momentInfo =
+        CurrentTripViewModel.MomentInfo(dateFormat.format(now), timeFormat.format(now), cityName)
 
     //save location information to viewModel
     viewModel.momentLocation = com.example.tripsi.data.Location(
@@ -250,10 +251,7 @@ fun MomentPictures(context: Context) {
                 scope.launch {
                     launcher.launch(photoURI)
                 }
-            },
-            colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary)
+            }
         ) {
             Text("Take Photo")
         }
@@ -307,8 +305,9 @@ fun SaveOrDiscard(
             modifier = viewModel.modifier,
             shape = viewModel.shape,
             colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary),
+                backgroundColor = colors.primary,
+                contentColor = colors.onPrimary
+            ),
         ) {
             Text("Save")
         }
@@ -320,8 +319,9 @@ fun SaveOrDiscard(
             modifier = viewModel.modifier,
             shape = viewModel.shape,
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.primary,
-                contentColor = MaterialTheme.colors.onPrimary),
+                backgroundColor = colors.primary,
+                contentColor = colors.onPrimary
+            ),
         ) {
             Text("Discard")
         }

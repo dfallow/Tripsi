@@ -10,10 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ChevronLeft
 import androidx.compose.material.icons.rounded.ChevronRight
@@ -195,7 +192,7 @@ fun DisplayMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
                                     momentNumber += 1
                                 }
                             ) {
-                                Icon(Icons.Rounded.ChevronRight, "arrow right", tint = Color(0xFFCBEF43))
+                                Icon(Icons.Rounded.ChevronRight, "arrow right", tint = MaterialTheme.colors.primary)
                             }
                         }
 
@@ -212,7 +209,7 @@ fun DisplayMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
                                     momentNumber -= 1
                                 }
                             ) {
-                                Icon(Icons.Rounded.ChevronLeft, "arrow right", tint = Color(0xFFCBEF43))
+                                Icon(Icons.Rounded.ChevronLeft, "arrow right", tint = MaterialTheme.colors.primary)
                             }
                         }
 

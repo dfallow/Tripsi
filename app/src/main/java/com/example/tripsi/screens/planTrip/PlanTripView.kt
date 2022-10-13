@@ -2,11 +2,7 @@
 
 package com.example.tripsi.screens.planTrip
 
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import android.app.DatePickerDialog
-import android.content.pm.ActivityInfo
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -22,11 +18,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -35,12 +29,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.tripsi.R
 import com.example.tripsi.data.TravelMethod
 import com.example.tripsi.functionality.TripDbViewModel
-import com.example.tripsi.utils.LockScreenOrientation
 import java.util.*
-
 
 
 @Composable
@@ -53,16 +46,16 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
         modifier = Modifier
             .padding(10.dp)
             .fillMaxSize()
-            .background( color = MaterialTheme.colors.background),
+            .background(color = MaterialTheme.colors.background),
         verticalArrangement = Arrangement.SpaceEvenly
-        )
+    )
     {
         Text(
             text = "Create a plan for your upcoming trip",
             Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             color = MaterialTheme.colors.onPrimary,
-            )
+        )
 
         DatePicker(planTripViewModel)
         TextInput(planTripViewModel)
@@ -73,7 +66,7 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround,
 
-        ) {
+            ) {
             Button(
                 onClick = {
                     val saved = planTripViewModel.saveTrip(tripDbViewModel, context)
@@ -81,7 +74,9 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.primary,
-                    contentColor = MaterialTheme.colors.onPrimary),            ) {
+                    contentColor = MaterialTheme.colors.onPrimary
+                ),
+            ) {
                 Text(
                     text = "Save", fontWeight = FontWeight.ExtraBold
                 )
@@ -90,7 +85,8 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
                 onClick = { navController.navigateUp() },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.secondary,
-                    contentColor = MaterialTheme.colors.onSurface),
+                    contentColor = MaterialTheme.colors.onSurface
+                ),
             ) {
                 Text(
                     text = "Discard",
@@ -110,7 +106,7 @@ fun TextInput(planTripViewModel: PlanTripViewModel) {
             planTripViewModel.tripName = it
             text = it
         },
-        label = { Text("Name of your trip", color = MaterialTheme.colors.onPrimary,) },
+        label = { Text("Name of your trip", color = MaterialTheme.colors.onPrimary) },
         modifier = Modifier
             .fillMaxWidth(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -155,10 +151,14 @@ fun FinalLocationPicker(planTripViewModel: PlanTripViewModel) {
                         contentDescription = "search text",
                         modifier = Modifier.clickable {
                             if (text != "") {
-                                    focusManager.clearFocus(true)
-                                    planTripViewModel.searchState.value = SearchState.SAVED.status
+                                focusManager.clearFocus(true)
+                                planTripViewModel.searchState.value = SearchState.SAVED.status
                             } else {
-                                Toast.makeText(context, "Please Enter a Destination", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Please Enter a Destination",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     )
@@ -249,8 +249,10 @@ fun DatePicker(planTripViewModel: PlanTripViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp)
-            .background( MaterialTheme.colors.onBackground,
-                shape = RoundedCornerShape(5.dp)),
+            .background(
+                MaterialTheme.colors.onBackground,
+                shape = RoundedCornerShape(5.dp)
+            ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     )
@@ -265,13 +267,14 @@ fun DatePicker(planTripViewModel: PlanTripViewModel) {
             },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = MaterialTheme.colors.onBackground,
-                contentColor = MaterialTheme.colors.secondaryVariant),
+                contentColor = MaterialTheme.colors.secondaryVariant
+            ),
         )
         {
             Icon(
                 painter = painterResource(R.drawable.calendar),
                 contentDescription = "Calendar",
-               // tint = MaterialTheme.colors.secondaryVariant
+                // tint = MaterialTheme.colors.secondaryVariant
             )
             //  Text(text = "Date", color = Color(0xFF2D0320))
         }
@@ -285,7 +288,7 @@ fun DatePicker(planTripViewModel: PlanTripViewModel) {
             Modifier.padding(10.dp),
             fontSize = 14.sp,
             textAlign = TextAlign.Center,
-            color= MaterialTheme.colors.onSurface
+            color = MaterialTheme.colors.onSurface
 
         )
     }
@@ -323,11 +326,17 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
         }
     }
 
-    Text(text = "Selected Type of trip: ${selectedValue.value.ifEmpty { "NONE" }}", color = MaterialTheme.colors.onPrimary)
+    Text(
+        text = "Selected Type of trip: ${selectedValue.value.ifEmpty { "NONE" }}",
+        color = MaterialTheme.colors.onPrimary
+    )
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colors.onBackground,shape = RoundedCornerShape(5.dp)),
+            .background(
+                color = MaterialTheme.colors.onBackground,
+                shape = RoundedCornerShape(5.dp)
+            ),
         horizontalArrangement = Arrangement.SpaceEvenly
 
     )
@@ -369,7 +378,6 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
         }
     }
 }
-
 
 
 /*

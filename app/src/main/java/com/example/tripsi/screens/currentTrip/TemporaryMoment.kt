@@ -69,7 +69,11 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                                         momentNumber += 1
                                     }
                                 ) {
-                                    Icon(Icons.Rounded.ChevronRight, "arrow right", tint = MaterialTheme.colors.primary)
+                                    Icon(
+                                        Icons.Rounded.ChevronRight,
+                                        "arrow right",
+                                        tint = MaterialTheme.colors.primary
+                                    )
                                 }
                             }
 
@@ -86,8 +90,10 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                                         momentNumber -= 1
                                     }
                                 ) {
-                                    Icon(Icons.Rounded.ChevronLeft, "arrow right",
-                                        tint = MaterialTheme.colors.primary)
+                                    Icon(
+                                        Icons.Rounded.ChevronLeft, "arrow right",
+                                        tint = MaterialTheme.colors.primary
+                                    )
                                 }
                             }
 
@@ -105,7 +111,7 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
             ) {
 
                 Text("Date", color = MaterialTheme.colors.onSurface)
-                Text(moment.info.date, color =MaterialTheme.colors.onSurface)
+                Text(moment.info.date, color = MaterialTheme.colors.onSurface)
                 Text("Time", color = MaterialTheme.colors.onSurface)
                 Text(moment.info.time, color = MaterialTheme.colors.onSurface)
                 Text("Location", color = MaterialTheme.colors.onSurface)
@@ -158,10 +164,10 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
             ) {
                 Text(
                     moment.description ?: "",
-                        style = TextStyle(
-                            fontSize = 18.sp
-                        )
+                    style = TextStyle(
+                        fontSize = 18.sp
                     )
+                )
 
                 ClickableText(text = AnnotatedString("Close"), onClick = {
                     viewModel.hideMoment()

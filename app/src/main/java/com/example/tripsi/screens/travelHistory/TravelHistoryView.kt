@@ -1,6 +1,5 @@
 package com.example.tripsi.screens.travelHistory
 
-import android.content.pm.ActivityInfo
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,7 +26,6 @@ import androidx.navigation.NavController
 import com.example.tripsi.data.Trip
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
-import com.example.tripsi.utils.LockScreenOrientation
 import com.example.tripsi.utils.Screen
 
 // TODO: cleanup the code from all the formatting, modifiers, etc
@@ -41,7 +38,12 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
     val pastTrips =
         tripDbViewModel.getAllTripsDataByStatus(TripStatus.PAST.status).observeAsState(listOf())
 
-    Column(modifier = Modifier.fillMaxWidth().padding(bottom = 70.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 70.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             "Your trip history",
             Modifier.padding(vertical = 15.dp),
@@ -82,7 +84,7 @@ fun TravelHistoryItem(
     Row(
         modifier = Modifier
             .height(90.dp)
-            .background(MaterialTheme.colors.primaryVariant,)
+            .background(MaterialTheme.colors.primaryVariant)
             .padding(horizontal = 10.dp)
             .fillMaxWidth()
             .clickable {
@@ -92,20 +94,32 @@ fun TravelHistoryItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-            Column() {
+            Column {
                 Text(trip.tripName, fontSize = 20.sp, color = MaterialTheme.colors.onSurface)
                 Spacer(Modifier.size(10.dp))
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth(0.3f)
                 ) {
-                    Row() {
-                        Icon(Icons.Rounded.Image, "image icon", tint = MaterialTheme.colors.onSurface)
+                    Row {
+                        Icon(
+                            Icons.Rounded.Image,
+                            "image icon",
+                            tint = MaterialTheme.colors.onSurface
+                        )
                         Spacer(Modifier.size(5.dp))
-                        Text(imageCount.toString(), fontSize = 16.sp, color = MaterialTheme.colors.onSurface)
+                        Text(
+                            imageCount.toString(),
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colors.onSurface
+                        )
                     }
-                    Row() {
-                        Icon(Icons.Rounded.Group, "friends icon", tint = MaterialTheme.colors.onSurface)
+                    Row {
+                        Icon(
+                            Icons.Rounded.Group,
+                            "friends icon",
+                            tint = MaterialTheme.colors.onSurface
+                        )
                         Spacer(Modifier.size(5.dp))
                         Text("0", fontSize = 16.sp, color = MaterialTheme.colors.onSurface)
                     }
@@ -116,7 +130,11 @@ fun TravelHistoryItem(
                 tripDbViewModel.tripId = trip.tripId
                 navController.navigate(route = Screen.MediaScreen.route)
             }) {
-                Icon(Icons.Rounded.ChevronRight, "arrow right", tint = MaterialTheme.colors.secondaryVariant)
+                Icon(
+                    Icons.Rounded.ChevronRight,
+                    "arrow right",
+                    tint = MaterialTheme.colors.secondaryVariant
+                )
             }
         }
     }

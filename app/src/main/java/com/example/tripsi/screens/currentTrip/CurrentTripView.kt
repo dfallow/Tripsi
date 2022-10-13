@@ -1,13 +1,7 @@
 package com.example.tripsi.screens.currentTrip
 
 
-import android.app.Activity
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import android.content.Context
-import android.util.Log
-import android.content.pm.ActivityInfo
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -26,7 +20,6 @@ import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.Location
-import com.example.tripsi.utils.LockScreenOrientation
 import com.example.tripsi.utils.Screen
 import com.example.tripsi.utils.StopWatch
 import java.util.*
@@ -186,8 +179,7 @@ fun CurrentTripMap(
                 Column(
                 ) {
                     WeatherCard(
-                        state = weatherViewModel.state,
-                        backgroundColor = MaterialTheme.colors.primaryVariant
+                        state = weatherViewModel.state
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                 }
