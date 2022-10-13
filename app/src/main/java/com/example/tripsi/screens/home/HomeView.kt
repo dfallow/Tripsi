@@ -1,51 +1,27 @@
 package com.example.tripsi.screens.home
 
 import android.content.Context
-import android.content.pm.ActivityInfo
-import android.util.Log
-import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.ui.Alignment
-import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.navigation.NavController
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
+import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.example.tripsi.R
 import com.example.tripsi.data.Trip
 import com.example.tripsi.data.TripData
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
-import com.example.tripsi.screens.media.viewModel
-import com.example.tripsi.screens.currentTrip.DatabaseMoment
-import com.example.tripsi.screens.currentTrip.TemporaryMoment
-import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.Screen
 
@@ -207,14 +183,22 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
                         .fillMaxWidth(0.9f)
                         .padding(20.dp)
                 ) {
-                    Column(Modifier.border(2.dp, color = Color(0x000000))) {
-                        Text("Please enter a title for your trip")
+                    Column(Modifier.border(2.dp, color = MaterialTheme.colors.primaryVariant, shape = RoundedCornerShape(10.dp))) {
                         OutlinedTextField(
                             value = quicktripName,
                             onValueChange = { quicktripName = it},
-                            maxLines = 1
+                            maxLines = 1,
+                            label = { Text("Please enter a title for your trip", color = MaterialTheme.colors.onPrimary) },
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = MaterialTheme.colors.onPrimary,
+                                unfocusedBorderColor = MaterialTheme.colors.onSurface,
+                                textColor = MaterialTheme.colors.onPrimary
+                            ),
+                            modifier = Modifier.padding(10.dp)
                         )
-                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth()) {
+
+                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth().padding(10.dp)) {
                             Button(onClick = {
                                 quicktrip = false
                                 if (quicktripName != "") {

@@ -13,15 +13,14 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.rounded.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -112,8 +111,8 @@ fun MediaView(
                             },
                             enabled = !delete,
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = Color(0xFF2D0320),
-                                contentColor = Color(0xFFFFFFFF)
+                                backgroundColor = MaterialTheme.colors.primary,
+                                contentColor = MaterialTheme.colors.onPrimary,
                             )
                         ) {
                             Text("Delete trip")
@@ -130,14 +129,14 @@ fun MediaView(
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .background(Color(0xFFFFFFFF))
+                                    .background(MaterialTheme.colors.onSurface)
                                     .fillMaxWidth()
                                     .padding(20.dp)
                             ) {
                                 Column {
                                     Text(
                                         "Are you sure you want to delete this trip?",
-                                        color = Color(0xFF000000)
+                                        color = MaterialTheme.colors.primaryVariant
                                     )
                                     Row {
                                         Button(onClick = {
@@ -358,30 +357,7 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
     //TODO: display something when there are no trip images saved (lottie/text/etc)
     LoadingSpinner(isDisplayed = loading.value)
 
-    LazyRow(Modifier.padding(horizontal = 10.dp)) {
-        imageBitmaps.value?.let {
-            itemsIndexed(it.toList()) { _, image ->
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .size(270.dp, 370.dp)
-                        .clip(RoundedCornerShape(15.dp))
-                        .background(MaterialTheme.colors.onSurface),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    if (image != null) {
-                        Column(modifier = Modifier.padding(20.dp)) {
-                            if (loading.value) {
-                                LoadingSpinner(isDisplayed = loading.value)
-                            } else {
-                                TripPhotoItem(image)
-                                Spacer(
-                                    modifier = Modifier
-                                        .size(10.dp)
-                                        .padding(20.dp)
-                                )
-                                image.note?.let { note -> TripNoteItem(note) }
-/*
+
     if (imageBitmaps.value?.isNotEmpty() == true) {
         LazyRow(Modifier.padding(horizontal = 10.dp)) {
             imageBitmaps.value?.let {
@@ -407,14 +383,14 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
                                     )
                                     image.note?.let { note -> TripNoteItem(note) }
                                 }
-*/
                             }
                         }
                     }
                 }
             }
         }
-    } else {
+    }
+    else {
         Text("No photos saved for this trip.")
     }
 }

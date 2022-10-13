@@ -75,8 +75,9 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
             }
         } else {
             Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
-                Text("Nothing to show.")
-                Text("You should start planning some trips!")
+                Text("Nothing to show.\n You should start planning some trips!",
+                    color= MaterialTheme.colors.onPrimary, textAlign = TextAlign.Center)
+
             }
 
         }

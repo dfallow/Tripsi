@@ -7,10 +7,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @SuppressLint("ConflictingOnColor")
 private val DarkColorPalette = darkColors(
@@ -58,16 +56,7 @@ fun TripsiTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
     } else {
         LightColorPalette
     }
-/*    val systemUiController = rememberSystemUiController()
-    if(darkTheme){
-        systemUiController.setSystemBarsColor(
-            color = Color.Transparent
-        )
-    }else{
-        systemUiController.setSystemBarsColor(
-            color = Color.White
-        )
-    }*/
+
     val view = LocalView.current
     val window = (view.context as Activity).window
     window.statusBarColor = colors.primaryVariant.toArgb()
@@ -79,8 +68,4 @@ fun TripsiTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
         content = content
     )
 
-    val view = LocalView.current
-    val window = (view.context as Activity).window
-    window.statusBarColor = colors.onBackground.toArgb()
-    window.navigationBarColor = colors.onBackground.toArgb()
 }
