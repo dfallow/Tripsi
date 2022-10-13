@@ -43,8 +43,6 @@ fun CurrentTripView(
     tripDbViewModel: TripDbViewModel,
     weatherViewModel: WeatherViewModel
 ) {
-    // Lock rotation for this view
-    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED)
 
     // Start updating users location when they are looking at the map
     location.startUpdatingLocation()

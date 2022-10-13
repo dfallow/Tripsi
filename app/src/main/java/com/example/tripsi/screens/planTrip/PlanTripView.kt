@@ -44,8 +44,6 @@ import java.util.*
 @Composable
 fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel) {
 
-    // Lock rotation for this view
-    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED)
 
     val planTripViewModel = PlanTripViewModel()
     val context = LocalContext.current

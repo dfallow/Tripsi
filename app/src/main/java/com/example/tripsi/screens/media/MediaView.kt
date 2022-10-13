@@ -46,8 +46,6 @@ fun MediaView(
     navController: NavController,
     context: Context
 ) {
-    // Lock rotation for this view
-    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED)
 
     //get all data from database associated with a trip
     val tripData = tripDbViewModel.getTripData(tripId).observeAsState().value

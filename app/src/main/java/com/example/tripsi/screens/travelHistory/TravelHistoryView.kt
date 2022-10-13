@@ -38,9 +38,6 @@ import com.example.tripsi.utils.Screen
 @Composable
 fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavController) {
 
-    // Lock rotation for this view
-    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED)
-
     val pastTrips =
         tripDbViewModel.getAllTripsDataByStatus(TripStatus.PAST.status).observeAsState(listOf())
 

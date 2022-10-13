@@ -40,7 +40,6 @@ import java.util.*
 
 @Composable
 fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, context: Context, weatherViewModel: WeatherViewModel) {
-    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED)
 
     val homeViewModel = HomeViewModel()
 
