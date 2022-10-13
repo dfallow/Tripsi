@@ -7,15 +7,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.ui.Alignment
 import androidx.navigation.NavController
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.Surface
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -23,6 +22,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -227,12 +227,21 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
             }
 
             Column(
+                horizontalAlignment = Alignment.End,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(100.dp)
+                    .padding(horizontal = 15.dp)
                     //.background(Color.Black)
             ) {
-                Row() {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "Your Current Icon\n click to change",
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.width(40.dp))
                     Image(
                         when (tripData.trip!!.travelMethod) {
                             1 -> painterResource(R.drawable.car_svgrepo_com)
@@ -240,7 +249,12 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
                             3 -> painterResource(R.drawable.hiker_walk_svgrepo_com)
                             4 -> painterResource(R.drawable.plane_svgrepo_com)
                             else -> painterResource(R.drawable.bus_svgrepo_com) },
-                        contentDescription = "user map icons"
+                        contentDescription = "user map icons",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape)
+                            .border(3.dp, MaterialTheme.colors.primary, CircleShape)
                     )
                 }
 
