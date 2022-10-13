@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,9 +36,7 @@ import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.Screen
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
+import com.google.accompanist.pager.*
 import kotlin.math.absoluteValue
 
 
@@ -282,8 +281,8 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
                     )
                     
                     Spacer(modifier = Modifier.height(10.dp))
-                    
-                    HorizontalPager(count = 5) { icon ->
+
+                    HorizontalPager(count = 5, state = rememberPagerState(tripData.trip!!.travelMethod - 1)) { icon ->
                         Box() {
                             Card(
                                 Modifier
@@ -323,7 +322,10 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
                                             .size(64.dp)
                                             .clickable {
                                                 changeIcon = false
-                                                tripDbViewModel.updateTripTravelMethod(icon + 1, tripData.trip!!.tripId)
+                                                tripDbViewModel.updateTripTravelMethod(
+                                                    icon + 1,
+                                                    tripData.trip!!.tripId
+                                                )
                                             }
                                     )
                                 }
