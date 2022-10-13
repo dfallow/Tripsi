@@ -35,14 +35,10 @@ fun DatabaseMoment(
     tripDbViewModel: TripDbViewModel,
     context: Context
 ) {
-
     val currentTripData = tripDbViewModel.getTripData(tripDbViewModel.tripData.trip!!.tripId).observeAsState().value
-
-
     var cityName by remember {
         mutableStateOf("")
     }
-
 
     Box(
         Modifier
@@ -51,7 +47,6 @@ fun DatabaseMoment(
             .background(Color.White)
     ) {
         currentTripData?.let {
-
             if (it.location?.isNotEmpty() == true) {
                 val geoCoder = Geocoder(context, Locale.getDefault())
                 val address = geoCoder.getFromLocation(

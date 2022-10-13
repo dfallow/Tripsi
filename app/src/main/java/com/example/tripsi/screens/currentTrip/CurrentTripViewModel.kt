@@ -38,8 +38,6 @@ class CurrentTripViewModel : ViewModel() {
     )
     data class MomentInfo(val date: String, val time: String, val location: String)
 
-    var firstTime by mutableStateOf(true)
-
     // Temporary status of trip, used to update UI
     var currentStatus by mutableStateOf(TripStatus.UPCOMING.status)
     fun startActive() { currentStatus = TripStatus.ACTIVE.status }
@@ -53,30 +51,10 @@ class CurrentTripViewModel : ViewModel() {
     // Used to update UI when a moment is added
     // TODO find a better way
     var showText by mutableStateOf(false)
-    fun toggleText() { showText = !showText }
 
     // Array of GeoPoints for ViewModel
     val currentTripMomentsNew: MutableLiveData<ArrayList<Moment>> by lazy {
         MutableLiveData<ArrayList<Moment>>()
-    }
-
-    // Array of Points for which the polyline will draw between
-    val polylinePoints: MutableLiveData<ArrayList<GeoPoint>> by lazy {
-        MutableLiveData<ArrayList<GeoPoint>>()
-    }
-
-    val allTripMoments: MutableLiveData<ArrayList<Moment>> by lazy {
-        MutableLiveData<ArrayList<Moment>>()
-    }
-    var allTripMomentsNew = ArrayList<Moment>()
-
-    fun createPolylinePoints(): List<GeoPoint> {
-        val tempPolylineArray = ArrayList<GeoPoint>()
-        for (moment in currentTripMomentsNew.value!!) {
-            tempPolylineArray += moment.location
-        }
-        polylinePoints.value = tempPolylineArray
-        return polylinePoints.value!!
     }
 
     // value is just used to update the MutableLiveData object
@@ -130,12 +108,10 @@ class CurrentTripViewModel : ViewModel() {
     // momentId will get randomly generated after first use
     val momentId = mutableStateOf(UUID.randomUUID().toString())
     val fromDatabase = mutableStateOf(false)
-    val temporaryMoment = mutableStateOf(false)
     var temporaryPhotos = mutableListOf<Bitmap?>()
     val mapMoments = mutableListOf<Int>()
     val currentIndex = mutableStateOf(0)
     lateinit var momentInfo: MomentInfo
-    val momentFromDatabase = mutableStateOf("")
     lateinit var currentLocation: GeoPoint
     lateinit var currentMomentId: String
 
@@ -217,7 +193,7 @@ class CurrentTripViewModel : ViewModel() {
     // Variables and fun for counting steps
     val currentSteps = MutableLiveData(0)
     private val stepsBottomLine = MutableLiveData<Int>(null)
-    var distance = MutableLiveData(0)
+    private var distance = MutableLiveData(0)
 
 
     // Setting step counting

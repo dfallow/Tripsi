@@ -2,9 +2,7 @@ package com.example.tripsi.screens.pastTrip
 
 import android.content.Context
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,44 +17,10 @@ fun PastTripView(context: Context, tripDbViewModel: TripDbViewModel) {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Box(modifier = Modifier.fillMaxSize(0.8f)) {
-                PastTripMap(context = context, tripDbViewModel = tripDbViewModel)
-            }
-
-
-            var popup by remember { mutableStateOf(false) }
-            Button(onClick = { popup = !popup }) {
-
-            }
-            if (popup) {
-                Popup() {
-                    Surface(
-                        color = Color.Black.copy(alpha = 0.6f),
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Column(
-                            verticalArrangement = Arrangement.Bottom,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .fillMaxHeight()
-
-                        ) {
-                            Text(text = "Hello")
-                        }
-                    }
-                }
-            }
-
+            PastTripMap(context = context, tripDbViewModel = tripDbViewModel)
 
             if (pastViewModel.showMoment) {
-                /*for (moment in tripDbViewModel.currentTripMomentsNew) {
-                    if (pastViewModel.currentMomentId == moment.id) {
-                        ShowPastMoment(context = context, tripDbViewModel = tripDbViewModel)
-
-                    }
-                }*/
-
-                Popup() {
+                Popup {
                     Surface(
                         color = Color.Black.copy(alpha = 0.6f),
                         modifier = Modifier.fillMaxSize()
@@ -70,39 +34,24 @@ fun PastTripView(context: Context, tripDbViewModel: TripDbViewModel) {
                         ) {
                             for (moment in tripDbViewModel.currentTripMomentsNew) {
                                 if (pastViewModel.currentMomentId == moment.id) {
-
                                     ShowPastMoment(context = context, tripDbViewModel = tripDbViewModel)
-
                                 }
                             }
                         }
                     }
                 }
-
             }
-
         }
-
-
-
-
 }
-
-
 
 @Composable
 fun ShowPastMoment(context: Context, tripDbViewModel: TripDbViewModel) {
-
             Column(
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxHeight()
-
             ) {
-
                PastTripMoment(tripDbViewModel, context)
             }
-
-
 }

@@ -65,8 +65,6 @@ fun PastTripMap(context: Context, tripDbViewModel: TripDbViewModel) {
         }
     }
 
-
-
     if (pastTripLocations != null) {
         polyline = Polyline()
 

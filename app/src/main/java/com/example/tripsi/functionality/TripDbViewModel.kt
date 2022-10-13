@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.*
 import com.example.tripsi.screens.currentTrip.CurrentTripViewModel
-import com.example.tripsi.screens.currentTrip.MomentPosition
 import kotlinx.coroutines.launch
 import org.osmdroid.util.GeoPoint
 
