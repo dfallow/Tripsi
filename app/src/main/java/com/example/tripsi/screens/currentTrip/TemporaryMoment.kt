@@ -18,7 +18,10 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
@@ -100,11 +103,32 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                     .padding(horizontal = 5.dp, vertical = 5.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text("Date", color = Color.Black)
+                Text(
+                    "Date:",
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
                 Text(moment.info.date, color = Color.Black)
-                Text("Time", color = Color.Black)
+                Text(
+                    "Time:",
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
                 Text(moment.info.time, color = Color.Black)
-                Text("Location", color = Color.Black)
+                Text(
+                    "Location:",
+                    style = TextStyle(
+                        color = Color.Black,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                )
                 Text(moment.info.location, color = Color.Black)
 
             }
@@ -124,7 +148,12 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                     .fillMaxWidth()
                     .padding(vertical = 2.dp, horizontal = 10.dp)
             ) {
-                Text(moment.description ?: "")
+                Text(
+                    moment.description ?: "",
+                        style = TextStyle(
+                            fontSize = 18.sp
+                        )
+                    )
 
                 ClickableText(text = AnnotatedString("Close"), onClick = {
                     viewModel.hideMoment()
