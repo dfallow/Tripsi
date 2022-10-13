@@ -198,7 +198,9 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
                             modifier = Modifier.padding(10.dp)
                         )
 
-                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier.fillMaxWidth().padding(10.dp)) {
+                        Row(horizontalArrangement = Arrangement.End, modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)) {
                             Button(onClick = {
                                 quicktrip = false
                                 if (quicktripName != "") {
@@ -251,6 +253,7 @@ fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbVi
             Text("Your trip to ${tripData.trip?.destination} is coming up.", color = MaterialTheme.colors.onSurface,fontSize = 20.sp)
         }
         Text("Ready to start?", color = MaterialTheme.colors.onSurface, fontSize = 20.sp)
+        Spacer(Modifier.size(20.dp))
         Button(
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = MaterialTheme.colors.primary,

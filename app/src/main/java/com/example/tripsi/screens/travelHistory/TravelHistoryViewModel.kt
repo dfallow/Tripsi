@@ -8,10 +8,4 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class TravelHistoryViewModel: ViewModel() {
-
-     suspend fun deleteTrip (tripId: Int, tripDbViewModel: TripDbViewModel) {
-      withContext(Dispatchers.IO) {
-            tripDbViewModel.deleteTripById(tripId)
-       }
-    }
 }

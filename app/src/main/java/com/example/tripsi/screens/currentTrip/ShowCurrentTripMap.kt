@@ -177,7 +177,7 @@ fun TripInfoOverlay(type: String, measurement: String) {
     Column(
         modifier = Modifier
             .size(width = 80.dp, height = 60.dp)
-            .background(MaterialTheme.colors.onBackground, RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colors.primaryVariant, RoundedCornerShape(10.dp))
             .padding(2.dp),
         horizontalAlignment = Alignment.CenterHorizontally
 
