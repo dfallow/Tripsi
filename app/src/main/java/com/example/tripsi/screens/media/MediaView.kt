@@ -2,6 +2,7 @@ package com.example.tripsi.screens.media
 
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
@@ -33,9 +34,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
+import com.example.tripsi.data.Location
+import com.example.tripsi.data.LocationWithImagesAndNotes
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.screens.currentTrip.CurrentTripViewModel
+import com.example.tripsi.screens.currentTrip.MomentPosition
 import com.example.tripsi.utils.LoadingSpinner
 import com.example.tripsi.utils.Screen
 
@@ -49,70 +55,60 @@ fun MediaView(
     context: Context
 ) {
     //get all data from database associated with a trip
-    val tripData = tripDbViewModel.getTripData(tripId).observeAsState().value
-    //get trip's starting coordinates
-    val startCoordinates = tripDbViewModel.getTripStartCoords(tripId).observeAsState().value
-    //convert startCoordinates to city name
-    val startLocation = viewModel.getCity(startCoordinates, context)
-    //get trip's end coordinates
-    val endCoordinates = tripDbViewModel.getTripEndCoords(tripId).observeAsState().value
-    //convert startCoordinates to city name
-    val endLocation = viewModel.getCity(endCoordinates, context)
-    //get distance
-    val distance = viewModel.getDistance(
-        startCoordinates?.location?.coordsLatitude,
-        startCoordinates?.location?.coordsLongitude,
-        endCoordinates?.location?.coordsLatitude,
-        endCoordinates?.location?.coordsLongitude,
-    )
+    val tripData = tripDbViewModel.getTripData(tripId).observeAsState()
+    LaunchedEffect(tripData.value) {
+        tripData.value?.let { viewModel.getStartEndCoords(it, context) }
+    }
 
     Column(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        tripData?.let {
-            DisplayTitle(it.trip?.tripName ?: "")
-            DisplayRoute(start = startLocation ?: "Home", end = endLocation ?: "Destination")
-            DisplayStats(
-                distance = distance ?: it.stats?.distance ?: 0,
-                steps = it.stats?.steps ?: 0,
-            )
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxHeight()
-            ) {
-                DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 30.dp)
+        tripData.value.let {
+            if (it != null) {
+                DisplayTitle(it.trip?.tripName ?: "")
+                DisplayRoute()
+                DisplayStats(
+                    distance = it.stats?.distance ?: 0,
+                    steps = it.stats?.steps ?: 0,
+                )
+                Column(
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxHeight()
                 ) {
-                    Button(
-                        onClick = {
-                            /*TODO*/
-                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFFCBEF43),
-                            contentColor = Color(0xFF2D0320)
-                        )
+                    DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 30.dp)
                     ) {
-                        Text("show on map")
-                    }
-                    Button(
-                        onClick = {
-                            viewModel.deleteTrip(tripId, tripDbViewModel)
-                            navController.navigate(Screen.TravelsScreen.route)
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFF2D0320),
-                            contentColor = Color(0xFFFFFFFF)
-                        )
-                    ) {
-                        Text("Delete trip")
+                        Button(
+                            onClick = {
+                                /*TODO*/
+                                Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color(0xFFCBEF43),
+                                contentColor = Color(0xFF2D0320)
+                            )
+                        ) {
+                            Text("show on map")
+                        }
+                        Button(
+                            onClick = {
+                                //viewModel.deleteTrip(tripId, tripDbViewModel)
+                                //navController.navigate(Screen.TravelsScreen.route)
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color(0xFF2D0320),
+                                contentColor = Color(0xFFFFFFFF)
+                            )
+                        ) {
+                            Text("Delete trip")
+                        }
                     }
                 }
             }
@@ -141,9 +137,11 @@ fun DisplayTitle(tripName: String) {
 
 //displays start and end points of the trip
 //currently destination = destination that the user entered when planning the trip
-//TODO change destination to end coordinates
 @Composable
-fun DisplayRoute(start: String, end: String) {
+fun DisplayRoute() {
+    val startLocation = viewModel.startCity.observeAsState()
+    val endLocation = viewModel.endCity.observeAsState()
+
     Row(
         modifier = Modifier
             .fillMaxWidth(0.6f)
@@ -157,7 +155,7 @@ fun DisplayRoute(start: String, end: String) {
                 Modifier.size(20.dp),
                 tint = Color(0xFF3C493F)
             )
-            Text(start, Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
+            Text(startLocation.value ?: "Home", Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
         }
         Icon(
             Icons.Rounded.ChevronRight,
@@ -173,7 +171,7 @@ fun DisplayRoute(start: String, end: String) {
                 Modifier.size(20.dp),
                 tint = Color(0xFF3C493F)
             )
-            Text(end, Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
+            Text(endLocation.value ?: "Destination", Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
         }
     }
 }
@@ -343,7 +341,7 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
                 image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
                     .size(250.dp)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(Color.Gray)
+                    .background(Color(0xFFD1CCDC))
                     .clickable { isLargePhotoVisible = true },
                 contentScale = ContentScale.FillWidth
             )

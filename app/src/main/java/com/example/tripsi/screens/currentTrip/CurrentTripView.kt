@@ -259,7 +259,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
     Button(
         onClick = {
             viewModel.addStartLocationNew(location)
-            val startLocation = LocationData(
+            tripDbViewModel.addLocation(com.example.tripsi.data.Location(
                 viewModel.momentId.value,
                 location.userLocation.latitude,
                 location.userLocation.longitude,
@@ -268,8 +268,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
                 position = MomentPosition.START,
                 isStart = true,
                 isEnd = false
-            )
-            tripDbViewModel.addLocation(startLocation)
+            ))
             viewModel.startActive()
             tripDbViewModel.updateTripStatus(TripStatus.ACTIVE.status, tripDbViewModel.tripData.trip!!.tripId)
             viewModel.momentId.value = UUID.randomUUID().toString()

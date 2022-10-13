@@ -314,8 +314,7 @@ fun SaveOrDiscard(
         }
         Button(
             onClick = {
-                /*TODO finish functionality*/
-                navController.navigate(Screen.CurrentScreen.route)
+                navController.navigateUp()
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape,

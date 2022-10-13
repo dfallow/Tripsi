@@ -2,17 +2,17 @@ package com.example.tripsi.screens.media
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.location.Address
 import android.location.Geocoder
 import android.location.Location
-import android.util.Log
 import androidx.collection.ArrayMap
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.InternalStoragePhoto
-import com.example.tripsi.data.LocationWithImagesAndNotes
-import com.example.tripsi.data.Trip
+import com.example.tripsi.data.TripData
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.screens.currentTrip.MomentPosition
 import com.example.tripsi.utils.rotateImageIfRequired
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -70,33 +70,53 @@ class MediaViewModel : ViewModel() {
         imageBitmaps.postValue(images)
     }
 
-    //this function converts trip start or end coordinates into a city name
-    fun getCity(coordinates: LocationWithImagesAndNotes?, context: Context): String? {
-        val geoCoder = Geocoder(context, Locale.getDefault())
-        val address = coordinates?.location?.let {
-            geoCoder.getFromLocation(
-                it.coordsLatitude,
-                it.coordsLongitude,
-                1
-            )
+    val startCity: MutableLiveData<String?> = MutableLiveData(null)
+    val endCity: MutableLiveData<String?> = MutableLiveData(null)
+
+    private val startLat: MutableLiveData<Double> = MutableLiveData(null)
+    private val startLong: MutableLiveData<Double> = MutableLiveData(null)
+    private val endLat: MutableLiveData<Double> = MutableLiveData(null)
+    private val endLong: MutableLiveData<Double> = MutableLiveData(null)
+
+    suspend fun getStartEndCoords(tripData: TripData, context: Context) {
+        withContext(Dispatchers.IO) {
+            tripData.location?.forEach {
+                if (it.position.position == MomentPosition.START.position) {
+                    startLat.postValue(it.coordsLatitude)
+                    startLong.postValue(it.coordsLongitude)
+
+                } else if (it.isEnd) {
+                    endLat.postValue(it.coordsLatitude)
+                    endLong.postValue(it.coordsLongitude)
+                }
+            }
         }
-        return address?.get(0)?.locality
+        if (startLat.value != null && startLong != null && endLat != null && endLong != null) {
+            getStartLocale(context)
+            getEndLocale(context)
+        }
     }
 
-    fun getDistance(startLat: Double?, startLong: Double?, endLat: Double?, endLong: Double?): Int? {
-        var distance: Int? = null
-        if (startLat != null && startLong != null && endLat != null && endLong != null) {
-            val start = Location("start")
-            start.latitude = startLat
-            start.longitude = startLong
 
-            val end = Location("end")
-            end.latitude = endLat
-            end.longitude = endLong
+    //this function converts trip start or end coordinates into a city name
+    private fun getStartLocale(context: Context) {
+        val geoCoder = Geocoder(context, Locale.getDefault())
+        val address: MutableList<Address>
 
-            distance = start.distanceTo(end).toInt()
+        if (startLat.value != null && startLong.value != null) {
+            address = geoCoder.getFromLocation(startLat.value!!, startLong.value!!, 1)
+            startCity.postValue(address[0].locality.toString())
         }
-        return distance
+    }
+
+    private fun getEndLocale(context: Context) {
+        val geoCoder = Geocoder(context, Locale.getDefault())
+        val address: MutableList<Address>
+
+        if (endLat.value != null && endLong.value != null) {
+            address = geoCoder.getFromLocation(endLat.value!!, endLong.value!!, 1)
+            endCity.postValue(address[0].locality.toString())
+        }
     }
 
     fun deleteTrip(tripId: Int, tripDbViewModel: TripDbViewModel) {

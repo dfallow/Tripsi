@@ -23,9 +23,9 @@ class Location(context: Context): LocationListener {
 
     @SuppressLint("MissingPermission")
     fun startUpdatingLocation() {
-        val startLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)!!
+        val startLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)!!
         userLocation = GeoPoint(startLocation.latitude, startLocation.longitude)
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100 * 1000, 500f, this)
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100 * 1000, 500f, this)
         Log.d("Location", startLocation.toString())
     }
 
