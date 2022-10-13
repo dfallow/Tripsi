@@ -14,12 +14,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -31,6 +33,7 @@ import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
+import com.example.tripsi.utils.Screen
 
 val viewModel = MediaViewModel()
 
@@ -41,12 +44,20 @@ fun MediaView(
     navController: NavController,
     context: Context
 ) {
+
     //get all data from database associated with a trip
     val tripData = tripDbViewModel.getTripData(tripId).observeAsState().value
     //get trip's starting coordinates
     val startCoordinates = tripDbViewModel.getTripStartCoords(tripId).observeAsState().value
     //convert startCoordinates to city name
     val startLocation = viewModel.getStartLocation(startCoordinates, context)
+
+    // Store tripData in viewModel for PastTripMap
+    if (tripData != null) {
+        tripDbViewModel.pastTripData = tripData
+    }
+
+    tripData?.location?.let { tripDbViewModel.getCurrentTripMomentsNew(it) }
 
     Column(
         modifier = Modifier
@@ -75,8 +86,7 @@ fun MediaView(
                 ) {
                     Button(
                         onClick = {
-                            /*TODO*/
-                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                            navController.navigate(Screen.PastTripScreen.route)
                         },
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = MaterialTheme.colors.primary,
@@ -97,6 +107,7 @@ fun MediaView(
                     ) {
                         Text("create a video")
                     }
+
                 }
             }
         }
@@ -140,7 +151,11 @@ fun DisplayRoute(start: String, end: String) {
                 Modifier.size(20.dp),
                 tint = MaterialTheme.colors.onPrimary
             )
-            Text("Helsinki", Modifier.padding(horizontal = 5.dp), color = MaterialTheme.colors.onPrimary)
+            Text(
+                "Helsinki",
+                Modifier.padding(horizontal = 5.dp),
+                color = MaterialTheme.colors.onPrimary
+            )
         }
         Icon(
             Icons.Rounded.ChevronRight,
@@ -223,7 +238,11 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 7.dp)
         )
-        Text(unit, color = MaterialTheme.colors.onSurface, modifier = Modifier.padding(horizontal = 7.dp))
+        Text(
+            unit,
+            color = MaterialTheme.colors.onSurface,
+            modifier = Modifier.padding(horizontal = 7.dp)
+        )
     }
 }
 
@@ -272,7 +291,7 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
                         .padding(horizontal = 15.dp)
                         .size(270.dp, 370.dp)
                         .clip(RoundedCornerShape(15.dp))
-                        .background(MaterialTheme.colors.onSurface,),
+                        .background(MaterialTheme.colors.onSurface),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (image != null) {
@@ -302,7 +321,7 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
         image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
             .size(250.dp)
             .clip(RoundedCornerShape(15.dp))
-            .background(MaterialTheme.colors.onSurface,),
+            .background(MaterialTheme.colors.onSurface),
         contentScale = ContentScale.FillWidth
 
     )

@@ -117,11 +117,32 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         mapInitialized = true
     }
     AndroidView({ currentTripMap }) {
+        it.overlays.clear()
         it.controller.animateTo(location.userLocation)
         userLocation.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         userLocation.position = location.userLocation
-        //userLocation.title = location.userLocation.toString()
-        userLocation.icon = ContextCompat.getDrawable(context, R.drawable.hiker_walk_svgrepo_com)
+
+        // Changes the users icon based on their choice, Quick trip is car
+        when (tripDbViewModel.tripData.trip!!.travelMethod) {
+            1 -> {
+                userLocation.icon = ContextCompat.getDrawable(context, R.drawable.car_svgrepo_com)
+            }
+            2 -> {
+                userLocation.icon = ContextCompat.getDrawable(context, R.drawable.bike_svgrepo_com)
+            }
+            3 -> {
+                userLocation.icon = ContextCompat.getDrawable(context, R.drawable.hiker_walk_svgrepo_com)
+            }
+            4 -> {
+                userLocation.icon = ContextCompat.getDrawable(context, R.drawable.plane_svgrepo_com)
+            }
+            5 -> {
+                userLocation.icon = ContextCompat.getDrawable(context, R.drawable.bus_svgrepo_com)
+            }
+            else -> {}
+        }
+
+
 
         // add lines that connect moments
         currentTripMap.overlays.add(polyline)
@@ -133,8 +154,6 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
         for (moment in momentLocations) {
             currentTripMap.overlays.add(moment)
         }
-
-
 
         // TODO not sure if this is needed
         //currentTripMap.invalidate()

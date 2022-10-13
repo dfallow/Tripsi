@@ -1,6 +1,7 @@
 package com.example.tripsi
 
 import android.Manifest
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -22,6 +23,7 @@ import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.ui.theme.TripsiTheme
 import com.example.tripsi.utils.BottomNavigation
 import com.example.tripsi.utils.Location
+import com.example.tripsi.utils.LockScreenOrientation
 import dagger.hilt.android.AndroidEntryPoint
 import org.osmdroid.config.Configuration
 
@@ -31,6 +33,7 @@ class MainActivity : ComponentActivity() {
         private lateinit var tripDbViewModel: TripDbViewModel
         private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     }
+
     private val weatherViewModel: WeatherViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,10 +43,12 @@ class MainActivity : ComponentActivity() {
         ) {
             weatherViewModel.loadWeatherInfo()
         }
-        permissionLauncher.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-        ))
+        permissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+            )
+        )
 
         //initialize database view model
         tripDbViewModel = TripDbViewModel(application)
@@ -90,12 +95,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    //Navigation(navController = NavHostController(this))
 
 
                     //for testing purposes
                     val trips = tripDbViewModel.getAllTrips().observeAsState()
-                    //Text(trips.value.toString())
+
+                    // Lock rotation for this view
+                    LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED)
 
                     BottomNavigation(context = this, location, tripDbViewModel, weatherViewModel)
 

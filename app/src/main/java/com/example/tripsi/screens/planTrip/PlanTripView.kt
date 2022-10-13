@@ -6,6 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import android.app.DatePickerDialog
+import android.content.pm.ActivityInfo
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -37,12 +38,15 @@ import androidx.compose.ui.unit.sp
 import com.example.tripsi.R
 import com.example.tripsi.data.TravelMethod
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.utils.LockScreenOrientation
 import java.util.*
 
 
 
 @Composable
 fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel) {
+
+
     val planTripViewModel = PlanTripViewModel()
     val context = LocalContext.current
     Column(
@@ -201,7 +205,6 @@ fun FinalLocationPicker(planTripViewModel: PlanTripViewModel) {
         )
     )
 }
-
 
 @Composable
 fun DatePicker(planTripViewModel: PlanTripViewModel) {
