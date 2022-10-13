@@ -1,6 +1,7 @@
 package com.example.tripsi.screens.home
 
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import com.example.tripsi.screens.currentTrip.DatabaseMoment
 import com.example.tripsi.screens.currentTrip.TemporaryMoment
 import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
+import com.example.tripsi.utils.LockScreenOrientation
 import com.example.tripsi.utils.Screen
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -41,6 +43,7 @@ import java.util.*
 
 @Composable
 fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, context: Context, weatherViewModel: WeatherViewModel) {
+
     val homeViewModel = HomeViewModel()
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.globe))
