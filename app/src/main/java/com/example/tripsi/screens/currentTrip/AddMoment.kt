@@ -113,7 +113,7 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
             ) {
                 Text(stringResource(R.string.dateM), color = colors.primary)
                 Text(stringResource(R.string.time), color = colors.primary)
-                Text(stringResource(R.string.dateM), color = colors.primary)
+                Text(stringResource(R.string.locationM), color = colors.primary)
             }
 
             Column(
