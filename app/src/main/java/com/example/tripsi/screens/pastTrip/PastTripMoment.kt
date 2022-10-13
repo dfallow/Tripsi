@@ -2,7 +2,6 @@ package com.example.tripsi.screens.pastTrip
 
 import android.content.Context
 import android.location.Geocoder
-import android.util.Log
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
 import androidx.compose.foundation.Image
@@ -26,7 +25,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import com.example.tripsi.data.LocationWithImagesAndNotes
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.media.viewModel
 import com.example.tripsi.utils.LoadingSpinner
@@ -38,7 +36,6 @@ fun PastTripMoment(
     context: Context
 ) {
     val pastTripData = tripDbViewModel.pastTripData
-    //val pastTripData = tripDbViewModel.getTripData(tripDbViewModel.pastTripData.trip!!.tripId).observeAsState().value
     var cityName by remember {
         mutableStateOf("")
     }
@@ -119,7 +116,8 @@ fun PastTripMoment(
 @Composable
 fun DisplayPastMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
 
-    val momentWithMedia = tripDbViewModel.getMomentWithMedia(pastViewModel.currentMomentId).observeAsState().value
+    val momentWithMedia =
+        tripDbViewModel.getMomentWithMedia(pastViewModel.currentMomentId).observeAsState().value
     //this list stores all image filenames and notes associated to them
     val filenamesAndNotes: MutableList<ArrayMap<String, String?>> = mutableListOf()
 
@@ -132,9 +130,6 @@ fun DisplayPastMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
             }
         }
     }
-
-
-
     //this is used to display loading spinner when set to true
     val loading = remember { mutableStateOf(true) }
 
@@ -177,10 +172,13 @@ fun DisplayPastMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
                                     momentNumber += 1
                                 }
                             ) {
-                                Icon(Icons.Rounded.ChevronRight, "arrow right", tint = Color(0xFFCBEF43))
+                                Icon(
+                                    Icons.Rounded.ChevronRight,
+                                    "arrow right",
+                                    tint = Color(0xFFCBEF43)
+                                )
                             }
                         }
-
                     }
                     if (momentNumber <= it.size && momentNumber > 0) {
                         Column(
@@ -194,16 +192,16 @@ fun DisplayPastMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
                                     momentNumber -= 1
                                 }
                             ) {
-                                Icon(Icons.Rounded.ChevronLeft, "arrow right", tint = Color(0xFFCBEF43))
+                                Icon(
+                                    Icons.Rounded.ChevronLeft,
+                                    "arrow right",
+                                    tint = Color(0xFFCBEF43)
+                                )
                             }
                         }
-
                     }
                 }
-
             }
         }
-
     }
-
 }
