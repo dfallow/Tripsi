@@ -25,7 +25,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
 import java.util.*
@@ -76,12 +80,26 @@ fun DatabaseMoment(
                     Modifier
                         .fillMaxHeight(0.55f)
                         .fillMaxWidth()
-                        .padding(horizontal = 5.dp, vertical = 5.dp),
+                        .padding(horizontal = 10.dp, vertical = 30.dp),
                     verticalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text("Date", color = Color.Black)
+                    Text(
+                        "Date:",
+                            style = TextStyle(
+                                color = Color.Black,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        )
                     Text(it.location!![0].date, color = Color.Black)
-                    Text("Location", color = Color.Black)
+                    Text(
+                        "Location:",
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
                     Text(cityName, color = Color.Black)
                 }
             }
@@ -98,9 +116,14 @@ fun DatabaseMoment(
                     modifier = Modifier
                         .fillMaxHeight(0.45f)
                         .fillMaxWidth()
-                        .padding(vertical = 2.dp, horizontal = 10.dp)
+                        .padding(vertical = 10.dp, horizontal = 10.dp)
                 ) {
-                    Text(it.image?.get(0)?.comment ?: "")
+                    Text(
+                        it.image?.get(0)?.comment ?: "",
+                        style = TextStyle(
+                            fontSize = 18.sp
+                        )
+                    )
 
                     ClickableText(text = AnnotatedString("Close"), onClick = {
                         viewModel.hideMoment()

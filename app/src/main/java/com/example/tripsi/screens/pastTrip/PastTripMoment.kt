@@ -24,7 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.media.viewModel
 import com.example.tripsi.utils.LoadingSpinner
@@ -81,9 +84,23 @@ fun PastTripMoment(
                         .padding(horizontal = 5.dp, vertical = 5.dp),
                     verticalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text("Date", color = Color.Black)
+                    Text(
+                        "Date:",
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
                     Text(it.location!![0].date, color = Color.Black)
-                    Text("Location", color = Color.Black)
+                    Text(
+                        "Location:",
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
                     Text(cityName, color = Color.Black)
                 }
             }
@@ -102,7 +119,12 @@ fun PastTripMoment(
                         .fillMaxWidth()
                         .padding(vertical = 2.dp, horizontal = 10.dp)
                 ) {
-                    Text(it.image?.get(0)?.comment ?: "")
+                    Text(
+                        it.image?.get(0)?.comment ?: "",
+                        style = TextStyle(
+                            fontSize = 18.sp
+                        )
+                    )
 
                     ClickableText(text = AnnotatedString("Close"), onClick = {
                         pastViewModel.hideMoment()
