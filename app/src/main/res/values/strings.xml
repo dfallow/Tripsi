@@ -64,4 +64,10 @@
     <!--   Travel history view   -->
     <string name="tripHistory">Your trip history</string>
 
+    <!--   Nav bar  -->
+    <string name="homeNav">Home</string>
+    <string name="tripNav">Travels</string>
+    <string name="currentNav">Current</string>
+
+
 </resources>

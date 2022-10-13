@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tripsi</string>
+
+    <!--    Home view   -->
+    <string name="trip_history_Btn">Edelliset matkat</string>
+    <string name="trip_plan_Btn">Suunnittele matka</string>
+    <string name="trip_quick_Btn">Nopea matka</string>
+    <string name="trip_start_Btn">Aloita matka</string>
+    <string name="trip_continue_Btn">Jatka matkaa</string>
+    <string name="home_popUp_comingUp_1">Matkasi</string>
+    <string name="home_popUp_comingUp_2">on tulossa.</string>
+    <string name="ready_toStart">Valmiina aloittamaan?</string>
+    <string name="toastTripPlanned">Matka suunniteltu onnistuneesti!</string>
+    <string name="somthWrong">Jotain meni pieleen. Yritä uudelleen.</string>
+
+    <!--    Plan trip view   -->
+    <string name="title_create">Tee suunnitelma tulevaa matkaasi varten</string>
+    <string name="title_whatIs">Mikä on lopullinen määränpääsi?</string>
+    <string name="title_chooseMethod">Valitse matkatapa</string>
+    <string name="title_whenMethod">Milloin matkasi alkaa?</string>
+    <string name="pleaseEnter_title">Anna määränpää</string>
+    <string name="findalDest_title">Mikä on lopullinen määränpääsi</string>
+
+    <string name="calendar">Kalenteri</string>
+    <string name="tripDate">Matkan päivämäärä</string>
+
+    <!--    Trip type   -->
+    <string name="selectedTypeTrip">Valittu matkatyyppi</string>
+    <string name="none">NONE</string>
+    <string name="car">car</string>
+    <string name="bike">bike</string>
+    <string name="bus">bus</string>
+    <string name="walk">walk</string>
+    <string name="plane">plane</string>
+
+    <string name="search_text">hakusana</string>
+    <string name="clear_text">poistaa</string>
+    <string name="nameYourTrip_title">Matkasi nimi</string>
+    <string name="save_Btn">Tallentaa</string>
+    <string name="discard_Btn">Hylätä</string>
+    <string name="clearOrSearch">Tyhjennä tai hae tekstiät</string>
+
+    <!--    Current trip view   -->
+    <string name="steps">Askeleet</string>
+    <string name="distance">Etäisyys</string>
+    <string name="time">Aika</string>
+    <string name="saveMoment_Btn">Säästä hetki</string>
+    <string name="connectFr_Btn">Yhdistä ystävä</string>
+    <string name="End_Btn">Lopeta matka</string>
+    <string name="go_home">Go home</string>
+    <string name="nothing_toast">Ei mitään vielä...</string>
+    <string name="showMap">Näytä kartalla</string>
+    <string name="createVideo">Luo video</string>
+
+    <!--   Add moment   -->
+    <string name="dateM">Päivämäärä</string>
+    <string name="timeM">Aika</string>
+    <string name="locationM">Sijainti</string>
+    <string name="describeM">Kuvaile hetkeä...</string>
+    <string name="takePhoto_Btn">Ota kuva</string>
+    <string name="close">Sulje</string>
+    <string name="temporaryString">Tämä on väliaikainen merkkijono, joka korvataan hetken kommentilla</string>
+
+    <!--   Travel history view   -->
+    <string name="tripHistory">Matkahistoriasi</string>
+    <!--   Nav bar  -->
+    <string name="homeNav">Koti</string>
+    <string name="tripNav">Matkat</string>
+    <string name="currentNav">Kartta</string>
+
+</resources>
