@@ -49,7 +49,7 @@ fun MediaView(
     context: Context
 ) {
     var delete by remember { mutableStateOf(false) }
-    var scope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
     //get all data from database associated with a trip
     val tripData = tripDbViewModel.getTripData(tripId).observeAsState()
@@ -326,35 +326,39 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
     //TODO: display something when there are no trip images saved (lottie/text/etc)
     LoadingSpinner(isDisplayed = loading.value)
 
-    LazyRow(Modifier.padding(horizontal = 10.dp)) {
-        imageBitmaps.value?.let {
-            itemsIndexed(it.toList()) { _, image ->
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .size(270.dp, 370.dp)
-                        .clip(RoundedCornerShape(15.dp))
-                        .background(Color(0xFFD1CCDC)),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    if (image != null) {
-                        Column(modifier = Modifier.padding(20.dp)) {
-                            if (loading.value) {
-                                LoadingSpinner(isDisplayed = loading.value)
-                            } else {
-                                TripPhotoItem(image)
-                                Spacer(
-                                    modifier = Modifier
-                                        .size(10.dp)
-                                        .padding(20.dp)
-                                )
-                                image.note?.let { note -> TripNoteItem(note) }
+    if (imageBitmaps.value?.isNotEmpty() == true) {
+        LazyRow(Modifier.padding(horizontal = 10.dp)) {
+            imageBitmaps.value?.let {
+                itemsIndexed(it.toList()) { _, image ->
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp)
+                            .size(270.dp, 370.dp)
+                            .clip(RoundedCornerShape(15.dp))
+                            .background(Color(0xFFD1CCDC)),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        if (image != null) {
+                            Column(modifier = Modifier.padding(20.dp)) {
+                                if (loading.value) {
+                                    LoadingSpinner(isDisplayed = loading.value)
+                                } else {
+                                    TripPhotoItem(image)
+                                    Spacer(
+                                        modifier = Modifier
+                                            .size(10.dp)
+                                            .padding(20.dp)
+                                    )
+                                    image.note?.let { note -> TripNoteItem(note) }
+                                }
                             }
                         }
                     }
                 }
             }
         }
+    } else {
+        Text("No photos saved for this trip.")
     }
 }
 

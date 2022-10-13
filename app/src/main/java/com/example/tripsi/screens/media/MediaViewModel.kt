@@ -5,20 +5,16 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
-import android.location.Location
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.data.TripData
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.currentTrip.MomentPosition
-import com.example.tripsi.screens.currentTrip.imagesAndFilenames
 import com.example.tripsi.utils.rotateImageIfRequired
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.*
@@ -128,7 +124,7 @@ class MediaViewModel : ViewModel() {
     suspend fun deleteTrip(tripId: Int, tripDbViewModel: TripDbViewModel, context: Context) {
 
         val files = context.filesDir.listFiles()
-        val toRemove : MutableList<ArrayMap<Bitmap, String>> = mutableListOf()
+        val toRemove: MutableList<ArrayMap<Bitmap, String>> = mutableListOf()
 
         withContext(Dispatchers.IO) {
             imagesAndFilenames.forEach { pair ->
@@ -151,6 +147,4 @@ class MediaViewModel : ViewModel() {
 
     }
 
-    fun deleteOneImage() {
-    }
 }
