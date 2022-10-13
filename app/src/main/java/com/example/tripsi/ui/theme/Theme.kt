@@ -1,10 +1,13 @@
 package com.example.tripsi.ui.theme
 
+import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalView
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,
@@ -54,4 +57,9 @@ fun TripsiTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
         shapes = Shapes,
         content = content
     )
+
+    val view = LocalView.current
+    val window = (view.context as Activity).window
+    window.statusBarColor = colors.onBackground.toArgb()
+    window.navigationBarColor = colors.onBackground.toArgb()
 }

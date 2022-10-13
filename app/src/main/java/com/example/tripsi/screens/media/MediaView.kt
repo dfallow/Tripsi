@@ -1,13 +1,12 @@
 package com.example.tripsi.screens.media
 
-
 import android.content.Context
-import android.content.pm.ActivityInfo
 import android.widget.Toast
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -31,12 +30,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavController
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
 import com.example.tripsi.utils.Screen
-import com.example.tripsi.utils.LockScreenOrientation
+import kotlinx.coroutines.launch
 
 val viewModel = MediaViewModel()
 
@@ -47,61 +48,133 @@ fun MediaView(
     navController: NavController,
     context: Context
 ) {
+    var delete by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     //get all data from database associated with a trip
-    val tripData = tripDbViewModel.getTripData(tripId).observeAsState().value
-    //get trip's starting coordinates
-    val startCoordinates = tripDbViewModel.getTripStartCoords(tripId).observeAsState().value
-    //convert startCoordinates to city name
-    val startLocation = viewModel.getStartLocation(startCoordinates, context)
+    val tripData = tripDbViewModel.getTripData(tripId).observeAsState()
 
-    // Store tripData in viewModel for PastTripMap
-    if (tripData != null) {
-        tripDbViewModel.pastTripData = tripData
+    LaunchedEffect(tripData.value) {
+        tripData.value?.let { viewModel.getStartEndCoords(it, context) }
     }
 
-    tripData?.location?.let { tripDbViewModel.getCurrentTripMomentsNew(it) }
+    // Store tripData in viewModel for PastTripMap
+    if (tripData.value != null) {
+        tripDbViewModel.pastTripData = tripData.value!!
+    }
+
+
+    LaunchedEffect(tripData.value) {
+        tripData.value?.let { viewModel.getStartEndCoords(it, context) }
+    }
+    //tripData?.location?.let { tripDbViewModel.getCurrentTripMomentsNew(it) }
 
     Column(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        tripData?.let {
-            DisplayTitle(it.trip?.tripName ?: "")
-            DisplayRoute(start = startLocation, end = it.trip?.destination ?: "")
-            DisplayStats(
-                distance = it.stats?.distance ?: 0.0,
-                duration = it.stats?.duration ?: 0.0,
-                speed = it.stats?.speed ?: 0.0
-            )
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxHeight()
-            ) {
-                DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 30.dp)
+        tripData.value.let {
+            if (it != null) {
+                DisplayTitle(it.trip?.tripName ?: "")
+                DisplayRoute()
+                DisplayStats(
+                    distance = it.stats?.distance ?: 0,
+                    steps = it.stats?.steps ?: 0,
+                )
+                Column(
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxHeight()
                 ) {
-                    Button(
-                        onClick = {
-                            navController.navigate(Screen.PastTripScreen.route)
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0xFFCBEF43),
-                            contentColor = Color(0xFF2D0320)
-                        )
+
+// TODO merge conflicts were here
+                    DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 30.dp)
                     ) {
-                        Text("show on map")
+                        Button(
+                            onClick = {
+                                navController.navigate(Screen.PastTripScreen.route)
+                            },
+                            enabled = !delete,
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color(0xFFCBEF43),
+                                contentColor = Color(0xFF2D0320)
+                            )
+                        ) {
+                            Text("show on map")
+                        }
+                        Button(
+                            onClick = {
+                                delete = true
+                            },
+                            enabled = !delete,
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color(0xFF2D0320),
+                                contentColor = Color(0xFFFFFFFF)
+                            )
+                        ) {
+                            Text("Delete trip")
+                        }
+                    }
+                    if (delete) {
+                        Popup(
+                            alignment = Alignment.CenterEnd,
+                            properties = PopupProperties(
+                                dismissOnBackPress = false,
+                                dismissOnClickOutside = false
+                            ),
+                        ) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .background(Color(0xFFFFFFFF))
+                                    .fillMaxWidth()
+                                    .padding(20.dp)
+                            ) {
+                                Column {
+                                    Text(
+                                        "Are you sure you want to delete this trip?",
+                                        color = Color(0xFF000000)
+                                    )
+                                    Row {
+                                        Button(onClick = {
+                                            scope.launch {
+                                                viewModel.deleteTrip(tripId, tripDbViewModel, context)
+                                                Toast.makeText(
+                                                    context,
+                                                    "Trip was deleted.",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                    .show()
+                                                delete = false
+                                                navController.navigateUp()
+                                            }
+                                        }
+                                        ) {
+                                            Text("Yes, delete the trip")
+                                        }
+                                        Spacer(Modifier.size(20.dp))
+                                        Button(onClick = { delete = false }) {
+                                            Text("No")
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
                     }
                 }
             }
+
         }
     }
+
 }
 
 //displays trip name that the user entered when planning the trip
@@ -125,9 +198,11 @@ fun DisplayTitle(tripName: String) {
 
 //displays start and end points of the trip
 //currently destination = destination that the user entered when planning the trip
-//TODO change destination to end coordinates
 @Composable
-fun DisplayRoute(start: String, end: String) {
+fun DisplayRoute() {
+    val startLocation = viewModel.startCity.observeAsState()
+    val endLocation = viewModel.endCity.observeAsState()
+
     Row(
         modifier = Modifier
             .fillMaxWidth(0.6f)
@@ -141,7 +216,11 @@ fun DisplayRoute(start: String, end: String) {
                 Modifier.size(20.dp),
                 tint = Color(0xFF3C493F)
             )
-            Text("Helsinki", Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
+            Text(
+                startLocation.value ?: "Home",
+                Modifier.padding(horizontal = 5.dp),
+                color = Color(0xFF3C493F)
+            )
         }
         Icon(
             Icons.Rounded.ChevronRight,
@@ -157,20 +236,23 @@ fun DisplayRoute(start: String, end: String) {
                 Modifier.size(20.dp),
                 tint = Color(0xFF3C493F)
             )
-            Text(end, Modifier.padding(horizontal = 5.dp), color = Color(0xFF3C493F))
+            Text(
+                endLocation.value ?: "Destination",
+                Modifier.padding(horizontal = 5.dp),
+                color = Color(0xFF3C493F)
+            )
         }
     }
 }
 
 @Composable
-fun DisplayStats(distance: Double, duration: Double, speed: Double) {
+fun DisplayStats(distance: Int, steps: Int) {
     Row(
         Modifier
             .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        StatsItem(label = "Distance", statsValue = distance.toString(), unit = "kilometers")
-        StatsItem(label = "Time", statsValue = duration.toString(), unit = "hours")
-        StatsItem(label = "Speed", statsValue = speed.toString(), unit = "km/h")
+        StatsItem(label = "Distance", statsValue = distance.toString(), unit = "meters")
+        StatsItem(label = "Steps", statsValue = steps.toString(), unit = "steps")
     }
 }
 
@@ -193,18 +275,10 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
                         tint = Color(0xFFCBEF43)
                     )
                 }
-                "Time" -> {
+                "Steps" -> {
                     Icon(
-                        Icons.Rounded.Schedule,
-                        "time",
-                        Modifier.size(18.dp),
-                        tint = Color(0xFFCBEF43)
-                    )
-                }
-                "Speed" -> {
-                    Icon(
-                        Icons.Rounded.Speed,
-                        "speed",
+                        Icons.Rounded.DirectionsWalk,
+                        "walking",
                         Modifier.size(18.dp),
                         tint = Color(0xFFCBEF43)
                     )
@@ -260,55 +334,100 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
     //these are the Bitmaps that were retrieved from storage and rotated
     val imageBitmaps = viewModel.imageBitmaps.observeAsState()
 
-
     //TODO: display something when there are no trip images saved (lottie/text/etc)
-
     LoadingSpinner(isDisplayed = loading.value)
 
-    LazyRow(Modifier.padding(horizontal = 10.dp)) {
-        imageBitmaps.value?.let {
-            itemsIndexed(it.toList()) { _, image ->
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 15.dp)
-                        .size(270.dp, 370.dp)
-                        .clip(RoundedCornerShape(15.dp))
-                        .background(Color(0xFFD1CCDC)),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    if (image != null) {
-                        Column(modifier = Modifier.padding(20.dp)) {
-                            if (loading.value) {
-                                LoadingSpinner(isDisplayed = loading.value)
-                            } else {
-                                TripPhotoItem(image)
-                                Spacer(
-                                    modifier = Modifier
-                                        .size(10.dp)
-                                        .padding(20.dp)
-                                )
-                                image.note?.let { note -> TripNoteItem(note) }
+    if (imageBitmaps.value?.isNotEmpty() == true) {
+        LazyRow(Modifier.padding(horizontal = 10.dp)) {
+            imageBitmaps.value?.let {
+                itemsIndexed(it.toList()) { _, image ->
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = 15.dp)
+                            .size(270.dp, 370.dp)
+                            .clip(RoundedCornerShape(15.dp))
+                            .background(Color(0xFFD1CCDC)),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        if (image != null) {
+                            Column(modifier = Modifier.padding(20.dp)) {
+                                if (loading.value) {
+                                    LoadingSpinner(isDisplayed = loading.value)
+                                } else {
+                                    TripPhotoItem(image)
+                                    Spacer(
+                                        modifier = Modifier
+                                            .size(10.dp)
+                                            .padding(20.dp)
+                                    )
+                                    image.note?.let { note -> TripNoteItem(note) }
+                                }
                             }
                         }
                     }
                 }
             }
         }
+    } else {
+        Text("No photos saved for this trip.")
     }
 }
 
 @Composable
 fun TripPhotoItem(image: InternalStoragePhoto) {
-    Image(
-        image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
-            .size(250.dp)
-            .clip(RoundedCornerShape(15.dp))
-            .background(Color.Gray),
-        contentScale = ContentScale.FillWidth
+    var isLargePhotoVisible by remember { mutableStateOf(false) }
 
-    )
+    if (isLargePhotoVisible) {
+        Popup(
+            alignment = Alignment.Center,
+            properties = PopupProperties(dismissOnBackPress = false)
+        ) {
+            Box(
+                contentAlignment = Alignment.TopEnd,
+                modifier = Modifier
+                    .background(Color(0xFFD1CCDC))
+                    .fillMaxSize()
+                    .clickable {
+                        isLargePhotoVisible = false
+                    }) {
+                Image(
+                    image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
+                        .fillMaxSize()
+                        .clickable { isLargePhotoVisible = false },
+                    contentScale = ContentScale.FillWidth
+                )
+                Icon(
+                    Icons.Rounded.Close,
+                    "close",
+                    Modifier
+                        .size(50.dp)
+                        .padding(10.dp),
+                    tint = Color(0xFF3C493F)
+                )
+            }
+        }
+    } else {
+        Box(contentAlignment = Alignment.TopEnd) {
+            Image(
+                image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
+                    .size(250.dp)
+                    .clip(RoundedCornerShape(15.dp))
+                    .background(Color(0xFFD1CCDC))
+                    .clickable { isLargePhotoVisible = true },
+                contentScale = ContentScale.FillWidth
+            )
+            Icon(
+                Icons.Rounded.OpenInFull,
+                "expand",
+                Modifier
+                    .size(50.dp)
+                    .padding(10.dp),
+                tint = Color(0xFFCBEF43)
+            )
+        }
+
+    }
 }
-
 
 @Composable
 fun TripNoteItem(note: String) {
