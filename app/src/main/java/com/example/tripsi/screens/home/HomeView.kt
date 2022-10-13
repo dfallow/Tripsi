@@ -3,6 +3,7 @@ package com.example.tripsi.screens.home
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,12 +14,18 @@ import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -173,42 +180,73 @@ fun HomeView(navController: NavController, tripDbViewModel: TripDbViewModel, con
 
 @Composable
 fun UpcomingOrActiveTrip(navController: NavController, tripDbViewModel: TripDbViewModel, tripData: TripData) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 20.dp)
-        .clip(
-            shape = RoundedCornerShape(
-                topEndPercent = 10,
-                topStartPercent = 10
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 20.dp)
+                .clip(
+                    shape = RoundedCornerShape(
+                        topEndPercent = 10,
+                        topStartPercent = 10
+                    )
+                )
+                .background(color = Color(0xFF3C493F)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceAround,
+
+            ) {
+            Text(
+                "Your trip to ${tripData.trip?.destination} is coming up.\n Ready to start?",
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                lineHeight = 30.sp,
+                fontSize = 20.sp
             )
-        )
-        .background(color = Color(0xFF3C493F)),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+            //Text("Ready to start?", color = Color.White, fontSize = 20.sp)
+            Button(
+                onClick = {
 
-        ){
-        Text("Your trip to ${tripData.trip?.destination} is coming up.", color = Color.White,fontSize = 20.sp)
-        Text("Ready to start?", color = Color.White, fontSize = 20.sp)
-        Button(onClick = {
-
-            tripDbViewModel.tripData = tripData
-            // TODO
-            tripDbViewModel.getCurrentTripMomentsNew(tripData.location!!)
-            tripDbViewModel.getTripMoments(tripData.location!!)
+                    tripDbViewModel.tripData = tripData
+                    // TODO
+                    tripDbViewModel.getCurrentTripMomentsNew(tripData.location!!)
+                    tripDbViewModel.getTripMoments(tripData.location!!)
 
 
-            navController.navigate(Screen.CurrentScreen.route)
-        },
-            shape = RoundedCornerShape(
-                25
-            )
-        ) {
-            if (tripData.trip?.status == TripStatus.ACTIVE.status) {
-                Text("Continue Trip")
-            } else {
-                Text(text = "Start Trip")
+                    navController.navigate(Screen.CurrentScreen.route)
+                },
+                shape = RoundedCornerShape(
+                    25
+                )
+            ) {
+                if (tripData.trip?.status == TripStatus.ACTIVE.status) {
+                    Text("Continue Trip")
+                } else {
+                    Text(text = "Start Trip")
+                }
+
             }
 
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    //.background(Color.Black)
+            ) {
+                Row() {
+                    Image(
+                        when (tripData.trip!!.travelMethod) {
+                            1 -> painterResource(R.drawable.car_svgrepo_com)
+                            2 -> painterResource(R.drawable.bike_svgrepo_com)
+                            3 -> painterResource(R.drawable.hiker_walk_svgrepo_com)
+                            4 -> painterResource(R.drawable.plane_svgrepo_com)
+                            else -> painterResource(R.drawable.bus_svgrepo_com) },
+                        contentDescription = "user map icons"
+                    )
+                }
+
+            }
+            
+            Spacer(modifier = Modifier.height(0.dp))
+
         }
-    }
 }
