@@ -7,6 +7,7 @@ import androidx.collection.arrayMapOf
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -294,7 +295,7 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
         Text(
             statsValue,
             color = MaterialTheme.colors.secondaryVariant,
-            fontSize = 25.sp,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 7.dp)
         )
@@ -442,7 +443,7 @@ fun TripNoteItem(note: String) {
         note,
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
-        maxLines = 4,
+        maxLines = 2,
         overflow = TextOverflow.Ellipsis,
         color = MaterialTheme.colors.primaryVariant
     )
