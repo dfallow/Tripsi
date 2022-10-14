@@ -1,6 +1,8 @@
 package com.example.tripsi.screens.home
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,6 +36,7 @@ import com.example.tripsi.data.Trip
 import com.example.tripsi.data.TripData
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
+import com.example.tripsi.screens.currentTrip.CurrentTripViewModel
 import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.Screen
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -43,6 +46,7 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlin.math.absoluteValue
 
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun HomeView(
     navController: NavController,
@@ -53,9 +57,13 @@ fun HomeView(
 
     val focusManager = LocalFocusManager.current
     val homeViewModel = HomeViewModel()
+    val stepViewModel = CurrentTripViewModel()
+
+    if (!stepViewModel.checkPermission(context)) {
+        stepViewModel.requestPermission(context)
+    }
     var quicktrip by remember { mutableStateOf(false) }
     var quicktripName by remember { mutableStateOf("") }
-
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.globe))
     val progress by animateLottieCompositionAsState(
         composition = composition,
@@ -310,18 +318,19 @@ fun UpcomingOrActiveTrip(
         ) {
         if (tripData.trip?.destination == "Unknown") {
             Text(
-                "Your trip is coming up.",
+                "Your trip is coming up.\n Ready to start?",
+                textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 20.sp
             )
         } else {
             Text(
-                "Your trip to ${tripData.trip?.destination} is coming up.",
+                "Your trip to ${tripData.trip?.destination} is coming up.\n Ready to start?",
+                textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 20.sp
             )
         }
-        Text("Ready to start?", color = MaterialTheme.colors.onSurface, fontSize = 20.sp)
 
         Spacer(Modifier.size(20.dp))
 

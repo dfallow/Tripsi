@@ -5,7 +5,6 @@ import android.content.Context
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.text.BoringLayout
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +47,12 @@ class Location(context: Context): LocationListener {
 
 
         userLocation = GeoPoint(startLocation.latitude, startLocation.longitude)
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100 * 1000, 500f, this)
+        if (isGPSEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100 * 1000, 500f, this)
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100 * 1000, 500f, this)
+        }
+
 
     }
 
