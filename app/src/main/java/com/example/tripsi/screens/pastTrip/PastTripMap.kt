@@ -1,7 +1,6 @@
 package com.example.tripsi.screens.pastTrip
 
 import android.content.Context
-import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
