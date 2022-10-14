@@ -16,7 +16,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -226,7 +225,7 @@ fun HomeView(
                             },
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                             keyboardActions = KeyboardActions {
-                                                              focusManager.clearFocus(true)
+                                focusManager.clearFocus(true)
                             },
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 focusedBorderColor = MaterialTheme.colors.onPrimary,
@@ -242,34 +241,37 @@ fun HomeView(
                                 .fillMaxWidth()
                                 .padding(10.dp)
                         ) {
-                        Row(horizontalArrangement = Arrangement.End//, modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(10.dp)) {
-                            Button(onClick = {
-                                quicktrip = false
-                                if (quicktripName != "") {
-                                    homeViewModel.startQuickTrip(
-                                        tripDbViewModel,
-                                        context,
-                                        quicktripName
-                                    )
-                                } else {
-                                    homeViewModel.startQuickTrip(tripDbViewModel, context, null)
+                            Row(
+                                horizontalArrangement = Arrangement.End, modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp)
+                            ) {
+                                Button(onClick = {
+                                    quicktrip = false
+                                    if (quicktripName != "") {
+                                        homeViewModel.startQuickTrip(
+                                            tripDbViewModel,
+                                            context,
+                                            quicktripName
+                                        )
+                                    } else {
+                                        homeViewModel.startQuickTrip(tripDbViewModel, context, null)
+                                    }
+                                }) {
+                                    Text("Save")
                                 }
-                            }) {
-                                Text("Save")
+                                Spacer(Modifier.size(10.dp))
+                                Button(onClick = { quicktrip = false }) {
+                                    Text("Cancel")
+                                }
                             }
-                            Spacer(Modifier.size(10.dp))
-                            Button(onClick = { quicktrip = false }) {
-                                Text("Cancel")
-                            }
-                        }
 
+                        }
                     }
+
                 }
 
             }
-
         }
 
         //check for upcoming trips
@@ -391,7 +393,7 @@ fun UpcomingOrActiveTrip(
         }
 
         if (changeIcon) {
-            Popup() {
+            Popup {
                 Box(
                     contentAlignment = Alignment.BottomCenter,
                     modifier = Modifier
@@ -417,7 +419,7 @@ fun UpcomingOrActiveTrip(
                             count = 5,
                             state = rememberPagerState(tripData.trip!!.travelMethod - 1)
                         ) { icon ->
-                            Box() {
+                            Box {
                                 Card(
                                     Modifier
                                         .border(
