@@ -242,6 +242,9 @@ fun HomeView(
                                 .fillMaxWidth()
                                 .padding(10.dp)
                         ) {
+                        Row(horizontalArrangement = Arrangement.End//, modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)) {
                             Button(onClick = {
                                 quicktrip = false
                                 if (quicktripName != "") {
@@ -317,6 +320,8 @@ fun UpcomingOrActiveTrip(
             )
         }
         Text("Ready to start?", color = MaterialTheme.colors.onSurface, fontSize = 20.sp)
+
+        Spacer(Modifier.size(20.dp))
 
         Button(
             colors = ButtonDefaults.buttonColors(

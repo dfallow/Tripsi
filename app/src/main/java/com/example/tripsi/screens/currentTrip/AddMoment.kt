@@ -98,7 +98,7 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
 
     Card(
         // Moment Information
-        backgroundColor = colors.onBackground,
+        backgroundColor = colors.primaryVariant,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.15f)
@@ -118,9 +118,9 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
                     .fillMaxHeight()
                     .fillMaxWidth(0.5f)
             ) {
-                Text("Date", color = colors.primary)
-                Text("Time", color = colors.primary)
-                Text("Location", color = colors.primary)
+                Text("Date", color = colors.onSurface)
+                Text("Time", color = colors.onSurface)
+                Text("Location", color = colors.onSurface)
             }
 
             Column(
@@ -129,10 +129,10 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
                 modifier = Modifier
                     .fillMaxHeight()
             ) {
-                Text(dateFormat.format(now), color = colors.secondary)
-                Text(timeFormat.format(now), color = colors.secondary)
+                Text(dateFormat.format(now), color = colors.onSurface)
+                Text(timeFormat.format(now), color = colors.onSurface)
                 Text(
-                    cityName, color = colors.secondary
+                    cityName, color = colors.onSurface
                 )
             }
         }
@@ -168,7 +168,7 @@ fun MomentComment(
 fun myAppTextFieldColors(
     textColor: Color = Color.Black,
     disabledTextColor: Color = Color.White,
-    backgroundColor: Color = Color.White,
+    backgroundColor: Color = colors.onSurface,
     cursorColor: Color = Color.White,
     errorCursorColor: Color = Color.White,
     focusedLabelColor: Color = Color.Black

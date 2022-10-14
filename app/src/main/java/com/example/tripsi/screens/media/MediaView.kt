@@ -61,11 +61,9 @@ fun MediaView(
         tripDbViewModel.pastTripData = tripData.value!!
     }
 
-
     LaunchedEffect(tripData.value) {
         tripData.value?.let { viewModel.getStartEndCoords(it, context) }
     }
-    //tripData?.location?.let { tripDbViewModel.getCurrentTripMomentsNew(it) }
 
     Column(
         modifier = Modifier
@@ -129,17 +127,22 @@ fun MediaView(
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .background(MaterialTheme.colors.onSurface)
+                                    .background(MaterialTheme.colors.onBackground)
                                     .fillMaxWidth()
                                     .padding(20.dp)
                             ) {
                                 Column {
                                     Text(
                                         "Are you sure you want to delete this trip?",
-                                        color = MaterialTheme.colors.primaryVariant
+                                        color = MaterialTheme.colors.secondaryVariant
                                     )
                                     Row {
-                                        Button(onClick = {
+                                        Button(
+                                            colors = ButtonDefaults.buttonColors(
+                                                backgroundColor = MaterialTheme.colors.secondaryVariant,
+                                                contentColor = MaterialTheme.colors.primaryVariant
+                                            ),
+                                            onClick = {
                                             scope.launch {
                                                 viewModel.deleteTrip(tripId, tripDbViewModel, context)
                                                 Toast.makeText(
@@ -156,35 +159,23 @@ fun MediaView(
                                             Text("Yes, delete the trip")
                                         }
                                         Spacer(Modifier.size(20.dp))
-                                        Button(onClick = { delete = false }) {
+                                        Button(
+                                            colors = ButtonDefaults.buttonColors(
+                                                backgroundColor = MaterialTheme.colors.secondaryVariant,
+                                                contentColor = MaterialTheme.colors.primaryVariant
+                                            ),
+                                            onClick = { delete = false }) {
                                             Text("No")
                                         }
                                     }
                                 }
                             }
-
                         }
-
                     }
-                    Button(
-                        onClick = {
-                            /*TODO*/
-                            Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = MaterialTheme.colors.primary,
-                            contentColor = MaterialTheme.colors.onPrimary
-                        )
-                    ) {
-                        Text("create a video")
-                    }
-
                 }
             }
-
         }
     }
-
 }
 
 //displays trip name that the user entered when planning the trip
@@ -207,7 +198,6 @@ fun DisplayTitle(tripName: String) {
 }
 
 //displays start and end points of the trip
-//currently destination = destination that the user entered when planning the trip
 @Composable
 fun DisplayRoute() {
     val startLocation = viewModel.startCity.observeAsState()
@@ -222,19 +212,14 @@ fun DisplayRoute() {
         Row {
             Icon(
                 Icons.Rounded.Home,
-                "home location",
+                "home",
                 Modifier.size(20.dp),
                 tint = MaterialTheme.colors.onPrimary
             )
             Text(
-                "Helsinki",
-                Modifier.padding(horizontal = 5.dp),
-                color = MaterialTheme.colors.onPrimary
-            )
-            Text(
                 startLocation.value ?: "Home",
                 Modifier.padding(horizontal = 5.dp),
-                color = Color(0xFF3C493F)
+                color = MaterialTheme.colors.onPrimary
             )
         }
         Icon(
@@ -243,7 +228,6 @@ fun DisplayRoute() {
             Modifier.size(20.dp),
             tint = MaterialTheme.colors.onPrimary
         )
-        //Text("to", color =  Color(0xFFCBEF43))
         Row {
             Icon(
                 Icons.Rounded.LocationOn,
@@ -278,7 +262,7 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
         modifier = Modifier
             .size(97.dp, 80.dp)
             .clip(RoundedCornerShape(15.dp))
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colors.primaryVariant)
     ) {
         Row(modifier = Modifier.padding(5.dp, 5.dp, 0.dp, 0.dp)) {
             when (label) {
@@ -287,7 +271,7 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
                         Icons.Rounded.NearMe,
                         "distance",
                         Modifier.size(18.dp),
-                        tint = MaterialTheme.colors.onPrimary
+                        tint = MaterialTheme.colors.secondaryVariant
                     )
                 }
                 "Steps" -> {
@@ -295,28 +279,28 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
                         Icons.Rounded.DirectionsWalk,
                         "walking",
                         Modifier.size(18.dp),
-                        tint = MaterialTheme.colors.onPrimary
+                        tint = MaterialTheme.colors.secondaryVariant
                
                     )
                 }
             }
             Text(
                 label,
-                color = MaterialTheme.colors.onPrimary,
+                color = MaterialTheme.colors.secondaryVariant,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 5.dp)
             )
         }
         Text(
             statsValue,
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.secondaryVariant,
             fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 7.dp)
         )
         Text(
             unit,
-            color = MaterialTheme.colors.onSurface,
+            color = MaterialTheme.colors.secondaryVariant,
             modifier = Modifier.padding(horizontal = 7.dp)
         )
     }
@@ -391,18 +375,12 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
         }
     }
     else {
-        Text("No photos saved for this trip.")
+        Text("No photos saved for this trip.", color = MaterialTheme.colors.onPrimary)
     }
 }
 
 @Composable
 fun TripPhotoItem(image: InternalStoragePhoto) {
-//    Image(
-//        image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
-//            .size(250.dp)
-//            .clip(RoundedCornerShape(15.dp))
-//            .background(MaterialTheme.colors.onSurface),
-//        contentScale = ContentScale.FillWidth
 
     var isLargePhotoVisible by remember { mutableStateOf(false) }
 
@@ -414,7 +392,7 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
             Box(
                 contentAlignment = Alignment.TopEnd,
                 modifier = Modifier
-                    .background(Color(0xFFD1CCDC))
+                    .background(MaterialTheme.colors.onBackground)
                     .fillMaxSize()
                     .clickable {
                         isLargePhotoVisible = false
@@ -431,7 +409,7 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
                     Modifier
                         .size(50.dp)
                         .padding(10.dp),
-                    tint = Color(0xFF3C493F)
+                    tint = MaterialTheme.colors.secondaryVariant
                 )
             }
         }
@@ -441,7 +419,7 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
                 image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
                     .size(250.dp)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(Color(0xFFD1CCDC))
+                    .background(MaterialTheme.colors.primaryVariant)
                     .clickable { isLargePhotoVisible = true },
                 contentScale = ContentScale.FillWidth
             )
@@ -451,7 +429,7 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
                 Modifier
                     .size(50.dp)
                     .padding(10.dp),
-                tint = Color(0xFFCBEF43)
+                tint = MaterialTheme.colors.secondaryVariant
             )
         }
 
@@ -465,6 +443,7 @@ fun TripNoteItem(note: String) {
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
         maxLines = 4,
-        overflow = TextOverflow.Ellipsis
+        overflow = TextOverflow.Ellipsis,
+        color = MaterialTheme.colors.primaryVariant
     )
 }

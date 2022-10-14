@@ -51,10 +51,12 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
     )
     {
         Text(
-            text = "Create a plan for your upcoming trip",
+            text = "Create a plan\nfor your upcoming trip",
             Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             color = MaterialTheme.colors.onPrimary,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
         )
 
         DatePicker(planTripViewModel)
@@ -248,7 +250,6 @@ fun DatePicker(planTripViewModel: PlanTripViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
             .background(
                 MaterialTheme.colors.onBackground,
                 shape = RoundedCornerShape(5.dp)
@@ -304,7 +305,7 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
         TravelMethod.CAR,
         TravelMethod.BUS,
         TravelMethod.BIKE,
-        TravelMethod.WALK,
+        TravelMethod.HUMAN,
         TravelMethod.PLANE
     )
 
@@ -318,8 +319,8 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
         TravelMethod.BIKE.name -> {
             planTripViewModel.tripMethod = TravelMethod.BIKE.method
         }
-        TravelMethod.WALK.name -> {
-            planTripViewModel.tripMethod = TravelMethod.WALK.method
+        TravelMethod.HUMAN.name -> {
+            planTripViewModel.tripMethod = TravelMethod.HUMAN.method
         }
         TravelMethod.PLANE.name -> {
             planTripViewModel.tripMethod = TravelMethod.PLANE.method
@@ -327,7 +328,7 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
     }
 
     Text(
-        text = "Selected Type of trip: ${selectedValue.value.ifEmpty { "NONE" }}",
+        text = "Choose your map marker: ${selectedValue.value.ifEmpty { "NONE" }}",
         color = MaterialTheme.colors.onPrimary
     )
     Row(
@@ -363,7 +364,7 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
                         contentDescription = "bike",
                         tint = MaterialTheme.colors.secondaryVariant
                     )
-                    TravelMethod.WALK -> Icon(
+                    TravelMethod.HUMAN -> Icon(
                         painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_walk else R.drawable.walk),
                         contentDescription = "walk",
                         tint = MaterialTheme.colors.secondaryVariant
