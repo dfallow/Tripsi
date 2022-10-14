@@ -2,16 +2,13 @@
 
 package com.example.tripsi.screens.planTrip
 
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import android.app.DatePickerDialog
-import android.content.pm.ActivityInfo
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -24,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -33,12 +29,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.tripsi.R
 import com.example.tripsi.data.TravelMethod
 import com.example.tripsi.functionality.TripDbViewModel
-import com.example.tripsi.utils.LockScreenOrientation
 import java.util.*
-
 
 
 @Composable
@@ -50,15 +45,20 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
     Column(
         modifier = Modifier
             .padding(10.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(color = MaterialTheme.colors.background),
         verticalArrangement = Arrangement.SpaceEvenly
-
-    ) {
+    )
+    {
         Text(
-            text = "Create a plan for your upcoming trip",
+            text = "Create a plan\nfor your upcoming trip",
             Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.onPrimary,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
         )
+
         DatePicker(planTripViewModel)
         TextInput(planTripViewModel)
         //MapAddressPickerView(planTripViewModel)
@@ -66,28 +66,33 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
         TripType(planTripViewModel)
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
+            horizontalArrangement = Arrangement.SpaceAround,
+
+            ) {
             Button(
                 onClick = {
                     val saved = planTripViewModel.saveTrip(tripDbViewModel, context)
                     if (saved) navController.navigateUp()
                 },
-                colors = ButtonDefaults.buttonColors(Color(0xFFCBEF43))
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary
+                ),
             ) {
                 Text(
-                    text = "Save", fontWeight = FontWeight.ExtraBold,
-                    color = Color(0xFF2D0320)
+                    text = "Save", fontWeight = FontWeight.ExtraBold
                 )
             }
             Button(
                 onClick = { navController.navigateUp() },
-                colors = ButtonDefaults.buttonColors(Color(0xFF200217))
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.secondary,
+                    contentColor = MaterialTheme.colors.onSurface
+                ),
             ) {
                 Text(
                     text = "Discard",
                     fontWeight = FontWeight.ExtraBold,
-                    color = Color(0xFFFBC02D)
                 )
             }
         }
@@ -103,13 +108,14 @@ fun TextInput(planTripViewModel: PlanTripViewModel) {
             planTripViewModel.tripName = it
             text = it
         },
-        label = { Text("Name of your trip", color = Color(0xFF2D0320)) },
+        label = { Text("Name of your trip", color = MaterialTheme.colors.onPrimary) },
         modifier = Modifier
             .fillMaxWidth(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color(0xFFCBEF43),
-            unfocusedBorderColor = Color(0xFF3C493F)
+            focusedBorderColor = MaterialTheme.colors.onPrimary,
+            unfocusedBorderColor = MaterialTheme.colors.onSurface,
+            textColor = MaterialTheme.colors.onPrimary
         )
     )
 }
@@ -147,10 +153,14 @@ fun FinalLocationPicker(planTripViewModel: PlanTripViewModel) {
                         contentDescription = "search text",
                         modifier = Modifier.clickable {
                             if (text != "") {
-                                    focusManager.clearFocus(true)
-                                    planTripViewModel.searchState.value = SearchState.SAVED.status
+                                focusManager.clearFocus(true)
+                                planTripViewModel.searchState.value = SearchState.SAVED.status
                             } else {
-                                Toast.makeText(context, "Please Enter a Destination", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Please Enter a Destination",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     )
@@ -169,7 +179,7 @@ fun FinalLocationPicker(planTripViewModel: PlanTripViewModel) {
             }
 
         },
-        label = { Text("What's your final destination", color = Color(0xFF2D0320)) },
+        label = { Text("What's your final destination", color = MaterialTheme.colors.onPrimary) },
 
         modifier = Modifier
             .fillMaxWidth()
@@ -190,8 +200,10 @@ fun FinalLocationPicker(planTripViewModel: PlanTripViewModel) {
             }
         ),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color(0xFFCBEF43),
-            unfocusedBorderColor = Color(0xFF3C493F)
+            focusedBorderColor = MaterialTheme.colors.onPrimary,
+            unfocusedBorderColor = MaterialTheme.colors.onSurface,
+            textColor = MaterialTheme.colors.onPrimary
+
         )
     )
 }
@@ -238,8 +250,10 @@ fun DatePicker(planTripViewModel: PlanTripViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
-            .background(Color(0xFFD1CCDC)),
+            .background(
+                MaterialTheme.colors.onBackground,
+                shape = RoundedCornerShape(5.dp)
+            ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     )
@@ -252,12 +266,16 @@ fun DatePicker(planTripViewModel: PlanTripViewModel) {
             onClick = {
                 mDatePickerDialog.show()
             },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF3C493F))
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colors.onBackground,
+                contentColor = MaterialTheme.colors.secondaryVariant
+            ),
         )
         {
             Icon(
-                painter = painterResource(R.drawable.calendar), contentDescription = "Calendar",
-                tint = Color(0xFFCBEF43)
+                painter = painterResource(R.drawable.calendar),
+                contentDescription = "Calendar",
+                // tint = MaterialTheme.colors.secondaryVariant
             )
             //  Text(text = "Date", color = Color(0xFF2D0320))
         }
@@ -270,7 +288,8 @@ fun DatePicker(planTripViewModel: PlanTripViewModel) {
             text = "Trip Date: ${mDate.value}",
             Modifier.padding(10.dp),
             fontSize = 14.sp,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.onSurface
 
         )
     }
@@ -286,7 +305,7 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
         TravelMethod.CAR,
         TravelMethod.BUS,
         TravelMethod.BIKE,
-        TravelMethod.WALK,
+        TravelMethod.HUMAN,
         TravelMethod.PLANE
     )
 
@@ -300,19 +319,25 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
         TravelMethod.BIKE.name -> {
             planTripViewModel.tripMethod = TravelMethod.BIKE.method
         }
-        TravelMethod.WALK.name -> {
-            planTripViewModel.tripMethod = TravelMethod.WALK.method
+        TravelMethod.HUMAN.name -> {
+            planTripViewModel.tripMethod = TravelMethod.HUMAN.method
         }
         TravelMethod.PLANE.name -> {
             planTripViewModel.tripMethod = TravelMethod.PLANE.method
         }
     }
 
-    Text(text = "Selected Type of trip: ${selectedValue.value.ifEmpty { "NONE" }}")
+    Text(
+        text = "Choose your map marker: ${selectedValue.value.ifEmpty { "NONE" }}",
+        color = MaterialTheme.colors.onPrimary
+    )
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFF3C493F)),
+            .background(
+                color = MaterialTheme.colors.onBackground,
+                shape = RoundedCornerShape(5.dp)
+            ),
         horizontalArrangement = Arrangement.SpaceEvenly
 
     )
@@ -327,30 +352,88 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
                     TravelMethod.CAR -> Icon(
                         painter = painterResource(if (isSelectedItem.invoke(item.name)) R.drawable.unselected_car else R.drawable.car),
                         contentDescription = "car",
-                        tint = Color(0xFFCBEF43)
+                        tint = MaterialTheme.colors.secondaryVariant
                     )
                     TravelMethod.BUS -> Icon(
                         painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_bus else R.drawable.bus),
                         contentDescription = "bus",
-                        tint = Color(0xFFCBEF43)
+                        tint = MaterialTheme.colors.secondaryVariant
                     )
                     TravelMethod.BIKE -> Icon(
                         painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_bike else R.drawable.bike),
                         contentDescription = "bike",
-                        tint = Color(0xFFCBEF43)
+                        tint = MaterialTheme.colors.secondaryVariant
                     )
-                    TravelMethod.WALK -> Icon(
+                    TravelMethod.HUMAN -> Icon(
                         painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_walk else R.drawable.walk),
                         contentDescription = "walk",
-                        tint = Color(0xFFCBEF43)
+                        tint = MaterialTheme.colors.secondaryVariant
                     )
                     TravelMethod.PLANE -> Icon(
                         painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_plane else R.drawable.plane),
                         contentDescription = "plane",
-                        tint = Color(0xFFCBEF43)
+                        tint = MaterialTheme.colors.secondaryVariant
                     )
                 }
             }
         }
     }
 }
+
+
+/*
+
+@Composable
+fun MapAddressPickerView(planTripViewModel: PlanTripViewModel) {
+    Surface {
+        val currentLocation = planTripViewModel.location.collectAsState()
+        var text by remember { planTripViewModel.addressText }
+        val context = LocalContext.current
+
+
+        Row {
+
+            currentLocation.value.let {
+                if (planTripViewModel.isMapEditable.value) {
+                    text = planTripViewModel.getAddressFromLocation(context)
+                }
+            }
+        }
+        Column {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp)) {
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = {
+                        planTripViewModel.tripDestination = it
+                        text = it
+                        if (!planTripViewModel.isMapEditable.value)
+                            planTripViewModel.onTextChanged(context, text)
+                    },
+                    trailingIcon = {
+                        Icon(
+                            if (planTripViewModel.isMapEditable.value) {Icons.Default.Clear} else {Icons.Default.Search},
+                            contentDescription = "clear or search text",
+                            modifier = Modifier.clickable { text = ""
+                                planTripViewModel.isMapEditable.value =
+                                !planTripViewModel.isMapEditable.value })
+
+                    },
+                    label = { Text("What's your final destination", color = Color(0xFF2D0320)) },
+
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    enabled = !planTripViewModel.isMapEditable.value,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        focusedBorderColor = Color(0xFFCBEF43),
+                        unfocusedBorderColor = Color(0xFF3C493F)
+                    )
+                )
+            }
+
+        }
+
+    }
+}
+*/

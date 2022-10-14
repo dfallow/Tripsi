@@ -81,9 +81,21 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun deleteTripById(tripId: Int) {
+        viewModelScope.launch {
+            db.tripDao().deleteTripById(tripId)
+        }
+    }
+
     fun updateTripStatus(status: Int, tripId: Int) {
         viewModelScope.launch {
             db.tripDao().updateTripStatus(status, tripId)
+        }
+    }
+
+    fun updateTripTravelMethod(travelMethod: Int, tripId: Int) {
+        viewModelScope.launch {
+            db.tripDao().updateTripTravelMethod(travelMethod, tripId)
         }
     }
 
@@ -91,6 +103,8 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
     //Statistics
 
     fun getTripStats(tripId: Int): LiveData<Statistics> = db.statisticsDao().getTripStats(tripId)
+
+    fun getTripWithStats(tripId: Int): LiveData<TripWithStats> = db.tripDao().getTripStats(tripId)
 
     fun addTripStats(stats: Statistics) {
         viewModelScope.launch {

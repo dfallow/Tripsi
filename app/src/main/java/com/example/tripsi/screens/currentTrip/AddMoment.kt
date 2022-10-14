@@ -5,29 +5,37 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Geocoder
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.collection.ArrayMap
+import androidx.collection.arrayMapOf
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
+import com.example.tripsi.R
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
-import com.example.tripsi.utils.Screen
 import com.example.tripsi.utils.rotateImageIfRequired
 import kotlinx.coroutines.launch
 import java.io.File
@@ -35,8 +43,8 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-// TODO Important to not orientation changes clear screen
 
+val imagesAndFilenames: MutableList<ArrayMap<Bitmap, String>> = mutableListOf()
 
 @Composable
 fun AddMoment(
@@ -75,7 +83,8 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
     val cityName = address[0].locality
 
     // Temporary for UI updating
-    viewModel.momentInfo = CurrentTripViewModel.MomentInfo(dateFormat.format(now), timeFormat.format(now), cityName)
+    viewModel.momentInfo =
+        CurrentTripViewModel.MomentInfo(dateFormat.format(now), timeFormat.format(now), cityName)
 
     //save location information to viewModel
     viewModel.momentLocation = com.example.tripsi.data.Location(
@@ -89,7 +98,7 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
 
     Card(
         // Moment Information
-        backgroundColor = colors.onBackground,
+        backgroundColor = colors.primaryVariant,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.15f)
@@ -109,9 +118,9 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
                     .fillMaxHeight()
                     .fillMaxWidth(0.5f)
             ) {
-                Text("Date", color = colors.primary)
-                Text("Time", color = colors.primary)
-                Text("Location", color = colors.primary)
+                Text("Date", color = colors.onSurface)
+                Text("Time", color = colors.onSurface)
+                Text("Location", color = colors.onSurface)
             }
 
             Column(
@@ -120,10 +129,10 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
                 modifier = Modifier
                     .fillMaxHeight()
             ) {
-                Text(dateFormat.format(now), color = colors.onSecondary)
-                Text(timeFormat.format(now), color = colors.onSecondary)
+                Text(dateFormat.format(now), color = colors.onSurface)
+                Text(timeFormat.format(now), color = colors.onSurface)
                 Text(
-                    cityName, color = colors.onSecondary
+                    cityName, color = colors.onSurface
                 )
             }
         }
@@ -159,7 +168,7 @@ fun MomentComment(
 fun myAppTextFieldColors(
     textColor: Color = Color.Black,
     disabledTextColor: Color = Color.White,
-    backgroundColor: Color = Color.White,
+    backgroundColor: Color = colors.onSurface,
     cursorColor: Color = Color.White,
     errorCursorColor: Color = Color.White,
     focusedLabelColor: Color = Color.Black
@@ -175,7 +184,7 @@ fun myAppTextFieldColors(
 
 @Composable
 fun MomentPictures(context: Context) {
-    val photoThumbnails = remember { mutableListOf<Bitmap?>(null) }
+    val photoThumbnails = remember { mutableStateListOf<Bitmap?>(null) }
     val result = remember { mutableStateOf<Bitmap?>(null) }
 
     //directory in which photos will be stored
@@ -200,6 +209,7 @@ fun MomentPictures(context: Context) {
                 //save the filename to list of filenames in viewmodel
                 //this is needed to later iterate through the list and save information of each image to database
                 viewModel.momentImageFilenames.add(filename)
+                imagesAndFilenames.add(arrayMapOf(Pair(rotatedImg, filename)))
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -222,38 +232,69 @@ fun MomentPictures(context: Context) {
                             .size(150.dp, 150.dp)
                             .padding(10.dp)
                     ) {
-                        Image(
-                            item.asImageBitmap(),
-                            null,
-                            contentScale = ContentScale.FillBounds,
-                            modifier = Modifier
-                                .fillMaxSize()
+                        Box(contentAlignment = Alignment.TopEnd) {
+                            Image(
+                                item.asImageBitmap(),
+                                null,
+                                contentScale = ContentScale.FillBounds,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            )
+                            Icon(
+                                Icons.Rounded.Delete,
+                                "delete",
+                                Modifier
+                                    .size(50.dp)
+                                    .padding(10.dp)
+                                    .clickable {
+                                        imagesAndFilenames.forEach { pair ->
+                                            pair.forEach { (image, filename) ->
+                                                if (image == item) {
+                                                    val files = context.filesDir.listFiles()
+                                                    val file = files?.first {
+                                                        it.canRead() && it.isFile &&
+                                                                it.name.equals("$filename.jpg")
+                                                    }
+                                                    try {
+                                                        file?.delete()
+                                                        viewModel.momentImageFilenames.remove(
+                                                            filename
+                                                        )
+                                                        photoThumbnails.remove(image)
+                                                    } catch (e: IOException) {
+                                                        e.printStackTrace()
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                tint = Color(0xFFCBEF43)
+                            )
+                        }
 
-                        )
                     }
 
                 }
             }
         }
 
-        // TODO If I remove this the photos do not appear in the above lazyRow
         Row {
-            result.value?.let {
-                //TODO
-            }
+            //do not remove this
+            result.value?.let {}
         }
 
         val scope = rememberCoroutineScope()
         // TODO Replace button with some kind of camera clickable icon
-        Button(
-            onClick = {
-                scope.launch {
-                    launcher.launch(photoURI)
-                }
-            }
-        ) {
-            Text("Take Photo")
-        }
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.camera_add_svgrepo_com),
+            contentDescription = "",
+            modifier = Modifier
+                .clickable {
+                    scope.launch {
+                        launcher.launch(photoURI)
+                    }
+                },
+        )
 
     }
 }
@@ -276,43 +317,59 @@ fun SaveOrDiscard(
             .padding(10.dp)
     ) {
         Button(
+
             onClick = {
-                //TODO only allow saving if there's at least ONE photo
-                //save location to database
-                viewModel.saveLocationToDb(tripDbViewModel, context)
+                //check if there is at least one photo
+                if (viewModel.momentImageFilenames.isNotEmpty()) {
 
-                Log.d("momentInfo", "${viewModel.momentInfo}")
-                viewModel.addLocationNew(
-                    viewModel.momentLocation!!,
-                    viewModel.momentNote.value,
-                    viewModel.temporaryPhotos,
-                    viewModel.momentInfo
-                )
-                viewModel.momentId.value = UUID.randomUUID().toString()
+                    //save location to database
+                    viewModel.saveLocationToDb(tripDbViewModel, context)
 
-                //save images to database
-                scope.launch {
-                    val listOfFilenames = viewModel.momentImageFilenames
-                    listOfFilenames.forEach {
-                        viewModel.saveImageToDb(tripDbViewModel, it)
+                    Log.d("momentInfo", "${viewModel.momentInfo}")
+                    viewModel.addLocationNew(
+                        viewModel.momentLocation!!,
+                        viewModel.momentNote.value,
+                        viewModel.temporaryPhotos,
+                        viewModel.momentInfo
+                    )
+                    viewModel.momentId.value = UUID.randomUUID().toString()
+
+                    //save images to database
+                    scope.launch {
+                        val listOfFilenames = viewModel.momentImageFilenames
+                        listOfFilenames.forEach {
+                            viewModel.saveImageToDb(tripDbViewModel, it)
+                        }
                     }
-                }
 
-                navController.navigateUp()
+                    navController.navigateUp()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "You must add at least one photo to save the moment.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             },
             modifier = viewModel.modifier,
-            shape = viewModel.shape
+            shape = viewModel.shape,
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = colors.primary,
+                contentColor = colors.onPrimary
+            ),
         ) {
             Text("Save")
         }
         Button(
             onClick = {
-                /*TODO finish functionality*/
-                navController.navigate(Screen.CurrentScreen.route)
+                navController.navigateUp()
             },
             modifier = viewModel.modifier,
             shape = viewModel.shape,
-            colors = ButtonDefaults.buttonColors(colors.secondary)
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = colors.primary,
+                contentColor = colors.onPrimary
+            ),
         ) {
             Text("Discard")
         }

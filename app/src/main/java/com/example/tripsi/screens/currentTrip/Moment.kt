@@ -6,11 +6,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
@@ -23,7 +24,7 @@ fun PopupMoment(imageId: Int) {
         Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.5f)
-            .background(Color.White)
+            .background(MaterialTheme.colors.background)
     ) {
         Row(
             Modifier
@@ -48,7 +49,7 @@ fun PopupMoment(imageId: Int) {
                     .padding(horizontal = 5.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text("Date", color = Color.Black)
+                Text("Date", color = MaterialTheme.colors.onSurface)
                 Text("Time")
                 Text("Location")
 
