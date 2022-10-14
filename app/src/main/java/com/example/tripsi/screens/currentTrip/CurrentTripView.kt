@@ -2,13 +2,6 @@ package com.example.tripsi.screens.currentTrip
 
 
 import android.content.Context
-import android.os.Build
-import android.util.Log
-import android.content.pm.ActivityInfo
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.border
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*

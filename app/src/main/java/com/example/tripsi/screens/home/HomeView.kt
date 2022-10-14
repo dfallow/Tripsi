@@ -2,16 +2,7 @@ package com.example.tripsi.screens.home
 
 import android.content.Context
 import android.os.Build
-import android.content.pm.ActivityInfo
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.ui.Alignment
-import androidx.navigation.NavController
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,10 +37,6 @@ import com.example.tripsi.data.TripData
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.currentTrip.CurrentTripViewModel
-import com.example.tripsi.screens.currentTrip.viewModel
-import com.example.tripsi.screens.currentTrip.DatabaseMoment
-import com.example.tripsi.screens.currentTrip.TemporaryMoment
-import com.example.tripsi.screens.weather.WeatherCard
 import com.example.tripsi.screens.weather.WeatherViewModel
 import com.example.tripsi.utils.Screen
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -331,18 +318,19 @@ fun UpcomingOrActiveTrip(
         ) {
         if (tripData.trip?.destination == "Unknown") {
             Text(
-                "Your trip is coming up.",
+                "Your trip is coming up.\n Ready to start?",
+                textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 20.sp
             )
         } else {
             Text(
-                "Your trip to ${tripData.trip?.destination} is coming up.",
+                "Your trip to ${tripData.trip?.destination} is coming up.\n Ready to start?",
+                textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 20.sp
             )
         }
-        Text("Ready to start?", color = MaterialTheme.colors.onSurface, fontSize = 20.sp)
 
         Spacer(Modifier.size(20.dp))
 
