@@ -3,6 +3,7 @@ package com.example.tripsi.screens.currentTrip
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -31,6 +32,11 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
             .fillMaxHeight(0.5f)
             .background(MaterialTheme.colors.background)
     ) {
+        val color = if (isSystemInDarkTheme()){
+            MaterialTheme.colors.onSurface
+        } else {
+            MaterialTheme.colors.onPrimary
+        }
         Row(
             Modifier
                 .padding(10.dp)
@@ -111,16 +117,16 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
             ) {
 
                 val style = TextStyle(
-                    color = MaterialTheme.colors.onSurface,
+                    color = color,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Text("Date", color = MaterialTheme.colors.onSurface, style = style)
-                Text(moment.info.date, color = MaterialTheme.colors.onSurface)
-                Text("Time", color = MaterialTheme.colors.onSurface, style = style)
-                Text(moment.info.time, color = MaterialTheme.colors.onSurface)
-                Text("Location", color = MaterialTheme.colors.onSurface, style = style)
-                Text(moment.info.location, color = MaterialTheme.colors.onSurface)
+                Text("Date", style = style)
+                Text(moment.info.date, color = color)
+                Text("Time", style = style)
+                Text(moment.info.time, color = color)
+                Text("Location", style = style)
+                Text(moment.info.location, color = color)
 
             }
         }
@@ -142,11 +148,17 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                 Text(
                     moment.description ?: "",
                     style = TextStyle(
-                        fontSize = 18.sp
+                        fontSize = 18.sp,
+                        color = color
                     )
                 )
 
-                ClickableText(text = AnnotatedString("Close"), onClick = {
+                ClickableText(
+                    text = AnnotatedString("Close"),
+                    style = TextStyle(
+                        color =     color
+                    ),
+                    onClick = {
                     viewModel.hideMoment()
                 })
             }

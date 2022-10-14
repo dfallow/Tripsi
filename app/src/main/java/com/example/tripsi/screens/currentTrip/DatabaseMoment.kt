@@ -7,6 +7,7 @@ import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -47,6 +48,11 @@ fun DatabaseMoment(
             .fillMaxHeight(0.5f)
             .background(MaterialTheme.colors.background)
     ) {
+        val color = if (isSystemInDarkTheme()){
+            MaterialTheme.colors.onSurface
+        } else {
+            MaterialTheme.colors.onPrimary
+        }
         currentTripData?.let {
             if (it.location?.isNotEmpty() == true) {
                 val geoCoder = Geocoder(context, Locale.getDefault())
@@ -80,24 +86,17 @@ fun DatabaseMoment(
                         .padding(horizontal = 10.dp, vertical = 30.dp),
                     verticalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Text(
-                        "Date:",
-                            style = TextStyle(
-                                color = MaterialTheme.colors.onPrimary,
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        )
-                    Text(it.location!![0].date, color = MaterialTheme.colors.onPrimary)
-                    Text(
-                        "Location:",
-                        style = TextStyle(
-                            color = MaterialTheme.colors.onPrimary,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+
+
+                    val style = TextStyle(
+                        color = color,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
                     )
-                    Text(cityName, color = MaterialTheme.colors.onPrimary)
+                    Text("Date:", style = style)
+                    Text(it.location!![0].date, color = color)
+                    Text("Location:", style = style)
+                    Text(cityName, color = color)
                 }
             }
             Column(
@@ -118,14 +117,15 @@ fun DatabaseMoment(
                     Text(
                         it.image?.get(0)?.comment ?: "",
                         style = TextStyle(
-                            fontSize = 18.sp
+                            fontSize = 18.sp,
+                            color = color
                         )
                     )
 
                     ClickableText(
                         text = AnnotatedString("Close"),
                         style = TextStyle(
-                            color = MaterialTheme.colors.primary,
+                            color = color,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         ),
