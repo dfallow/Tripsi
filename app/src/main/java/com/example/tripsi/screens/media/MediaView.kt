@@ -89,7 +89,7 @@ fun MediaView(
                         horizontalArrangement = Arrangement.SpaceEvenly,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 30.dp)
+                            .padding(bottom = 70.dp)
                     ) {
                         Button(
                             onClick = {
@@ -342,20 +342,21 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
     LoadingSpinner(isDisplayed = loading.value)
 
 
-    if (imageBitmaps.value?.isNotEmpty() == true) {
+    if (filenamesAndNotes.isNotEmpty()) {
         LazyRow(Modifier.padding(horizontal = 10.dp)) {
             imageBitmaps.value?.let {
                 itemsIndexed(it.toList()) { _, image ->
                     Column(
                         modifier = Modifier
                             .padding(horizontal = 15.dp)
-                            .size(270.dp, 370.dp)
+                            .fillMaxWidth(0.8f)
+                            .fillMaxHeight(0.6f)
                             .clip(RoundedCornerShape(15.dp))
-                            .background(Color(0xFFD1CCDC)),
+                            .background(MaterialTheme.colors.onSurface),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         if (image != null) {
-                            Column(modifier = Modifier.padding(20.dp)) {
+                            Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                                 if (loading.value) {
                                     LoadingSpinner(isDisplayed = loading.value)
                                 } else {
@@ -363,7 +364,6 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
                                     Spacer(
                                         modifier = Modifier
                                             .size(10.dp)
-                                            .padding(20.dp)
                                     )
                                     image.note?.let { note -> TripNoteItem(note) }
                                 }
@@ -417,9 +417,9 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
         Box(contentAlignment = Alignment.TopEnd) {
             Image(
                 image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
-                    .size(250.dp)
+                    .size(230.dp)
                     .clip(RoundedCornerShape(15.dp))
-                    .background(MaterialTheme.colors.primaryVariant)
+                    .background(MaterialTheme.colors.onSurface)
                     .clickable { isLargePhotoVisible = true },
                 contentScale = ContentScale.FillWidth
             )
