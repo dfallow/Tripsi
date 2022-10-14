@@ -45,7 +45,7 @@ fun DatabaseMoment(
         Modifier
             .fillMaxWidth()
             .fillMaxHeight(0.5f)
-            .background(Color.White)
+            .background(MaterialTheme.colors.background)
     ) {
         currentTripData?.let {
             if (it.location?.isNotEmpty() == true) {
@@ -83,21 +83,21 @@ fun DatabaseMoment(
                     Text(
                         "Date:",
                             style = TextStyle(
-                                color = Color.Black,
+                                color = MaterialTheme.colors.onPrimary,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         )
-                    Text(it.location!![0].date, color = Color.Black)
+                    Text(it.location!![0].date, color = MaterialTheme.colors.onPrimary)
                     Text(
                         "Location:",
                         style = TextStyle(
-                            color = Color.Black,
+                            color = MaterialTheme.colors.onPrimary,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold
                         )
                     )
-                    Text(cityName, color = Color.Black)
+                    Text(cityName, color = MaterialTheme.colors.onPrimary)
                 }
             }
             Column(
@@ -122,7 +122,14 @@ fun DatabaseMoment(
                         )
                     )
 
-                    ClickableText(text = AnnotatedString("Close"), onClick = {
+                    ClickableText(
+                        text = AnnotatedString("Close"),
+                        style = TextStyle(
+                            color = MaterialTheme.colors.primary,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        onClick = {
                         viewModel.hideMoment()
                     })
                 }
