@@ -93,6 +93,12 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun updateTripTravelMethod(travelMethod: Int, tripId: Int) {
+        viewModelScope.launch {
+            db.tripDao().updateTripTravelMethod(travelMethod, tripId)
+        }
+    }
+
 
     //Statistics
 

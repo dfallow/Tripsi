@@ -39,6 +39,10 @@ interface TripDao : BaseDao<Trip> {
     @Query("UPDATE trip SET status = :status WHERE trip.tripId = :tripId")
     suspend fun updateTripStatus(status: Int, tripId: Int)
 
+    //update trip travel method
+    @Query("UPDATE trip SET travelMethod = :travelMethod WHERE trip.tripId = :tripId")
+    suspend fun updateTripTravelMethod(travelMethod: Int, tripId: Int)
+
     @Transaction
     @Query("SELECT * FROM trip WHERE trip.tripId = :tripId")
     fun getTripData(tripId: Int): LiveData<TripData>

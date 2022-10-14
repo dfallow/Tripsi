@@ -27,10 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
+import com.example.tripsi.R
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.Location
 import com.example.tripsi.utils.rotateImageIfRequired
@@ -282,15 +285,16 @@ fun MomentPictures(context: Context) {
 
         val scope = rememberCoroutineScope()
         // TODO Replace button with some kind of camera clickable icon
-        Button(
-            onClick = {
-                scope.launch {
-                    launcher.launch(photoURI)
-                }
-            }
-        ) {
-            Text("Take Photo")
-        }
+        Icon(
+            imageVector = ImageVector.vectorResource(id = R.drawable.camera_add_svgrepo_com),
+            contentDescription = "",
+            modifier = Modifier
+                .clickable {
+                    scope.launch {
+                        launcher.launch(photoURI)
+                    }
+                },
+        )
 
     }
 }
