@@ -287,6 +287,7 @@ fun MomentPictures(context: Context) {
         // TODO Replace button with some kind of camera clickable icon
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.camera_add_svgrepo_com),
+            tint = colors.onPrimary,
             contentDescription = "",
             modifier = Modifier
                 .clickable {

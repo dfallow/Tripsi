@@ -206,7 +206,7 @@ fun DisplayRoute() {
 
     Row(
         modifier = Modifier
-            .fillMaxWidth(0.6f)
+            .fillMaxWidth(0.7f)
             .padding(bottom = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

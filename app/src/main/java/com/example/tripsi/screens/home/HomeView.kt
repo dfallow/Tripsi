@@ -116,8 +116,8 @@ fun HomeView(
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.primary,
                     contentColor = MaterialTheme.colors.onPrimary,
-                    disabledBackgroundColor = MaterialTheme.colors.primary,
-                    disabledContentColor = MaterialTheme.colors.onSurface
+                    disabledBackgroundColor = MaterialTheme.colors.onSurface,
+                    disabledContentColor = MaterialTheme.colors.onBackground
                 ),
                 onClick = {
                     navController.navigate(Screen.PlanScreen.route)
@@ -175,8 +175,8 @@ fun HomeView(
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.primary,
                     contentColor = MaterialTheme.colors.onPrimary,
-                    disabledBackgroundColor = MaterialTheme.colors.primary,
-                    disabledContentColor = MaterialTheme.colors.onSurface
+                    disabledBackgroundColor = MaterialTheme.colors.onSurface,
+                    disabledContentColor = MaterialTheme.colors.onBackground
                 ),
                 onClick = {
                     quicktrip = true
