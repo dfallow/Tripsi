@@ -48,8 +48,6 @@ fun PastTripMap(context: Context, tripDbViewModel: TripDbViewModel) {
                 pastMomentMarker.icon = ContextCompat.getDrawable(context, R.drawable.photo_svgrepo_com)
 
                 pastMomentMarker.setOnMarkerClickListener { _, _ ->
-                    pastViewModel.currentMomentId = pastMomentMarker.id
-                    pastViewModel.displayMoment()
                     true
                 }
 
@@ -57,7 +55,6 @@ fun PastTripMap(context: Context, tripDbViewModel: TripDbViewModel) {
                 pastMomentMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
 
                 pastMomentMarker.setOnMarkerClickListener { _, _ ->
-                    Toast.makeText(context, "This is your Start/End location", Toast.LENGTH_SHORT).show()
                     true
                 }
             }
@@ -82,17 +79,16 @@ fun PastTripMap(context: Context, tripDbViewModel: TripDbViewModel) {
         polyline.setPoints(pastPolylinePoints)
     }
 
-
     if (!mapInitialized) {
         pastTripMap.setTileSource(TileSourceFactory.MAPNIK)
         pastTripMap.setMultiTouchControls(true)
 
         when (distanceBetween[0].toInt()) {
             in 0..500 -> {pastTripMap.controller.setZoom(15.0)}
-            in 501..5000 -> {pastTripMap.controller.setZoom(11.0)}
-            in 5001..50000 -> {pastTripMap.controller.setZoom(8.0)}
-            in 500001..5000000 -> {pastTripMap.controller.setZoom(5.0)}
-            else -> {pastTripMap.controller.setZoom(3.0)}
+            in 501..5000 -> {pastTripMap.controller.setZoom(13.0)}
+            in 5001..50000 -> {pastTripMap.controller.setZoom(11.0)}
+            in 500001..5000000 -> {pastTripMap.controller.setZoom(8.0)}
+            else -> {pastTripMap.controller.setZoom(5.0)}
         }
         pastTripMap.controller.setCenter(
             GeoPoint(pastTripLocations!![0].coordsLatitude, pastTripLocations[0].coordsLongitude)
