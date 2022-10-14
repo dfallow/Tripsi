@@ -105,7 +105,7 @@ fun TravelHistoryItem(
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
             Column {
-                Text(trip.tripName, fontSize = 20.sp, color = MaterialTheme.colors.onSurface)
+                Text(trip.tripName, fontSize = 20.sp, color = MaterialTheme.colors.secondaryVariant)
                 Spacer(Modifier.size(10.dp))
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
