@@ -10,6 +10,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -330,7 +331,7 @@ fun ShowMoment(
 ) {
     Popup() {
         Surface(
-            color = MaterialTheme.colors.primaryVariant,
+            color = MaterialTheme.colors.primaryVariant.copy(alpha = 0.6f),
             modifier = Modifier.fillMaxSize()
         ) {
             Column(

@@ -13,6 +13,7 @@ import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -24,7 +25,6 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
-    Log.d("currentMoment", viewModel.currentMomentId)
     Box(
         Modifier
             .fillMaxWidth()
@@ -110,40 +110,17 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
 
-                Text("Date", color = MaterialTheme.colors.onSurface)
+                val style = TextStyle(
+                    color = MaterialTheme.colors.onSurface,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Text("Date", color = MaterialTheme.colors.onSurface, style = style)
                 Text(moment.info.date, color = MaterialTheme.colors.onSurface)
-                Text("Time", color = MaterialTheme.colors.onSurface)
+                Text("Time", color = MaterialTheme.colors.onSurface, style = style)
                 Text(moment.info.time, color = MaterialTheme.colors.onSurface)
-                Text("Location", color = MaterialTheme.colors.onSurface)
+                Text("Location", color = MaterialTheme.colors.onSurface, style = style)
                 Text(moment.info.location, color = MaterialTheme.colors.onSurface)
-
-                Text(
-                    "Date:",
-                    style = TextStyle(
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-                Text(moment.info.date, color = Color.Black)
-                Text(
-                    "Time:",
-                    style = TextStyle(
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-                Text(moment.info.time, color = Color.Black)
-                Text(
-                    "Location:",
-                    style = TextStyle(
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-                Text(moment.info.location, color = Color.Black)
 
             }
         }
