@@ -21,12 +21,12 @@ class StopWatch {
     private var lastTimestamp = 0L
 
     fun start() {
-        if(isStarted) return
+        if (isStarted) return
 
         coroutineScope.launch {
             lastTimestamp = System.currentTimeMillis()
             isStarted = true
-            while(isStarted) {
+            while (isStarted) {
                 delay(10L)
                 timeMillis += System.currentTimeMillis() - lastTimestamp
                 lastTimestamp = System.currentTimeMillis()

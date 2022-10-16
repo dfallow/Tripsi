@@ -9,7 +9,12 @@ class PastTripViewModel {
     lateinit var currentMomentId: String
 
     var showMoment by mutableStateOf(false)
-    fun displayMoment() { showMoment = true }
-    fun hideMoment() { showMoment = false }
+    fun displayMoment() {
+        showMoment = true
+    }
+
+    fun hideMoment() {
+        showMoment = false
+    }
 
 }

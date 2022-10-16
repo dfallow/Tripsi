@@ -1,7 +1,8 @@
 package com.example.tripsi.utils
 
 import android.content.Context
-import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -15,10 +16,16 @@ import com.example.tripsi.screens.pastTrip.PastTripView
 import com.example.tripsi.screens.planTrip.PlanTripView
 import com.example.tripsi.screens.travelHistory.TravelHistoryView
 import com.example.tripsi.screens.weather.WeatherViewModel
-import java.io.File
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun NavigationGraph(navController: NavHostController, context: Context, location: Location, tripDbViewModel: TripDbViewModel, weatherViewModel: WeatherViewModel) {
+fun NavigationGraph(
+    navController: NavHostController,
+    context: Context,
+    location: Location,
+    tripDbViewModel: TripDbViewModel,
+    weatherViewModel: WeatherViewModel
+) {
 
     NavHost(navController = navController, startDestination = Screen.HomeScreen.route) {
         composable(route = Screen.HomeScreen.route) {
@@ -27,7 +34,7 @@ fun NavigationGraph(navController: NavHostController, context: Context, location
                 tripDbViewModel = tripDbViewModel,
                 context = context,
                 weatherViewModel
-                )
+            )
         }
         composable(route = Screen.TravelsScreen.route) {
             TravelHistoryView(navController = navController, tripDbViewModel = tripDbViewModel)
@@ -45,10 +52,20 @@ fun NavigationGraph(navController: NavHostController, context: Context, location
             )
         }
         composable(route = Screen.MomentScreen.route) {
-            AddMoment(navController = navController, context = context, location = location, tripDbViewModel = tripDbViewModel)
+            AddMoment(
+                navController = navController,
+                context = context,
+                location = location,
+                tripDbViewModel = tripDbViewModel
+            )
         }
         composable(route = Screen.MediaScreen.route) {
-            MediaView(navController = navController, tripDbViewModel = tripDbViewModel, tripId = tripDbViewModel.tripId, context = context)
+            MediaView(
+                navController = navController,
+                tripDbViewModel = tripDbViewModel,
+                tripId = tripDbViewModel.tripId,
+                context = context
+            )
         }
         composable(route = Screen.PastTripScreen.route) {
             PastTripView(context = context, tripDbViewModel = tripDbViewModel)

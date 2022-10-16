@@ -39,7 +39,7 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
                 )
             }
         }
-        Log.d("momentLocations","$currentTripMomentsNew")
+        Log.d("momentLocations", "$currentTripMomentsNew")
     }
 
     fun getTripMoments(locations: List<Location>) {
@@ -65,20 +65,12 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
 
     fun getAllTrips(): LiveData<List<Trip>> = db.tripDao().getAll()
 
-    fun getTripsByStatus(status: Int): LiveData<List<Trip>> = db.tripDao().getTripsByStatus(status)
-
     fun addTrip(trip: Trip): Int? {
         var tripId: Int? = null
         viewModelScope.launch {
             tripId = (db.tripDao().insert(trip)).toInt()
         }
         return tripId
-    }
-
-    fun deleteTrip(trip: Trip) {
-        viewModelScope.launch {
-            db.tripDao().delete(trip)
-        }
     }
 
     fun deleteTripById(tripId: Int) {
@@ -102,31 +94,14 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
 
     //Statistics
 
-    fun getTripStats(tripId: Int): LiveData<Statistics> = db.statisticsDao().getTripStats(tripId)
-
-    fun getTripWithStats(tripId: Int): LiveData<TripWithStats> = db.tripDao().getTripStats(tripId)
-
     fun addTripStats(stats: Statistics) {
         viewModelScope.launch {
             db.statisticsDao().insert(stats)
         }
     }
 
-    fun updateTripStats(statistics: Statistics) {
-        viewModelScope.launch {
-            db.statisticsDao().update(statistics)
-        }
-    }
-
 
     //Image
-
-    fun getTripImages(tripId: Int): LiveData<List<Image>> = db.imageDao().getTripImages(tripId)
-
-    fun getImageById(imageId: Int): LiveData<Image> = db.imageDao().getImageById(imageId)
-
-    fun getImageByFilename(filename: String): LiveData<Image> =
-        db.imageDao().getImageByFilename(filename)
 
     fun addImage(image: Image) {
         viewModelScope.launch {
@@ -134,23 +109,7 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun deleteImage(image: Image) {
-        viewModelScope.launch {
-            db.imageDao().delete(image)
-        }
-    }
-
-
     //Location
-
-    fun getTripLocationData(tripId: Int): LiveData<List<LocationWithImagesAndNotes>> =
-        db.locationDao().getTripLocationData(tripId)
-
-    fun getTripStartCoords(tripId: Int): LiveData<LocationWithImagesAndNotes> =
-        db.locationDao().getTripStartLocation(tripId)
-
-    fun getTripEndCoords(tripId: Int): LiveData<LocationWithImagesAndNotes> =
-        db.locationDao().getTripEndLocation(tripId)
 
     fun getLocationWithMedia(tripId: Int): LiveData<List<LocationWithImagesAndNotes>> =
         db.locationDao().getLocationsWithMedia(tripId)
@@ -164,30 +123,13 @@ class TripDbViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun updateLocation(location: Location) {
-        viewModelScope.launch {
-            db.locationDao().update(location)
-        }
-    }
-
 
     //TripData
 
     // get one trip and all of its related data
     fun getTripData(tripId: Int): LiveData<TripData> = db.tripDao().getTripData(tripId)
 
-    //get all trips and their related data
-    fun getAllTripsData(): LiveData<List<TripData>> = db.tripDao().getAllTripsData()
-
     //get all trips and their data by trip status
     fun getAllTripsDataByStatus(status: Int): LiveData<List<TripData>> =
         db.tripDao().getAllTripDataByStatus(status)
-
-
-    //LocationWithImagesAndNotes
-
-    //get location with all its images
-    fun getAllLocationImagesAndNote(locationId: String): LiveData<LocationWithImagesAndNotes> =
-        db.locationDao().getAllLocationImagesAndNote(locationId)
-
 }

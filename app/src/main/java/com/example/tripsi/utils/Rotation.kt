@@ -45,6 +45,7 @@ fun rotateImageIfRequired(img: Bitmap, path: String): Bitmap {
         else -> img
     }
 }
+
 // Function to set desired orientation inside of any view
 @Composable
 fun LockScreenOrientation(orientation: Int) {

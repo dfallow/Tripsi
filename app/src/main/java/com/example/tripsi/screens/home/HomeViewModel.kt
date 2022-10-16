@@ -16,7 +16,7 @@ class HomeViewModel() : ViewModel() {
     private val now = Date()
 
     fun startQuickTrip(tripDbViewModel: TripDbViewModel, context: Context, name: String?): Boolean {
-        var success:Boolean
+        var success: Boolean
         try {
             tripDbViewModel.addTrip(
                 Trip(

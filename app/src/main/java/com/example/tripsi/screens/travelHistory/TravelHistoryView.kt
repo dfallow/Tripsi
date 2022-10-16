@@ -1,19 +1,13 @@
 package com.example.tripsi.screens.travelHistory
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ChevronRight
-import androidx.compose.material.icons.rounded.Group
 import androidx.compose.material.icons.rounded.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -70,9 +64,15 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
                 }
             }
         } else {
-            Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()) {
-                Text("Nothing to show.\n You should start planning some trips!",
-                    color= MaterialTheme.colors.onPrimary, textAlign = TextAlign.Center)
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Text(
+                    "Nothing to show.\n You should start planning some trips!",
+                    color = MaterialTheme.colors.onPrimary, textAlign = TextAlign.Center
+                )
 
             }
 

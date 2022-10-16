@@ -41,27 +41,27 @@ fun WeatherCard(
                     horizontalArrangement = Arrangement.Center
                 ) {
 
-                
-                Spacer(modifier = Modifier.padding(10.dp))
-                Image(
-                    painter = painterResource(id = data.weatherType.iconRes),
-                    contentDescription = null,
-                    modifier = Modifier.width(30.dp)
-                )
-                Spacer(modifier = Modifier.padding(10.dp))
-                Text(
-                    text = "${data.temperatureCelsius}°C",
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colors.onSurface
-                )
-                Spacer(modifier = Modifier.padding(10.dp))
-                Text(
-                    text = data.weatherType.weatherDesc,
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colors.onSurface
-                )
-            }
-                 Spacer(modifier = Modifier.padding(5.dp))
+
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    Image(
+                        painter = painterResource(id = data.weatherType.iconRes),
+                        contentDescription = null,
+                        modifier = Modifier.width(30.dp)
+                    )
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    Text(
+                        text = "${data.temperatureCelsius}°C",
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colors.onSurface
+                    )
+                    Spacer(modifier = Modifier.padding(10.dp))
+                    Text(
+                        text = data.weatherType.weatherDesc,
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colors.onSurface
+                    )
+                }
+                Spacer(modifier = Modifier.padding(5.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround

@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
-import android.util.Log
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
 import androidx.lifecycle.MutableLiveData
@@ -26,6 +25,7 @@ class MediaViewModel : ViewModel() {
 
     //imageBitmaps is used to later display images in the MediaView
     var imageBitmaps: MutableLiveData<MutableList<InternalStoragePhoto?>> = MutableLiveData()
+
     //imagesAndFilenames is used to delete all imag
     private var imagesAndFilenames: MutableList<ArrayMap<Bitmap, String>> = mutableListOf()
 

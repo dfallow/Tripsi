@@ -11,13 +11,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import org.osmdroid.util.GeoPoint
 
-class Location(context: Context): LocationListener {
+class Location(context: Context) : LocationListener {
 
-    var userLocation by mutableStateOf(GeoPoint(0.0,0.0))
+    var userLocation by mutableStateOf(GeoPoint(0.0, 0.0))
     private var isGPSEnabled = false
     private var isNetworkEnabled = false
     private lateinit var startLocation: Location
-    private val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    private val locationManager =
+        context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     override fun onLocationChanged(p0: Location) {
         userLocation = GeoPoint(p0.latitude, p0.longitude)
@@ -41,22 +42,32 @@ class Location(context: Context): LocationListener {
                     locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)!!
                 }
             }
-        } catch (e : Exception) {
-            Log.d("Error",e.message.toString())
+        } catch (e: Exception) {
+            Log.d("Error", e.message.toString())
         }
 
 
         userLocation = GeoPoint(startLocation.latitude, startLocation.longitude)
         if (isGPSEnabled) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100 * 1000, 500f, this)
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                100 * 1000,
+                500f,
+                this
+            )
         } else {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100 * 1000, 500f, this)
+            locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                100 * 1000,
+                500f,
+                this
+            )
         }
 
 
     }
 
-    fun stopUpdatingLocation(){
+    fun stopUpdatingLocation() {
         locationManager.removeUpdates(this)
     }
 }

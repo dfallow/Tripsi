@@ -13,7 +13,12 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun LoadingSpinner(isDisplayed: Boolean) {
     if (isDisplayed) {
-        Row(modifier = Modifier.fillMaxWidth().padding(50.dp), horizontalArrangement = Arrangement.Center) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(50.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
             CircularProgressIndicator(color = MaterialTheme.colors.secondaryVariant)
         }
     }

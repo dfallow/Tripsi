@@ -10,7 +10,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,50 +46,51 @@ fun CurrentTripView(
     ) {
 
 
-            CurrentTripMap(
-                context = context,
-                location = location,
-                tripDbViewModel = tripDbViewModel,
-                weatherViewModel,
-                stopWatch
-            )
+        CurrentTripMap(
+            context = context,
+            location = location,
+            tripDbViewModel = tripDbViewModel,
+            weatherViewModel,
+            stopWatch
+        )
 
-            when (viewModel.currentStatus) {
-                // Upcoming
-                1 -> {
-                    Spacer(modifier = Modifier.height(64.dp))
+        when (viewModel.currentStatus) {
+            // Upcoming
+            1 -> {
+                Spacer(modifier = Modifier.height(64.dp))
 
-                    StartTrip(
-                        context = context,
-                        location = location,
-                        tripDbViewModel = tripDbViewModel
-                    )
-                }
-                // ACTIVE
-                2 -> {
-                    CurrentTripExtra(
-                        navController = navController,
-                        context = context,
-                        location = location,
-                        tripDbViewModel = tripDbViewModel
-                    )
+                StartTrip(
+                    context = context,
+                    location = location,
+                    tripDbViewModel = tripDbViewModel
+                )
+            }
+            // ACTIVE
+            2 -> {
+                CurrentTripExtra(
+                    navController = navController,
+                    context = context,
+                    location = location,
+                    tripDbViewModel = tripDbViewModel
+                )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                    EndTrip(
-                        context = context,
-                        location = location,
-                        tripDbViewModel = tripDbViewModel
-                    )
+                EndTrip(
+                    context = context,
+                    location = location,
+                    tripDbViewModel = tripDbViewModel
+                )
 
-                    // This helps update UI when user adds a moment
-                    if (viewModel.showText) { }
-                }
-                // PAST
-                3 -> {
-                    GoHomeButton(navController = navController, location = location)
+                // This helps update UI when user adds a moment
+                if (viewModel.showText) {
                 }
             }
+            // PAST
+            3 -> {
+                GoHomeButton(navController = navController, location = location)
+            }
+        }
 
 
 
@@ -129,7 +129,7 @@ fun CurrentTripView(
             Spacer(modifier = Modifier.height(32.dp))
             Button(
                 onClick = {
-                        //TODO: reset steps
+                    //TODO: reset steps
                     stopWatch.resetWatch()
                     viewModel.resetSteps()
                     Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
@@ -138,7 +138,8 @@ fun CurrentTripView(
                 shape = viewModel.shape,
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.primary,
-                    contentColor = MaterialTheme.colors.onPrimary),
+                    contentColor = MaterialTheme.colors.onPrimary
+                ),
             ) {
                 Text("End Trip", textAlign = TextAlign.Center)
             }
@@ -200,7 +201,7 @@ fun CurrentTripMap(
                 modifier = Modifier.weight(1f),
             )
             StepCounterSensor()
-          
+
         }
 
     }
@@ -242,25 +243,31 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
     Button(
         onClick = {
             viewModel.addStartLocationNew(location)
-            tripDbViewModel.addLocation(com.example.tripsi.data.Location(
-                viewModel.momentId.value,
-                location.userLocation.latitude,
-                location.userLocation.longitude,
-                "Today",
-                tripDbViewModel.tripData.trip!!.tripId,
-                position = MomentPosition.START,
-                isStart = true,
-                isEnd = false
-            ))
+            tripDbViewModel.addLocation(
+                com.example.tripsi.data.Location(
+                    viewModel.momentId.value,
+                    location.userLocation.latitude,
+                    location.userLocation.longitude,
+                    "Today",
+                    tripDbViewModel.tripData.trip!!.tripId,
+                    position = MomentPosition.START,
+                    isStart = true,
+                    isEnd = false
+                )
+            )
             viewModel.startActive()
-            tripDbViewModel.updateTripStatus(TripStatus.ACTIVE.status, tripDbViewModel.tripData.trip!!.tripId)
+            tripDbViewModel.updateTripStatus(
+                TripStatus.ACTIVE.status,
+                tripDbViewModel.tripData.trip!!.tripId
+            )
             viewModel.momentId.value = UUID.randomUUID().toString()
         },
         modifier = viewModel.modifier,
         shape = viewModel.shape,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary),
+            contentColor = MaterialTheme.colors.onPrimary
+        ),
     ) {
         Text("Start Trip", textAlign = TextAlign.Center)
     }
@@ -285,7 +292,10 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
             )
             tripDbViewModel.addLocation(endLocation)
             viewModel.endActive()
-            tripDbViewModel.updateTripStatus(TripStatus.PAST.status, tripDbViewModel.tripData.trip!!.tripId)
+            tripDbViewModel.updateTripStatus(
+                TripStatus.PAST.status,
+                tripDbViewModel.tripData.trip!!.tripId
+            )
             viewModel.momentId.value = UUID.randomUUID().toString()
             viewModel.saveStatisticsToDb(tripDbViewModel)
         },
@@ -293,7 +303,8 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
         shape = viewModel.shape,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = MaterialTheme.colors.error,
-            contentColor = MaterialTheme.colors.onSurface),
+            contentColor = MaterialTheme.colors.onSurface
+        ),
     ) {
         Text("End Trip", textAlign = TextAlign.Center)
     }
@@ -314,7 +325,8 @@ fun GoHomeButton(navController: NavController, location: Location) {
         shape = viewModel.shape,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary),
+            contentColor = MaterialTheme.colors.onPrimary
+        ),
     )
     {
         Text("Go home")

@@ -44,14 +44,16 @@ fun PastTripMap(context: Context, tripDbViewModel: TripDbViewModel) {
             pastMomentMarker.id = location.locationId
 
             if (location.position == MomentPosition.MIDDLE) {
-                pastMomentMarker.icon = ContextCompat.getDrawable(context, R.drawable.photo_svgrepo_com)
+                pastMomentMarker.icon =
+                    ContextCompat.getDrawable(context, R.drawable.photo_svgrepo_com)
 
                 pastMomentMarker.setOnMarkerClickListener { _, _ ->
                     true
                 }
 
             } else {
-                pastMomentMarker.icon = ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
+                pastMomentMarker.icon =
+                    ContextCompat.getDrawable(context, R.drawable.location_svgrepo_com)
 
                 pastMomentMarker.setOnMarkerClickListener { _, _ ->
                     true
@@ -66,7 +68,8 @@ fun PastTripMap(context: Context, tripDbViewModel: TripDbViewModel) {
 
         for (pastLocation in pastTripLocations) {
             pastPolylinePoints.add(
-                GeoPoint(pastLocation.coordsLatitude,
+                GeoPoint(
+                    pastLocation.coordsLatitude,
                     pastLocation.coordsLongitude
                 )
             )
@@ -83,11 +86,21 @@ fun PastTripMap(context: Context, tripDbViewModel: TripDbViewModel) {
         pastTripMap.setMultiTouchControls(true)
 
         when (distanceBetween[0].toInt()) {
-            in 0..500 -> {pastTripMap.controller.setZoom(15.0)}
-            in 501..5000 -> {pastTripMap.controller.setZoom(13.0)}
-            in 5001..50000 -> {pastTripMap.controller.setZoom(11.0)}
-            in 500001..5000000 -> {pastTripMap.controller.setZoom(8.0)}
-            else -> {pastTripMap.controller.setZoom(5.0)}
+            in 0..500 -> {
+                pastTripMap.controller.setZoom(15.0)
+            }
+            in 501..5000 -> {
+                pastTripMap.controller.setZoom(13.0)
+            }
+            in 5001..50000 -> {
+                pastTripMap.controller.setZoom(11.0)
+            }
+            in 500001..5000000 -> {
+                pastTripMap.controller.setZoom(8.0)
+            }
+            else -> {
+                pastTripMap.controller.setZoom(5.0)
+            }
         }
         pastTripMap.controller.setCenter(
             GeoPoint(pastTripLocations!![0].coordsLatitude, pastTripLocations[0].coordsLongitude)
