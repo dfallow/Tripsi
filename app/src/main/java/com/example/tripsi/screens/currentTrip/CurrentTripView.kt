@@ -289,11 +289,11 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
             viewModel.momentId.value = UUID.randomUUID().toString()
             viewModel.saveStatisticsToDb(tripDbViewModel)
         },
-        modifier = viewModel.modifier,
+        modifier = Modifier.height(35.dp),
         shape = viewModel.shape,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary),
+            backgroundColor = MaterialTheme.colors.error,
+            contentColor = MaterialTheme.colors.onSurface),
     ) {
         Text("End Trip", textAlign = TextAlign.Center)
     }
