@@ -10,14 +10,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
@@ -29,7 +28,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
@@ -131,9 +133,7 @@ fun MomentDetails(location: Location, context: Context, tripDbViewModel: TripDbV
             ) {
                 Text(dateFormat.format(now), color = colors.onSurface)
                 Text(timeFormat.format(now), color = colors.onSurface)
-                Text(
-                    cityName, color = colors.onSurface
-                )
+                Text(cityName, color = colors.onSurface)
             }
         }
     }
@@ -145,13 +145,19 @@ fun MomentComment(
 ) {
 
     var comment by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
 
     TextField(
         value = comment,
         onValueChange = { comment = it },
         shape = RoundedCornerShape(10.dp),
-        //textStyle = TextStyle(color = Color.Blue),
-        label = { Text("Describe the moment...") },
+        label = { Text("Describe the moment...", color = MaterialTheme.colors.primaryVariant) },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions (
+            onDone = {
+                focusManager.clearFocus()
+            }
+                ),
         colors = colors,
         modifier = Modifier
             .fillMaxWidth()
@@ -284,7 +290,6 @@ fun MomentPictures(context: Context) {
         }
 
         val scope = rememberCoroutineScope()
-        // TODO Replace button with some kind of camera clickable icon
         Icon(
             imageVector = ImageVector.vectorResource(id = R.drawable.camera_add_svgrepo_com),
             tint = colors.onPrimary,
@@ -352,7 +357,9 @@ fun SaveOrDiscard(
                     ).show()
                 }
             },
-            modifier = viewModel.modifier,
+            modifier = Modifier
+                .width(130.dp)
+                .height(45.dp),
             shape = viewModel.shape,
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = colors.primary,
@@ -365,11 +372,13 @@ fun SaveOrDiscard(
             onClick = {
                 navController.navigateUp()
             },
-            modifier = viewModel.modifier,
+            modifier = Modifier
+                .width(100.dp)
+                .height(35.dp),
             shape = viewModel.shape,
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = colors.primary,
-                contentColor = colors.onPrimary
+                backgroundColor = colors.error,
+                contentColor = colors.onSurface
             ),
         ) {
             Text("Discard")

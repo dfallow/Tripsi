@@ -7,6 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 
@@ -19,7 +20,8 @@ private val DarkColorPalette = darkColors(
     primaryVariant = DGreen,
     onSurface = PWhite,
     onBackground = DLGreen,
-    secondaryVariant = LGreen
+    secondaryVariant = LGreen,
+    error = Red
 
 )
 
@@ -32,7 +34,8 @@ private val LightColorPalette = lightColors(
     primaryVariant = DGreen,
     onSurface = PWhite,
     onBackground = DLGreen,
-    secondaryVariant = LGreen
+    secondaryVariant = LGreen,
+    error = DPurple
 
 
 

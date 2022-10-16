@@ -269,7 +269,13 @@ fun HomeView(
                                     Text("Save")
                                 }
                                 Spacer(Modifier.size(10.dp))
-                                Button(onClick = { quicktrip = false }) {
+                                Button(
+                                    onClick = { quicktrip = false },
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = MaterialTheme.colors.error,
+                                        contentColor = MaterialTheme.colors.onSurface
+                                    ),
+                                ) {
                                     Text("Cancel")
                                 }
                             }
@@ -372,7 +378,7 @@ fun UpcomingOrActiveTrip(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Your Current Icon\n click to change",
+                    "Your Current Icon\n click to change ->",
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colors.onSurface
                 )

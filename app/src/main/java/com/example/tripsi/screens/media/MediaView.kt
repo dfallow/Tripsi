@@ -88,6 +88,7 @@ fun MediaView(
                     DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
                     Row(
                         horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 70.dp)
@@ -108,10 +109,12 @@ fun MediaView(
                             onClick = {
                                 delete = true
                             },
+                            modifier = Modifier
+                                .height(35.dp),
                             enabled = !delete,
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = MaterialTheme.colors.primary,
-                                contentColor = MaterialTheme.colors.onPrimary,
+                                backgroundColor = MaterialTheme.colors.error,
+                                contentColor = MaterialTheme.colors.onSurface,
                             )
                         ) {
                             Text("Delete trip")
@@ -128,7 +131,7 @@ fun MediaView(
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .background(MaterialTheme.colors.onBackground)
+                                    .background(MaterialTheme.colors.primaryVariant)
                                     .fillMaxWidth()
                                     .padding(20.dp)
                             ) {
@@ -339,7 +342,6 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
     //these are the Bitmaps that were retrieved from storage and rotated
     val imageBitmaps = viewModel.imageBitmaps.observeAsState()
 
-    //TODO: display something when there are no trip images saved (lottie/text/etc)
     LoadingSpinner(isDisplayed = loading.value)
 
 

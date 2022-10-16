@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -61,12 +62,12 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
 
         DatePicker(planTripViewModel)
         TextInput(planTripViewModel)
-        //MapAddressPickerView(planTripViewModel)
         FinalLocationPicker(planTripViewModel)
         TripType(planTripViewModel)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.CenterVertically
 
             ) {
             Button(
@@ -74,6 +75,9 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
                     val saved = planTripViewModel.saveTrip(tripDbViewModel, context)
                     if (saved) navController.navigateUp()
                 },
+                modifier = Modifier
+                    .width(130.dp)
+                    .height(45.dp),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = MaterialTheme.colors.primary,
                     contentColor = MaterialTheme.colors.onPrimary
@@ -85,8 +89,11 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
             }
             Button(
                 onClick = { navController.navigateUp() },
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(35.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.secondary,
+                    backgroundColor = MaterialTheme.colors.error,
                     contentColor = MaterialTheme.colors.onSurface
                 ),
             ) {
@@ -247,51 +254,52 @@ fun DatePicker(planTripViewModel: PlanTripViewModel) {
 
     mDatePickerDialog.datePicker.minDate = mCalendar.timeInMillis
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                MaterialTheme.colors.onBackground,
-                shape = RoundedCornerShape(5.dp)
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    )
-
-    {
-
-        // Creating a button that on
-        // click displays/shows the DatePickerDialog
-        Button(
-            onClick = {
-                mDatePickerDialog.show()
-            },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.onBackground,
-                contentColor = MaterialTheme.colors.secondaryVariant
-            ),
-        )
-        {
-            Icon(
-                painter = painterResource(R.drawable.calendar),
-                contentDescription = "Calendar",
-                // tint = MaterialTheme.colors.secondaryVariant
+    if (mDate.value == "") {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Select Your Date ->    ", color = MaterialTheme.colors.onPrimary)
+            Button(
+                onClick = {
+                    mDatePickerDialog.show()
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.onBackground,
+                    contentColor = MaterialTheme.colors.secondaryVariant
+                ),
             )
-            //  Text(text = "Date", color = Color(0xFF2D0320))
+            {
+                Icon(
+                    painter = painterResource(R.drawable.calendar),
+                    contentDescription = "Calendar",
+                )
+            }
         }
-
-        // Adding a space of 100dp height
-        Spacer(modifier = Modifier.size(10.dp))
-
-        // Displaying the mDate value in the Text
-        Text(
-            text = "Trip Date: ${mDate.value}",
-            Modifier.padding(10.dp),
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colors.onSurface
-
-        )
+    } else {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(text = "${mDate.value} ->    ", color = MaterialTheme.colors.onPrimary)
+            Button(
+                onClick = {
+                    mDatePickerDialog.show()
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.onBackground,
+                    contentColor = MaterialTheme.colors.secondaryVariant
+                ),
+            )
+            {
+                Icon(
+                    painter = painterResource(R.drawable.calendar),
+                    contentDescription = "Calendar",
+                )
+            }
+        }
     }
 }
 
@@ -327,113 +335,59 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
         }
     }
 
-    Text(
-        text = "Choose your map marker: ${selectedValue.value.ifEmpty { "NONE" }}",
-        color = MaterialTheme.colors.onPrimary
-    )
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = MaterialTheme.colors.onBackground,
-                shape = RoundedCornerShape(5.dp)
-            ),
-        horizontalArrangement = Arrangement.SpaceEvenly
-
-    )
-    {
-        items.forEach { item ->
-
-            IconToggleButton(checked = isSelectedItem(item.name),
-                onCheckedChange = { onChangeState(item.name) }
-            )
-            {
-                when (item) {
-                    TravelMethod.CAR -> Icon(
-                        painter = painterResource(if (isSelectedItem.invoke(item.name)) R.drawable.unselected_car else R.drawable.car),
-                        contentDescription = "car",
-                        tint = MaterialTheme.colors.secondaryVariant
-                    )
-                    TravelMethod.BUS -> Icon(
-                        painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_bus else R.drawable.bus),
-                        contentDescription = "bus",
-                        tint = MaterialTheme.colors.secondaryVariant
-                    )
-                    TravelMethod.BIKE -> Icon(
-                        painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_bike else R.drawable.bike),
-                        contentDescription = "bike",
-                        tint = MaterialTheme.colors.secondaryVariant
-                    )
-                    TravelMethod.HUMAN -> Icon(
-                        painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_walk else R.drawable.walk),
-                        contentDescription = "walk",
-                        tint = MaterialTheme.colors.secondaryVariant
-                    )
-                    TravelMethod.PLANE -> Icon(
-                        painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_plane else R.drawable.plane),
-                        contentDescription = "plane",
-                        tint = MaterialTheme.colors.secondaryVariant
-                    )
-                }
-            }
-        }
-    }
-}
-
-
-/*
-
-@Composable
-fun MapAddressPickerView(planTripViewModel: PlanTripViewModel) {
-    Surface {
-        val currentLocation = planTripViewModel.location.collectAsState()
-        var text by remember { planTripViewModel.addressText }
-        val context = LocalContext.current
-
-
-        Row {
-
-            currentLocation.value.let {
-                if (planTripViewModel.isMapEditable.value) {
-                    text = planTripViewModel.getAddressFromLocation(context)
-                }
-            }
-        }
-        Column {
-            Row(modifier = Modifier
+    Column() {
+        Text(
+            text = "Choose your map marker: ${selectedValue.value.ifEmpty { "NONE" }}",
+            color = MaterialTheme.colors.onPrimary
+        )
+        Row(
+            modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp)) {
-                OutlinedTextField(
-                    value = text,
-                    onValueChange = {
-                        planTripViewModel.tripDestination = it
-                        text = it
-                        if (!planTripViewModel.isMapEditable.value)
-                            planTripViewModel.onTextChanged(context, text)
-                    },
-                    trailingIcon = {
-                        Icon(
-                            if (planTripViewModel.isMapEditable.value) {Icons.Default.Clear} else {Icons.Default.Search},
-                            contentDescription = "clear or search text",
-                            modifier = Modifier.clickable { text = ""
-                                planTripViewModel.isMapEditable.value =
-                                !planTripViewModel.isMapEditable.value })
+                .padding(vertical = 4.dp)
+                .background(
+                    color = MaterialTheme.colors.onBackground,
+                    shape = RoundedCornerShape(5.dp)
+                ),
+            horizontalArrangement = Arrangement.SpaceEvenly
 
-                    },
-                    label = { Text("What's your final destination", color = Color(0xFF2D0320)) },
+        )
+        {
+            items.forEach { item ->
 
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    enabled = !planTripViewModel.isMapEditable.value,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFFCBEF43),
-                        unfocusedBorderColor = Color(0xFF3C493F)
-                    )
+                IconToggleButton(checked = isSelectedItem(item.name),
+                    onCheckedChange = { onChangeState(item.name) }
                 )
+                {
+                    when (item) {
+                        TravelMethod.CAR -> Icon(
+                            painter = painterResource(if (isSelectedItem.invoke(item.name)) R.drawable.unselected_car else R.drawable.car),
+                            contentDescription = "car",
+                            tint = MaterialTheme.colors.secondaryVariant
+                        )
+                        TravelMethod.BUS -> Icon(
+                            painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_bus else R.drawable.bus),
+                            contentDescription = "bus",
+                            tint = MaterialTheme.colors.secondaryVariant
+                        )
+                        TravelMethod.BIKE -> Icon(
+                            painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_bike else R.drawable.bike),
+                            contentDescription = "bike",
+                            tint = MaterialTheme.colors.secondaryVariant
+                        )
+                        TravelMethod.HUMAN -> Icon(
+                            painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_walk else R.drawable.walk),
+                            contentDescription = "walk",
+                            tint = MaterialTheme.colors.secondaryVariant
+                        )
+                        TravelMethod.PLANE -> Icon(
+                            painter = painterResource(if (isSelectedItem(item.name)) R.drawable.unselected_plane else R.drawable.plane),
+                            contentDescription = "plane",
+                            tint = MaterialTheme.colors.secondaryVariant
+                        )
+                    }
+                }
             }
-
         }
-
     }
+
 }
-*/
