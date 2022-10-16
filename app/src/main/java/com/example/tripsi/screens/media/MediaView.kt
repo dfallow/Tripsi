@@ -36,7 +36,9 @@ import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
 import com.example.tripsi.utils.Screen
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 val viewModel = MediaViewModel()
 
@@ -60,10 +62,6 @@ fun MediaView(
     // Store tripData in viewModel for PastTripMap
     if (tripData.value != null) {
         tripDbViewModel.pastTripData = tripData.value!!
-    }
-
-    LaunchedEffect(tripData.value) {
-        tripData.value?.let { viewModel.getStartEndCoords(it, context) }
     }
 
     Column(
@@ -147,17 +145,15 @@ fun MediaView(
                                                 contentColor = MaterialTheme.colors.primaryVariant
                                             ),
                                             onClick = {
-                                            scope.launch {
+                                                delete = false
                                                 viewModel.deleteTrip(tripId, tripDbViewModel, context)
-                                                Toast.makeText(
+                                                /*Toast.makeText(
                                                     context,
                                                     "Trip was deleted.",
                                                     Toast.LENGTH_SHORT
                                                 )
-                                                    .show()
-                                                delete = false
+                                                    .show()*/
                                                 navController.navigateUp()
-                                            }
                                         }
                                         ) {
                                             Text("Yes, delete the trip")

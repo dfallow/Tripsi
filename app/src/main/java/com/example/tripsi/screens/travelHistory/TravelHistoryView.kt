@@ -59,7 +59,6 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
                 contentPadding = PaddingValues(vertical = 10.dp)
             ) {
                 itemsIndexed(pastTrips.value) { _, item ->
-                    Log.d("pastTrip", "${item.trip}")
                     item.trip?.let {
                         TravelHistoryItem(
                             trip = it,

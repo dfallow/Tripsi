@@ -5,40 +5,48 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.location.Address
 import android.location.Geocoder
+import android.util.Log
 import androidx.collection.ArrayMap
 import androidx.collection.arrayMapOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.data.TripData
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.currentTrip.MomentPosition
 import com.example.tripsi.utils.rotateImageIfRequired
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.util.*
 
 class MediaViewModel : ViewModel() {
 
-    val imageBitmaps: MutableLiveData<MutableList<InternalStoragePhoto?>> = MutableLiveData()
-    private val imagesAndFilenames: MutableList<ArrayMap<Bitmap, String>> = mutableListOf()
+    //imageBitmaps is used to later display images in the MediaView
+    var imageBitmaps: MutableLiveData<MutableList<InternalStoragePhoto?>> = MutableLiveData()
+    //imagesAndFilenames is used to delete all imag
+    private var imagesAndFilenames: MutableList<ArrayMap<Bitmap, String>> = mutableListOf()
 
     suspend fun loadPhotosFromStorage(
         context: Context,
         filenamesAndNotes: List<ArrayMap<String, String?>>
     ) {
-        var image: InternalStoragePhoto?
+        var image: List<InternalStoragePhoto>?
 
         val images: MutableList<InternalStoragePhoto?> = mutableListOf()
 
         withContext(Dispatchers.IO) {
+            //clear old data
+            imagesAndFilenames.clear()
+
+            //first, get the list of files in filesDir
+            val files = context.filesDir.listFiles()
+
             // for each filename in filenamesAndNotes list, retrieve a photo from storage
             filenamesAndNotes.forEach { item ->
                 item.forEach { (filename, note) ->
-                    //first, get the list of files in filesDir
-                    val files = context.filesDir.listFiles()
-
                     //second, filter through the list looking for a file matching the filename
                     image = files?.filter {
                         it.canRead() && it.isFile &&
@@ -49,18 +57,17 @@ class MediaViewModel : ViewModel() {
                         val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
                         InternalStoragePhoto(it.name, bmp, it.absolutePath, note)
                     }
-                        ?.first() //there will always be just one image with the same name, so only return that from the list
-                    if (image != null) {
+                    if (image?.isNotEmpty() == true) {
                         //check if the image needs to be rotated to display in correct orientation
-                        val rotatedImg = rotateImageIfRequired(image!!.bmp, image!!.path)
+                        val rotatedImg = rotateImageIfRequired(image!![0].bmp, image!![0].path)
                         imagesAndFilenames.add(arrayMapOf(Pair(rotatedImg, filename)))
 
                         //every rotated image is added to the images list, until the code runs through all filenames
                         images.add(
                             InternalStoragePhoto(
-                                image!!.name,
+                                image!![0].name,
                                 rotatedImg,
-                                image!!.path,
+                                image!![0].path,
                                 note
                             )
                         )
@@ -121,12 +128,13 @@ class MediaViewModel : ViewModel() {
         }
     }
 
-    suspend fun deleteTrip(tripId: Int, tripDbViewModel: TripDbViewModel, context: Context) {
+    fun deleteTrip(tripId: Int, tripDbViewModel: TripDbViewModel, context: Context) {
 
         val files = context.filesDir.listFiles()
         val toRemove: MutableList<ArrayMap<Bitmap, String>> = mutableListOf()
 
-        withContext(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
+            //delete all images from storage associated with the trip
             imagesAndFilenames.forEach { pair ->
                 pair.forEach { (image, filename) ->
                     val file = files?.first {
@@ -140,6 +148,7 @@ class MediaViewModel : ViewModel() {
                     }
                 }
             }
+            //delete trip data from the database
             tripDbViewModel.deleteTripById(tripId)
             imagesAndFilenames.removeAll(toRemove)
 
