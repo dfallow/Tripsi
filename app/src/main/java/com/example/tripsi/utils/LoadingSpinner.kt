@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 fun LoadingSpinner(isDisplayed: Boolean) {
     if (isDisplayed) {
         Row(modifier = Modifier.fillMaxWidth().padding(50.dp), horizontalArrangement = Arrangement.Center) {
-            CircularProgressIndicator(color = MaterialTheme.colors.primary)
+            CircularProgressIndicator(color = MaterialTheme.colors.secondaryVariant)
         }
     }
 }
