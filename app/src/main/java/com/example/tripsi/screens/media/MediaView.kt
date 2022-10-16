@@ -138,7 +138,7 @@ fun MediaView(
                                         "Are you sure you want to delete this trip?",
                                         color = MaterialTheme.colors.secondaryVariant
                                     )
-                                    Row {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
                                         Button(
                                             colors = ButtonDefaults.buttonColors(
                                                 backgroundColor = MaterialTheme.colors.secondaryVariant,
@@ -147,12 +147,12 @@ fun MediaView(
                                             onClick = {
                                                 delete = false
                                                 viewModel.deleteTrip(tripId, tripDbViewModel, context)
-                                                /*Toast.makeText(
+                                                Toast.makeText(
                                                     context,
-                                                    "Trip was deleted.",
+                                                    "Trip deleted.",
                                                     Toast.LENGTH_SHORT
                                                 )
-                                                    .show()*/
+                                                    .show()
                                                 navController.navigateUp()
                                         }
                                         ) {
@@ -160,9 +160,12 @@ fun MediaView(
                                         }
                                         Spacer(Modifier.size(20.dp))
                                         Button(
+                                            modifier = Modifier
+                                                .width(100.dp)
+                                                .height(35.dp),
                                             colors = ButtonDefaults.buttonColors(
-                                                backgroundColor = MaterialTheme.colors.secondaryVariant,
-                                                contentColor = MaterialTheme.colors.primaryVariant
+                                                backgroundColor = MaterialTheme.colors.error,
+                                                contentColor = MaterialTheme.colors.onSurface
                                             ),
                                             onClick = { delete = false }) {
                                             Text("No")
