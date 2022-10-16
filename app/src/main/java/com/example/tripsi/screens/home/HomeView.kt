@@ -372,7 +372,7 @@ fun UpcomingOrActiveTrip(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Your Current Icon\n click to change",
+                    "Your Current Icon\n click to change ->",
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colors.onSurface
                 )
