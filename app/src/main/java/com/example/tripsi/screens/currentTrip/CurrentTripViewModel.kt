@@ -150,7 +150,6 @@ class CurrentTripViewModel : ViewModel() {
     }
 
     // Currently storing generic properties for buttons
-    // TODO create own file for these properties
     val modifier = Modifier
         .width(130.dp)
     val shape = RoundedCornerShape(10.dp)
