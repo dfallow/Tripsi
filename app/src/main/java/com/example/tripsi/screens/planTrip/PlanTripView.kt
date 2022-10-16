@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -69,7 +68,7 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
 
-            ) {
+        ) {
             Button(
                 onClick = {
                     val saved = planTripViewModel.saveTrip(tripDbViewModel, context)

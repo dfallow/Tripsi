@@ -48,7 +48,7 @@ sealed class Screen(
         icon = null
     )
 
-    object PastTripScreen: Screen(
+    object PastTripScreen : Screen(
         route = "pastTrip",
         title = "PastTrip",
         icon = null

@@ -42,7 +42,8 @@ data class Statistics(
         parentColumns = ["tripId"],
         childColumns = ["trip"]
     ),
-        ForeignKey(entity = Location::class,
+        ForeignKey(
+            entity = Location::class,
             onDelete = CASCADE,
             parentColumns = ["locationId"],
             childColumns = ["location"]
@@ -59,12 +60,13 @@ data class Image(
 )
 
 @Entity(
-    foreignKeys = [ForeignKey(
-        entity = Trip::class,
-        onDelete = CASCADE,
-        parentColumns = ["tripId"],
-        childColumns = ["trip"]
-    ),
+    foreignKeys = [
+        ForeignKey(
+            entity = Trip::class,
+            onDelete = CASCADE,
+            parentColumns = ["tripId"],
+            childColumns = ["trip"]
+        ),
     ],
     indices = [
         Index("trip"),

@@ -99,7 +99,10 @@ interface LocationDao : BaseDao<Location> {
 
     //get only those locations of the trip that have media
     @Query("SELECT * FROM location WHERE location.trip = :tripId AND location.hasMedia = :hasMedia")
-    fun getLocationsWithMedia(tripId: Int, hasMedia: Boolean = true): LiveData<List<LocationWithImagesAndNotes>>
+    fun getLocationsWithMedia(
+        tripId: Int,
+        hasMedia: Boolean = true
+    ): LiveData<List<LocationWithImagesAndNotes>>
 
     //get all images and a note for a particular location
     @Transaction

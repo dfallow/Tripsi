@@ -7,21 +7,19 @@ import androidx.collection.arrayMapOf
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -36,7 +34,6 @@ import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
 import com.example.tripsi.utils.Screen
-import kotlinx.coroutines.launch
 
 val viewModel = MediaViewModel()
 
@@ -62,10 +59,6 @@ fun MediaView(
         tripDbViewModel.pastTripData = tripData.value!!
     }
 
-    LaunchedEffect(tripData.value) {
-        tripData.value?.let { viewModel.getStartEndCoords(it, context) }
-    }
-
     Column(
         modifier = Modifier
             .fillMaxWidth(),
@@ -84,7 +77,7 @@ fun MediaView(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxHeight()
                 ) {
-                
+
                     DisplayTripMediaList(it.trip!!.tripId, tripDbViewModel, context)
                     Row(
                         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -140,33 +133,38 @@ fun MediaView(
                                         "Are you sure you want to delete this trip?",
                                         color = MaterialTheme.colors.secondaryVariant
                                     )
-                                    Row {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
                                         Button(
                                             colors = ButtonDefaults.buttonColors(
                                                 backgroundColor = MaterialTheme.colors.secondaryVariant,
                                                 contentColor = MaterialTheme.colors.primaryVariant
                                             ),
                                             onClick = {
-                                            scope.launch {
-                                                viewModel.deleteTrip(tripId, tripDbViewModel, context)
+                                                delete = false
+                                                viewModel.deleteTrip(
+                                                    tripId,
+                                                    tripDbViewModel,
+                                                    context
+                                                )
                                                 Toast.makeText(
                                                     context,
-                                                    "Trip was deleted.",
+                                                    "Trip deleted.",
                                                     Toast.LENGTH_SHORT
                                                 )
                                                     .show()
-                                                delete = false
                                                 navController.navigateUp()
                                             }
-                                        }
                                         ) {
                                             Text("Yes, delete the trip")
                                         }
                                         Spacer(Modifier.size(20.dp))
                                         Button(
+                                            modifier = Modifier
+                                                .width(100.dp)
+                                                .height(35.dp),
                                             colors = ButtonDefaults.buttonColors(
-                                                backgroundColor = MaterialTheme.colors.secondaryVariant,
-                                                contentColor = MaterialTheme.colors.primaryVariant
+                                                backgroundColor = MaterialTheme.colors.error,
+                                                contentColor = MaterialTheme.colors.onSurface
                                             ),
                                             onClick = { delete = false }) {
                                             Text("No")
@@ -284,7 +282,7 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
                         "walking",
                         Modifier.size(18.dp),
                         tint = MaterialTheme.colors.secondaryVariant
-               
+
                     )
                 }
             }
@@ -349,6 +347,7 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
         LazyRow(Modifier.padding(horizontal = 10.dp)) {
             imageBitmaps.value?.let {
                 itemsIndexed(it.toList()) { _, image ->
+                    rememberScrollState()
                     Column(
                         modifier = Modifier
                             .padding(horizontal = 15.dp)
@@ -359,7 +358,10 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         if (image != null) {
-                            Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                            Column(
+                                modifier = Modifier.padding(20.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
                                 if (loading.value) {
                                     LoadingSpinner(isDisplayed = loading.value)
                                 } else {
@@ -376,8 +378,7 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
                 }
             }
         }
-    }
-    else {
+    } else {
         Text("No photos saved for this trip.", color = MaterialTheme.colors.onPrimary)
     }
 }
@@ -390,7 +391,7 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
     if (isLargePhotoVisible) {
         Popup(
             alignment = Alignment.Center,
-            properties = PopupProperties(dismissOnBackPress = false)
+            properties = PopupProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         ) {
             Box(
                 contentAlignment = Alignment.TopEnd,
@@ -402,8 +403,7 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
                     }) {
                 Image(
                     image.bmp.asImageBitmap(), "trip photo", modifier = Modifier
-                        .fillMaxSize()
-                        .clickable { isLargePhotoVisible = false },
+                        .fillMaxSize(),
                     contentScale = ContentScale.FillWidth
                 )
                 Icon(
@@ -411,7 +411,8 @@ fun TripPhotoItem(image: InternalStoragePhoto) {
                     "close",
                     Modifier
                         .size(50.dp)
-                        .padding(10.dp),
+                        .padding(10.dp)
+                        .clickable { isLargePhotoVisible = false },
                     tint = MaterialTheme.colors.secondaryVariant
                 )
             }

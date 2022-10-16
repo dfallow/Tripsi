@@ -19,12 +19,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +35,8 @@ fun DatabaseMoment(
     tripDbViewModel: TripDbViewModel,
     context: Context
 ) {
-    val currentTripData = tripDbViewModel.getTripData(tripDbViewModel.tripData.trip!!.tripId).observeAsState().value
+    val currentTripData =
+        tripDbViewModel.getTripData(tripDbViewModel.tripData.trip!!.tripId).observeAsState().value
     var cityName by remember {
         mutableStateOf("")
     }
@@ -48,7 +47,7 @@ fun DatabaseMoment(
             .fillMaxHeight(0.5f)
             .background(MaterialTheme.colors.background)
     ) {
-        val color = if (isSystemInDarkTheme()){
+        val color = if (isSystemInDarkTheme()) {
             MaterialTheme.colors.onSurface
         } else {
             MaterialTheme.colors.onPrimary
@@ -130,8 +129,8 @@ fun DatabaseMoment(
                             fontWeight = FontWeight.Bold
                         ),
                         onClick = {
-                        viewModel.hideMoment()
-                    })
+                            viewModel.hideMoment()
+                        })
                 }
             }
         }
@@ -141,7 +140,8 @@ fun DatabaseMoment(
 @Composable
 fun DisplayMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
 
-    val momentWithMedia = tripDbViewModel.getMomentWithMedia(viewModel.currentMomentId).observeAsState()
+    val momentWithMedia =
+        tripDbViewModel.getMomentWithMedia(viewModel.currentMomentId).observeAsState()
 
     //this list stores all image filenames and notes associated to them
     val filenamesAndNotes: MutableList<ArrayMap<String, String?>> = mutableListOf()
@@ -199,7 +199,11 @@ fun DisplayMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
                                     momentNumber += 1
                                 }
                             ) {
-                                Icon(Icons.Rounded.ChevronRight, "arrow right", tint = MaterialTheme.colors.primary)
+                                Icon(
+                                    Icons.Rounded.ChevronRight,
+                                    "arrow right",
+                                    tint = MaterialTheme.colors.primary
+                                )
                             }
                         }
 
@@ -216,7 +220,11 @@ fun DisplayMomentMedia(tripDbViewModel: TripDbViewModel, context: Context) {
                                     momentNumber -= 1
                                 }
                             ) {
-                                Icon(Icons.Rounded.ChevronLeft, "arrow right", tint = MaterialTheme.colors.primary)
+                                Icon(
+                                    Icons.Rounded.ChevronLeft,
+                                    "arrow right",
+                                    tint = MaterialTheme.colors.primary
+                                )
                             }
                         }
 

@@ -53,17 +53,6 @@ class MainActivity : ComponentActivity() {
         //initialize database view model
         tripDbViewModel = TripDbViewModel(application)
 
-        //for testing purposes
-        /*to add data use addMockData function.
-        IMPORTANT! Make sure to run it only ONCE.
-        After you've built and ran the app on your phone/emulator,
-        immediately comment the addMockData line out and REBUILD the app.
-        If you don't do that, after you've killed the app on your phone and opened it again,
-        it will duplicate some of the data.*/
-
-        //addMockData(tripDbViewModel)
-
-
         if ((Build.VERSION.SDK_INT >= 23 &&
                     ContextCompat.checkSelfPermission(
                         this,
@@ -85,26 +74,18 @@ class MainActivity : ComponentActivity() {
         )
         Configuration.getInstance().userAgentValue
 
-        //
         val location = Location(this)
 
         setContent {
             TripsiTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
-
-                    //for testing purposes
-                    val trips = tripDbViewModel.getAllTrips().observeAsState()
-
                     // Lock rotation for this view
                     LockScreenOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED)
 
                     BottomNavigation(context = this, location, tripDbViewModel, weatherViewModel)
-
                 }
             }
         }

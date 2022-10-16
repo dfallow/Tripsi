@@ -1,6 +1,5 @@
 package com.example.tripsi.screens.currentTrip
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -14,8 +13,6 @@ import androidx.compose.material.icons.rounded.ChevronRight
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.AnnotatedString
@@ -32,7 +29,7 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
             .fillMaxHeight(0.5f)
             .background(MaterialTheme.colors.background)
     ) {
-        val color = if (isSystemInDarkTheme()){
+        val color = if (isSystemInDarkTheme()) {
             MaterialTheme.colors.onSurface
         } else {
             MaterialTheme.colors.onPrimary
@@ -156,11 +153,11 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                 ClickableText(
                     text = AnnotatedString("Close"),
                     style = TextStyle(
-                        color =     color
+                        color = color
                     ),
                     onClick = {
-                    viewModel.hideMoment()
-                })
+                        viewModel.hideMoment()
+                    })
             }
         }
     }

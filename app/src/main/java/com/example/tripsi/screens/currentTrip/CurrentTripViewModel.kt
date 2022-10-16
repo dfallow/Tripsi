@@ -2,7 +2,6 @@ package com.example.tripsi.screens.currentTrip
 
 import android.Manifest
 import android.app.Activity
-import android.util.Log
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -12,7 +11,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -242,7 +240,7 @@ class CurrentTripViewModel : ViewModel() {
         setSteps(stepsBottomLine.value ?: 0)
     }
 
-    var stepsForDb : MutableLiveData<Int> = MutableLiveData(0)
+    var stepsForDb: MutableLiveData<Int> = MutableLiveData(0)
 
     // Calculating distance based on steps
     // 74cm is average step distance
@@ -275,7 +273,14 @@ class CurrentTripViewModel : ViewModel() {
 
         try {
             viewModelScope.launch(Dispatchers.IO) {
-                tripDbViewModel.addTripStats(Statistics(0, trip, distance.value ?: 0, stepsForDb.value ?: 0))
+                tripDbViewModel.addTripStats(
+                    Statistics(
+                        0,
+                        trip,
+                        distance.value ?: 0,
+                        stepsForDb.value ?: 0
+                    )
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()

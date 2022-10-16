@@ -43,7 +43,10 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
     val polyline: Polyline
     var momentLocations: Array<Marker> = arrayOf(Marker(currentTripMap))
 
-    fun createMomentMarkers(fromDatabase: Boolean, tripMoments: ArrayList<CurrentTripViewModel.Moment>) {
+    fun createMomentMarkers(
+        fromDatabase: Boolean,
+        tripMoments: ArrayList<CurrentTripViewModel.Moment>
+    ) {
         for ((index, moment) in tripMoments.withIndex()) {
             viewModel.mapMoments.add(index)
             val moMarker = Marker(currentTripMap)
@@ -64,7 +67,8 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
                 }
             } else {
                 moMarker.setOnMarkerClickListener { _, _ ->
-                    Toast.makeText(context, "This is your Start/End location", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "This is your Start/End location", Toast.LENGTH_SHORT)
+                        .show()
                     true
                 }
             }
@@ -85,18 +89,22 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
 
         createMomentMarkers(viewModel.fromDatabase.value, momentsFromDatabaseNew)
         Log.d("userLocationDatabase", "$momentsFromDatabaseNew")
-        Log.d("userLocationTemporary","$currentTripMomentsNew")
+        Log.d("userLocationTemporary", "$currentTripMomentsNew")
 
-    } else  {
+    } else {
         Log.d("userLocationDatabase", "$momentsFromDatabaseNew")
-        Log.d("userLocationTemporary","$currentTripMomentsNew")
+        Log.d("userLocationTemporary", "$currentTripMomentsNew")
         // used for updating ui
         viewModel.fromDatabase.value = false
         polyline = Polyline()
         val polylinePoints: ArrayList<GeoPoint> = ArrayList()
         // Used to connect the new points added by the user to the existing database entries
-        if (momentsFromDatabase.isNotEmpty()) { polylinePoints.add(momentsFromDatabase.last()) }
-        for (moment in currentTripMomentsNew) { polylinePoints.add(moment.location) }
+        if (momentsFromDatabase.isNotEmpty()) {
+            polylinePoints.add(momentsFromDatabase.last())
+        }
+        for (moment in currentTripMomentsNew) {
+            polylinePoints.add(moment.location)
+        }
         polyline.setPoints(polylinePoints)
 
         createMomentMarkers(viewModel.fromDatabase.value, momentsFromDatabaseNew)
@@ -126,7 +134,8 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
                 userLocation.icon = ContextCompat.getDrawable(context, R.drawable.bike_svgrepo_com)
             }
             3 -> {
-                userLocation.icon = ContextCompat.getDrawable(context, R.drawable.hiker_walk_svgrepo_com)
+                userLocation.icon =
+                    ContextCompat.getDrawable(context, R.drawable.hiker_walk_svgrepo_com)
             }
             4 -> {
                 userLocation.icon = ContextCompat.getDrawable(context, R.drawable.plane_svgrepo_com)
@@ -136,7 +145,6 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
             }
             else -> {}
         }
-
 
 
         // add lines that connect moments
