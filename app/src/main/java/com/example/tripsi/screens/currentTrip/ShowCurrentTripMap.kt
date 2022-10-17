@@ -34,10 +34,8 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
 
     val momentsFromDatabase = tripDbViewModel.currentTripMoments
 
-    // TODO
     val momentsFromDatabaseNew = tripDbViewModel.currentTripMomentsNew
 
-    // TODO
     val currentTripMomentsNew = viewModel.currentTripMomentsNew.observeAsState().value
 
     val polyline: Polyline
@@ -158,8 +156,6 @@ fun ShowCurrentTripMap(location: Location, context: Context, tripDbViewModel: Tr
             currentTripMap.overlays.add(moment)
         }
 
-        // TODO not sure if this is needed
-        //currentTripMap.invalidate()
     }
 }
 
@@ -176,7 +172,6 @@ fun currentTripMap(): MapView {
 }
 
 // Trip Measurements Overlay
-// TODO add small icons, change text size, replace dummy info with liveData
 @Composable
 fun TripInfoOverlay(type: String, measurement: String) {
 

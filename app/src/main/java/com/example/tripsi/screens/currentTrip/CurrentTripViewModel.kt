@@ -66,7 +66,6 @@ class CurrentTripViewModel : ViewModel() {
     }
 
     // Used to update UI when a moment is added
-    // TODO find a better way
     var showText by mutableStateOf(false)
     fun toggleText() {
         showText = !showText
