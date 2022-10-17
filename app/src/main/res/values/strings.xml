@@ -11,23 +11,20 @@
     <string name="home_popUp_comingUp_1_1">Your trip </string>
     <string name="home_popUp_comingUp_2">is coming up.</string>
     <string name="ready_toStart">Ready to start?</string>
-    <string name="yourCurrentIcon">Your Current Icon
- click to change -></string>
+    <string name="yourCurrentIcon">Your Current Icon\nclick to change -></string>
     <string name="toastTripPlanned">Trip planned successfully!</string>
     <string name="somthWrong">Something went wrong. Please try again.</string>
-    <string name="swipeToSee">Swipe to see your options
- Tap to confirm</string>
+    <string name="swipeToSee">Swipe to see your options\nTap to confirm</string>
 
 
     <!--    Plan trip view   -->
-    <string name="title_create">Create a plan
-for your upcoming trip</string>
+    <string name="title_create">Create a plan\nfor your upcoming trip</string>
     <string name="title_whatIs">What is your final destination?</string>
     <string name="title_chooseMethod">Choose your travel method</string>
     <string name="title_whenMethod">When does your trip start?</string>
-    <string name="pleaseEnter_title">Please Enter a Destination</string>
+    <string name="pleaseEnter_title">Please enter a name for your trip</string>
     <string name="findalDest_title">What is your final destination</string>
-    <string name="selectDate">Select Your Date ->    </string>
+    <string name="selectDate">Select trip date -> \ \</string>
     <string name="choseYourMarker">Choose your map marker: </string>
 
 
@@ -36,7 +33,7 @@ for your upcoming trip</string>
     <string name="cancel">Cancel</string>
 
     <!--    Trip type   -->
-    <string name="selectedTypeTrip">Selected Type of trip</string>
+    <string name="selectedMapIcon">Select your map icon -> \ \</string>
     <string name="none">NONE</string>
     <string name="car">car</string>
     <string name="bike">bike</string>
@@ -82,8 +79,7 @@ for your upcoming trip</string>
 
     <!--   Travel history view   -->
     <string name="tripHistory">Your trip history</string>
-    <string name="nothingToShow">Nothing to show.
- You should start planning some trips!</string>
+    <string name="nothingToShow">Nothing to show.\nYou should start planning some trips!</string>
 
 
     <!--   Nav bar  -->

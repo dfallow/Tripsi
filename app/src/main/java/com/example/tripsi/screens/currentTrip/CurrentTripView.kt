@@ -132,7 +132,6 @@ fun CurrentTripView(
             Spacer(modifier = Modifier.height(32.dp))
             Button(
                 onClick = {
-                    //TODO: reset steps
                     stopWatch.resetWatch()
                     viewModel.resetSteps()
                     Toast.makeText(context, textToast, Toast.LENGTH_LONG).show()
@@ -277,7 +276,6 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
 }
 
 // When the user wants to end their trip
-// TODO add a popup confirmation?
 @Composable
 fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewModel) {
     Button(

@@ -338,7 +338,7 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
 
     Column() {
         Text(
-            text = "${stringResource(R.string.selectDate)}${selectedValue.value.ifEmpty { stringResource(R.string.none) }}",
+            text = "${stringResource(R.string.selectedMapIcon)}${selectedValue.value.ifEmpty { stringResource(R.string.none) }}",
             color = MaterialTheme.colors.onPrimary
         )
         Row(

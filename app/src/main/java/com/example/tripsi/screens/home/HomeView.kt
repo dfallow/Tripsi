@@ -181,8 +181,6 @@ fun HomeView(
                 ),
                 onClick = {
                     quicktrip = true
-                    //homeViewModel.startQuickTrip(tripDbViewModel, context)
-                    //navController.navigate(Screen.CurrentScreen.route)
                 },
                 enabled = trip == null,
                 shape = RoundedCornerShape(
@@ -211,7 +209,6 @@ fun HomeView(
                 Box(
                     contentAlignment = Alignment.TopEnd,
                     modifier = Modifier
-                        //.background(Color(0xFF2D0320))
                         .fillMaxWidth(0.9f)
                         .padding(20.dp)
                 ) {
@@ -349,7 +346,6 @@ fun UpcomingOrActiveTrip(
             onClick = {
 
                 tripDbViewModel.tripData = tripData
-                // TODO
                 tripDbViewModel.getCurrentTripMomentsNew(tripData.location!!)
                 tripDbViewModel.getTripMoments(tripData.location!!)
                 navController.navigate(Screen.CurrentScreen.route)

@@ -261,7 +261,6 @@ fun DisplayStats(distance: Int, steps: Int) {
     }
 }
 
-//TODO: replace with component from map view?
 @Composable
 fun StatsItem(label: String, statsValue: String, unit: String) {
     Column(
