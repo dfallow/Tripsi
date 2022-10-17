@@ -1,3 +1,94 @@
 <resources>
     <string name="app_name">Tripsi</string>
+
+    <!--    Home view   -->
+    <string name="trip_history_Btn">Trip history</string>
+    <string name="trip_plan_Btn">Plan a trip</string>
+    <string name="trip_quick_Btn">Quick trip</string>
+    <string name="trip_start_Btn">Start trip</string>
+    <string name="trip_continue_Btn">Continue Trip</string>
+    <string name="home_popUp_comingUp_1">Your trip to</string>
+    <string name="home_popUp_comingUp_1_1">Your trip </string>
+    <string name="home_popUp_comingUp_2">is coming up.</string>
+    <string name="ready_toStart">Ready to start?</string>
+    <string name="yourCurrentIcon">Your Current Icon
+ click to change -></string>
+    <string name="toastTripPlanned">Trip planned successfully!</string>
+    <string name="somthWrong">Something went wrong. Please try again.</string>
+    <string name="swipeToSee">Swipe to see your options
+ Tap to confirm</string>
+
+
+    <!--    Plan trip view   -->
+    <string name="title_create">Create a plan
+for your upcoming trip</string>
+    <string name="title_whatIs">What is your final destination?</string>
+    <string name="title_chooseMethod">Choose your travel method</string>
+    <string name="title_whenMethod">When does your trip start?</string>
+    <string name="pleaseEnter_title">Please Enter a Destination</string>
+    <string name="findalDest_title">What is your final destination</string>
+    <string name="selectDate">Select Your Date ->    </string>
+    <string name="choseYourMarker">Choose your map marker: </string>
+
+
+    <string name="calendar">Calendar</string>
+    <string name="tripDate">Trip date</string>
+    <string name="cancel">Cancel</string>
+
+    <!--    Trip type   -->
+    <string name="selectedTypeTrip">Selected Type of trip</string>
+    <string name="none">NONE</string>
+    <string name="car">car</string>
+    <string name="bike">bike</string>
+    <string name="bus">bus</string>
+    <string name="walk">walk</string>
+    <string name="plane">plane</string>
+
+    <string name="search_text">search text</string>
+    <string name="clear_text">clear text</string>
+    <string name="nameYourTrip_title">Name of your trip</string>
+    <string name="save_Btn">Save</string>
+    <string name="discard_Btn">Discard</string>
+    <string name="clearOrSearch">Clear or search text</string>
+
+    <!--    Current trip view   -->
+    <string name="steps">Steps</string>
+    <string name="distance">Distance</string>
+    <string name="time">Time</string>
+    <string name="saveMoment_Btn">Save the moment</string>
+    <string name="connectFr_Btn">Connect a friend</string>
+    <string name="End_Btn">End trip</string>
+    <string name="go_home">Go home</string>
+    <string name="nothing_toast">Nothing yet...</string>
+    <string name="showMap">Show on map</string>
+    <string name="createVideo">Create a video</string>
+    <string name="deleteTrip_Btn">Delete trip</string>
+    <string name="areYouSure">Are you sure you want to delete this trip?</string>
+    <string name="yesDelete">Yes, delete the trip</string>
+    <string name="tripDeleted">Trip deleted</string>
+    <string name="no">No</string>
+    <string name="destination">Destination</string>
+    <string name="noPhotoSaved">No photos saved for this trip.</string>
+
+    <!--   Add moment   -->
+    <string name="dateM">Date</string>
+    <string name="timeM">Time</string>
+    <string name="locationM">Location</string>
+    <string name="describeM">Describe the moment...</string>
+    <string name="takePhoto_Btn">Take photo</string>
+    <string name="close">Close</string>
+    <string name="youMustAdd">You must add at least one photo to save the moment.</string>
+    <string name="temporaryString">This is a temporary string, which will be replaced with the moment comment</string>
+
+    <!--   Travel history view   -->
+    <string name="tripHistory">Your trip history</string>
+    <string name="nothingToShow">Nothing to show.
+ You should start planning some trips!</string>
+
+
+    <!--   Nav bar  -->
+    <string name="homeNav">Home</string>
+    <string name="tripNav">Travels</string>
+    <string name="currentNav">Current</string>
+
 </resources>

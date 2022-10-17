@@ -11,10 +11,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
+import com.example.tripsi.R
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.screens.weather.WeatherCard
@@ -40,6 +42,7 @@ fun CurrentTripView(
     location.startUpdatingLocation()
     val stopWatch = remember { StopWatch() }
     stopWatch.start()
+    val textToast = stringResource(R.string.nothing_toast)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -132,7 +135,7 @@ fun CurrentTripView(
                     //TODO: reset steps
                     stopWatch.resetWatch()
                     viewModel.resetSteps()
-                    Toast.makeText(context, "Nothing yet...", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, textToast, Toast.LENGTH_LONG).show()
                 },
                 modifier = viewModel.modifier,
                 shape = viewModel.shape,
@@ -141,7 +144,7 @@ fun CurrentTripView(
                     contentColor = MaterialTheme.colors.onPrimary
                 ),
             ) {
-                Text("End Trip", textAlign = TextAlign.Center)
+                Text(stringResource(R.string.End_Btn), textAlign = TextAlign.Center)
             }
         }
     }
@@ -232,7 +235,7 @@ fun CurrentTripExtra(
             modifier = viewModel.modifier,
             shape = viewModel.shape
         ) {
-            Text("Save the Moment", textAlign = TextAlign.Center)
+            Text(stringResource(R.string.saveMoment_Btn), textAlign = TextAlign.Center)
         }
     }
 }
@@ -269,7 +272,7 @@ fun StartTrip(context: Context, location: Location, tripDbViewModel: TripDbViewM
             contentColor = MaterialTheme.colors.onPrimary
         ),
     ) {
-        Text("Start Trip", textAlign = TextAlign.Center)
+        Text(stringResource(R.string.trip_start_Btn), textAlign = TextAlign.Center)
     }
 }
 
@@ -306,7 +309,7 @@ fun EndTrip(context: Context, location: Location, tripDbViewModel: TripDbViewMod
             contentColor = MaterialTheme.colors.onSurface
         ),
     ) {
-        Text("End Trip", textAlign = TextAlign.Center)
+        Text(stringResource(R.string.End_Btn), textAlign = TextAlign.Center)
     }
 }
 
@@ -329,7 +332,7 @@ fun GoHomeButton(navController: NavController, location: Location) {
         ),
     )
     {
-        Text("Go home")
+        Text(stringResource(R.string.go_home))
     }
 }
 

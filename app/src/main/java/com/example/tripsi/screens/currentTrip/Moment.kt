@@ -13,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import com.example.tripsi.R
 
 
 @Composable
@@ -49,9 +51,9 @@ fun PopupMoment(imageId: Int) {
                     .padding(horizontal = 5.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text("Date", color = MaterialTheme.colors.onSurface)
-                Text("Time")
-                Text("Location")
+                Text(stringResource(R.string.dateM), color = MaterialTheme.colors.onSurface)
+                Text(stringResource(R.string.timeM))
+                Text(stringResource(R.string.locationM))
 
             }
         }
@@ -70,9 +72,9 @@ fun PopupMoment(imageId: Int) {
                     .fillMaxWidth()
                     .padding(vertical = 2.dp, horizontal = 10.dp)
             ) {
-                Text("This is a temporary string, which will be replaced with the moment comment")
+                Text(stringResource(R.string.temporaryString))
 
-                ClickableText(text = AnnotatedString("Close"), onClick = {
+                ClickableText(text = AnnotatedString(stringResource(R.string.close)), onClick = {
                     viewModel.hideMoment()
                 })
             }

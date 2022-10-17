@@ -9,6 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.tripsi.R
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -61,7 +63,7 @@ fun StepCounter(
 fun ShowSteps(
     currentSteps: Int
 ) {
-    TripInfoOverlay(type = "Steps", measurement = "$currentSteps")
+    TripInfoOverlay(type = stringResource(R.string.steps), measurement = "$currentSteps")
 }
 
 @Composable
@@ -76,10 +78,10 @@ fun ShowDistance(
         distanceKm = (viewModel.setDistance(currentSteps).toDouble() / 1000)
         val bd = BigDecimal(distanceKm)
         val roundedDistance = bd.setScale(2, RoundingMode.DOWN)
-        TripInfoOverlay(type = "Distance", measurement = "$roundedDistance km")
+        TripInfoOverlay(type = stringResource(R.string.distance), measurement = "$roundedDistance km")
 
     } else {
         distanceM = viewModel.setDistance(currentSteps)
-        TripInfoOverlay(type = "Distance", measurement = "$distanceM m")
+        TripInfoOverlay(type = stringResource(R.string.distance), measurement = "$distanceM m")
     }
 }

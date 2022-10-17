@@ -24,6 +24,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -51,7 +52,7 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
     )
     {
         Text(
-            text = "Create a plan\nfor your upcoming trip",
+            text = stringResource(R.string.title_create),
             Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             color = MaterialTheme.colors.onPrimary,
@@ -83,7 +84,7 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
                 ),
             ) {
                 Text(
-                    text = "Save", fontWeight = FontWeight.ExtraBold
+                    text = stringResource(R.string.save_Btn), fontWeight = FontWeight.ExtraBold
                 )
             }
             Button(
@@ -97,7 +98,7 @@ fun PlanTripView(navController: NavController, tripDbViewModel: TripDbViewModel)
                 ),
             ) {
                 Text(
-                    text = "Discard",
+                    text = stringResource(R.string.discard_Btn),
                     fontWeight = FontWeight.ExtraBold,
                 )
             }
@@ -114,7 +115,7 @@ fun TextInput(planTripViewModel: PlanTripViewModel) {
             planTripViewModel.tripName = it
             text = it
         },
-        label = { Text("Name of your trip", color = MaterialTheme.colors.onPrimary) },
+        label = { Text(stringResource(R.string.nameYourTrip_title), color = MaterialTheme.colors.onPrimary) },
         modifier = Modifier
             .fillMaxWidth(),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -133,6 +134,7 @@ fun FinalLocationPicker(planTripViewModel: PlanTripViewModel) {
     val context = LocalContext.current
     var text by remember { mutableStateOf("") }
     val currentLocation = planTripViewModel.location.collectAsState()
+    val textToast = stringResource(R.string.pleaseEnter_title)
 
 
     currentLocation.value.let {
@@ -164,7 +166,7 @@ fun FinalLocationPicker(planTripViewModel: PlanTripViewModel) {
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "Please Enter a Destination",
+                                    textToast,
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -185,7 +187,7 @@ fun FinalLocationPicker(planTripViewModel: PlanTripViewModel) {
             }
 
         },
-        label = { Text("What's your final destination", color = MaterialTheme.colors.onPrimary) },
+        label = { Text(stringResource(R.string.title_whatIs), color = MaterialTheme.colors.onPrimary) },
 
         modifier = Modifier
             .fillMaxWidth()
@@ -201,7 +203,7 @@ fun FinalLocationPicker(planTripViewModel: PlanTripViewModel) {
                     focusManager.clearFocus(true)
                     planTripViewModel.searchState.value = SearchState.SAVED.status
                 } else {
-                    Toast.makeText(context, "Please Enter a Destination", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, textToast, Toast.LENGTH_SHORT).show()
                 }
             }
         ),
@@ -259,7 +261,7 @@ fun DatePicker(planTripViewModel: PlanTripViewModel) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            Text(text = "Select Your Date ->    ", color = MaterialTheme.colors.onPrimary)
+            Text(text = stringResource(R.string.selectDate), color = MaterialTheme.colors.onPrimary)
             Button(
                 onClick = {
                     mDatePickerDialog.show()
@@ -336,7 +338,7 @@ fun TripType(planTripViewModel: PlanTripViewModel) {
 
     Column() {
         Text(
-            text = "Choose your map marker: ${selectedValue.value.ifEmpty { "NONE" }}",
+            text = "${stringResource(R.string.selectDate)}${selectedValue.value.ifEmpty { stringResource(R.string.none) }}",
             color = MaterialTheme.colors.onPrimary
         )
         Row(

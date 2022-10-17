@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavController
+import com.example.tripsi.R
 import com.example.tripsi.data.InternalStoragePhoto
 import com.example.tripsi.functionality.TripDbViewModel
 import com.example.tripsi.utils.LoadingSpinner
@@ -49,6 +51,8 @@ fun MediaView(
 
     //get all data from database associated with a trip
     val tripData = tripDbViewModel.getTripData(tripId).observeAsState()
+
+    val textToast = stringResource(R.string.tripDeleted)
 
     LaunchedEffect(tripData.value) {
         tripData.value?.let { viewModel.getStartEndCoords(it, context) }
@@ -96,7 +100,7 @@ fun MediaView(
                                 contentColor = MaterialTheme.colors.onPrimary
                             )
                         ) {
-                            Text("show on map")
+                            Text(stringResource(R.string.showMap))
                         }
                         Button(
                             onClick = {
@@ -110,7 +114,7 @@ fun MediaView(
                                 contentColor = MaterialTheme.colors.onSurface,
                             )
                         ) {
-                            Text("Delete trip")
+                            Text(stringResource(R.string.deleteTrip_Btn))
                         }
                     }
                     if (delete) {
@@ -130,7 +134,7 @@ fun MediaView(
                             ) {
                                 Column {
                                     Text(
-                                        "Are you sure you want to delete this trip?",
+                                        stringResource(R.string.areYouSure),
                                         color = MaterialTheme.colors.secondaryVariant
                                     )
                                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -148,14 +152,14 @@ fun MediaView(
                                                 )
                                                 Toast.makeText(
                                                     context,
-                                                    "Trip deleted.",
+                                                    textToast,
                                                     Toast.LENGTH_SHORT
                                                 )
                                                     .show()
                                                 navController.navigateUp()
                                             }
                                         ) {
-                                            Text("Yes, delete the trip")
+                                            Text(stringResource(R.string.yesDelete))
                                         }
                                         Spacer(Modifier.size(20.dp))
                                         Button(
@@ -167,7 +171,7 @@ fun MediaView(
                                                 contentColor = MaterialTheme.colors.onSurface
                                             ),
                                             onClick = { delete = false }) {
-                                            Text("No")
+                                            Text(stringResource(R.string.no))
                                         }
                                     }
                                 }
@@ -219,7 +223,7 @@ fun DisplayRoute() {
                 tint = MaterialTheme.colors.onPrimary
             )
             Text(
-                startLocation.value ?: "Home",
+                startLocation.value ?: stringResource(R.string.homeNav),
                 Modifier.padding(horizontal = 5.dp),
                 color = MaterialTheme.colors.onPrimary
             )
@@ -238,7 +242,7 @@ fun DisplayRoute() {
                 tint = MaterialTheme.colors.onPrimary
             )
             Text(
-                endLocation.value ?: "Destination",
+                endLocation.value ?: stringResource(R.string.destination),
                 Modifier.padding(horizontal = 5.dp),
                 color = MaterialTheme.colors.onPrimary
             )
@@ -252,8 +256,8 @@ fun DisplayStats(distance: Int, steps: Int) {
         Modifier
             .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        StatsItem(label = "Distance", statsValue = distance.toString(), unit = "meters")
-        StatsItem(label = "Steps", statsValue = steps.toString(), unit = "steps")
+        StatsItem(label = stringResource(R.string.distance), statsValue = distance.toString(), unit = "meters")
+        StatsItem(label = stringResource(R.string.steps), statsValue = steps.toString(), unit = "steps")
     }
 }
 
@@ -268,7 +272,7 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
     ) {
         Row(modifier = Modifier.padding(5.dp, 5.dp, 0.dp, 0.dp)) {
             when (label) {
-                "Distance" -> {
+                stringResource(R.string.distance) -> {
                     Icon(
                         Icons.Rounded.NearMe,
                         "distance",
@@ -276,7 +280,7 @@ fun StatsItem(label: String, statsValue: String, unit: String) {
                         tint = MaterialTheme.colors.secondaryVariant
                     )
                 }
-                "Steps" -> {
+                stringResource(R.string.steps) -> {
                     Icon(
                         Icons.Rounded.DirectionsWalk,
                         "walking",
@@ -379,7 +383,7 @@ fun DisplayTripMediaList(tripId: Int, tripDbViewModel: TripDbViewModel, context:
             }
         }
     } else {
-        Text("No photos saved for this trip.", color = MaterialTheme.colors.onPrimary)
+        Text(stringResource(R.string.noPhotoSaved), color = MaterialTheme.colors.onPrimary)
     }
 }
 
