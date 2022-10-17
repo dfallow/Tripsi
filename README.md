@@ -72,3 +72,6 @@ Application was designed and developed using Android Studio, Kotlin, Jetpack Com
 - [Gintare Saali](https://github.com/gintaresaali)
 - [Pavlo Leinonen](https://github.com/leinonenko)
 - [Ali Fahad](https://github.com/Ali-k-fahad)
+
+## Download App
+- [Tripsi](https://users.metropolia.fi/~alifah/Trips/app-debug.apk)
