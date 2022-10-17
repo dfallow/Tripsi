@@ -37,7 +37,13 @@ Application was designed and developed using Android Studio, Kotlin, Jetpack Com
 - Other APIs and libraries: Dagger (Hilt)
 
 ## Screenshots
-![Tripsi screenshots](https://users.metropolia.fi/~gintares/Tripsi/Tripsi-screenshots2.png)
+![Tripsi screenshots-Group1](https://users.metropolia.fi/~gintares/Tripsi/Group%201.png)
+
+![Tripsi screenshots-Group2](https://users.metropolia.fi/~gintares/Tripsi/Group%202.png)
+
+![Tripsi screenshots-Group3](https://users.metropolia.fi/~gintares/Tripsi/Group%203.png)
+
+![Tripsi screenshots-Group4](https://users.metropolia.fi/~gintares/Tripsi/Group%204.png)
 ## Known bugs
 - Steps:
 	- Steps not reset to 0 after the trip ends.
