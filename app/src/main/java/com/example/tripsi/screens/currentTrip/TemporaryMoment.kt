@@ -15,11 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.tripsi.R
 
 @Composable
 fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
@@ -118,11 +120,11 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
-                Text("Date", style = style)
+                Text(stringResource(R.string.dateM), style = style)
                 Text(moment.info.date, color = color)
-                Text("Time", style = style)
+                Text(stringResource(R.string.timeM), style = style)
                 Text(moment.info.time, color = color)
-                Text("Location", style = style)
+                Text(stringResource(R.string.locationM), style = style)
                 Text(moment.info.location, color = color)
 
             }
@@ -151,7 +153,7 @@ fun TemporaryMoment(moment: CurrentTripViewModel.Moment) {
                 )
 
                 ClickableText(
-                    text = AnnotatedString("Close"),
+                    text = AnnotatedString(stringResource(R.string.close)),
                     style = TextStyle(
                         color = color
                     ),

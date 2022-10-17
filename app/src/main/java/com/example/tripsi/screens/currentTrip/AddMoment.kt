@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -153,7 +154,7 @@ fun MomentComment(
         value = comment,
         onValueChange = { comment = it },
         shape = RoundedCornerShape(10.dp),
-        label = { Text("Describe the moment...", color = MaterialTheme.colors.primaryVariant) },
+        label = { Text(stringResource(R.string.describeM), color = MaterialTheme.colors.primaryVariant) },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         keyboardActions = KeyboardActions(
             onDone = {
@@ -313,6 +314,7 @@ fun SaveOrDiscard(
     tripDbViewModel: TripDbViewModel,
     context: Context
 ) {
+    val textToast = stringResource(R.string.youMustAdd)
 
     val scope = rememberCoroutineScope()
     // Contains the buttons for saving or discarding the moment
@@ -354,7 +356,7 @@ fun SaveOrDiscard(
                 } else {
                     Toast.makeText(
                         context,
-                        "You must add at least one photo to save the moment.",
+                        textToast,
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -368,7 +370,7 @@ fun SaveOrDiscard(
                 contentColor = colors.onPrimary
             ),
         ) {
-            Text("Save")
+            Text(stringResource(R.string.save_Btn))
         }
         Button(
             onClick = {
@@ -383,7 +385,7 @@ fun SaveOrDiscard(
                 contentColor = colors.onSurface
             ),
         ) {
-            Text("Discard")
+            Text(stringResource(R.string.discard_Btn))
         }
     }
 }

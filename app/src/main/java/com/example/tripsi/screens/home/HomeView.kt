@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -134,7 +135,7 @@ fun HomeView(
                     bottom = 15.dp
                 )
             ) {
-                Text(text = "Plan a trip")
+                Text(text = stringResource(R.string.trip_plan_Btn))
             }
         }
         Row(
@@ -162,7 +163,7 @@ fun HomeView(
                     bottom = 15.dp
                 )
             ) {
-                Text(text = "Trip History")
+                Text(text = stringResource(R.string.trip_history_Btn))
             }
         }
         Row(
@@ -197,7 +198,7 @@ fun HomeView(
                 )
             )
             {
-                Text(text = "Quick Trip")
+                Text(text = stringResource(R.string.trip_quick_Btn))
             }
         }
 
@@ -227,7 +228,7 @@ fun HomeView(
                             maxLines = 1,
                             label = {
                                 Text(
-                                    "Please enter a title for your trip",
+                                    stringResource(R.string.pleaseEnter_title),
                                     color = MaterialTheme.colors.onPrimary
                                 )
                             },
@@ -266,7 +267,7 @@ fun HomeView(
                                         homeViewModel.startQuickTrip(tripDbViewModel, context, null)
                                     }
                                 }) {
-                                    Text("Save")
+                                    Text(stringResource(R.string.save_Btn))
                                 }
                                 Spacer(Modifier.size(10.dp))
                                 Button(
@@ -276,7 +277,7 @@ fun HomeView(
                                         contentColor = MaterialTheme.colors.onSurface
                                     ),
                                 ) {
-                                    Text("Cancel")
+                                    Text(stringResource(R.string.cancel))
                                 }
                             }
 
@@ -324,14 +325,14 @@ fun UpcomingOrActiveTrip(
         ) {
         if (tripData.trip?.destination == "Unknown") {
             Text(
-                "Your trip is coming up.\n Ready to start?",
+                "${stringResource(R.string.home_popUp_comingUp_1_1)} ${stringResource(R.string.home_popUp_comingUp_2)}\n ${stringResource(R.string.ready_toStart)}",
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 20.sp
             )
         } else {
             Text(
-                "Your trip to ${tripData.trip?.destination} is coming up.\n Ready to start?",
+                "${stringResource(R.string.home_popUp_comingUp_1)} ${tripData.trip?.destination} ${stringResource(R.string.home_popUp_comingUp_2)} \n ${stringResource(R.string.ready_toStart)}",
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onSurface,
                 fontSize = 20.sp
@@ -358,9 +359,9 @@ fun UpcomingOrActiveTrip(
             )
         ) {
             if (tripData.trip?.status == TripStatus.ACTIVE.status) {
-                Text("Continue Trip")
+                Text(stringResource(R.string.trip_continue_Btn))
             } else {
-                Text(text = "Start Trip")
+                Text(text = stringResource(R.string.trip_start_Btn))
             }
 
         }
@@ -378,7 +379,7 @@ fun UpcomingOrActiveTrip(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Your Current Icon\n click to change ->",
+                    stringResource(R.string.yourCurrentIcon),
                     textAlign = TextAlign.Center,
                     color = MaterialTheme.colors.onSurface
                 )
@@ -423,7 +424,7 @@ fun UpcomingOrActiveTrip(
                             .background(Color.Black)
                     ) {
                         Text(
-                            "Swipe to see your options\n Tap to confirm",
+                            stringResource(R.string.swipeToSee),
                             color = Color.White,
                             textAlign = TextAlign.Center
                         )

@@ -13,11 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.tripsi.R
 import com.example.tripsi.data.Trip
 import com.example.tripsi.data.TripStatus
 import com.example.tripsi.functionality.TripDbViewModel
@@ -38,7 +40,7 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            "Your trip history",
+            stringResource(R.string.tripHistory),
             Modifier.padding(vertical = 15.dp),
             color = MaterialTheme.colors.onPrimary,
             fontSize = 20.sp,
@@ -70,7 +72,7 @@ fun TravelHistoryView(tripDbViewModel: TripDbViewModel, navController: NavContro
                 modifier = Modifier.fillMaxSize()
             ) {
                 Text(
-                    "Nothing to show.\n You should start planning some trips!",
+                    stringResource(R.string.nothingToShow),
                     color = MaterialTheme.colors.onPrimary, textAlign = TextAlign.Center
                 )
 
